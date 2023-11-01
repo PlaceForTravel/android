@@ -1,6 +1,5 @@
 package com.easyhz.placeapp.ui.navigation
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
@@ -24,14 +23,12 @@ import com.easyhz.placeapp.ui.home.profile.Profile
 /**
  * BottomNavigation Items
  */
-fun NavGraphBuilder.addHomeGraph(
-    onNavigateToRoute: (String) -> Unit,
-) {
+fun NavGraphBuilder.addHomeGraph() {
     composable(route = HomeSections.FEED.route) {
-        Feed(onNavigateToRoute)
+        Feed()
     }
     composable(route = HomeSections.PROFILE.route) {
-        Profile(onNavigateToRoute)
+        Profile()
     }
 }
 
@@ -78,7 +75,7 @@ fun BottomBar(
 
 @Preview
 @Composable
-private fun previewBottomBar() {
+private fun PreviewBottomBar() {
     BottomBar(
         tabs = HomeSections.values(),
         currentRoute = "home/feed",
