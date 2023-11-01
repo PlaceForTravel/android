@@ -1,6 +1,8 @@
 package com.easyhz.placeapp.ui.navigation
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -10,15 +12,20 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.home.feed.Feed
 import com.easyhz.placeapp.ui.home.profile.Profile
+import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.utils.drawBorderTop
 
 /**
  * BottomNavigation Items
@@ -48,7 +55,15 @@ fun BottomBar(
     onNavigateToRoute: (String) -> Unit,
 ) {
     val currentTab = tabs.first { it.route == currentRoute }
-    NavigationBar() {
+    NavigationBar(
+        containerColor = PlaceAppTheme.colorScheme.background,
+        modifier = Modifier.drawBehind {
+            drawBorderTop(
+                color = Color.Gray,
+                widthPx = 1.dp.toPx()
+            )
+        }
+    ) {
         tabs.forEach { tab ->
             val label = stringResource(id = tab.label)
             NavigationBarItem(
@@ -60,25 +75,30 @@ fun BottomBar(
                 icon = {
                     Icon(
                         imageVector = tab.icon,
-                        contentDescription = label
+                        contentDescription = label,
+                        modifier = Modifier.size(32.dp)
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = Color.DarkGray,
-                    selectedIconColor = Color.Black
-                )
+                    unselectedIconColor = PlaceAppTheme.colorScheme.unselectedIcon,
+                    selectedIconColor = PlaceAppTheme.colorScheme.selectedIcon,
+                    indicatorColor = PlaceAppTheme.colorScheme.background
+                ),
             )
         }
     }
 }
 
 
-@Preview
+@Preview("default")
+@Preview("DarkMode", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewBottomBar() {
-    BottomBar(
-        tabs = HomeSections.values(),
-        currentRoute = "home/feed",
-        onNavigateToRoute = { },
-    )
+    PlaceAppTheme {
+        BottomBar(
+            tabs = HomeSections.values(),
+            currentRoute = "home/feed",
+            onNavigateToRoute = { },
+        )
+    }
 }
