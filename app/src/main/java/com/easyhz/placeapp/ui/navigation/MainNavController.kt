@@ -3,10 +3,6 @@ package com.easyhz.placeapp.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination
-import androidx.navigation.NavGraph
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -36,9 +32,8 @@ fun rememberMainNavController(
 class MainNavController(
     val navController: NavHostController,
 ) {
-    private val currentRoute: String?
+    val currentRoute: String?
         get() = navController.currentDestination?.route
-
     fun navigateToBottomBarRoute(route: String) {
         if(route != currentRoute) {
             navController.navigate(route) {
