@@ -18,6 +18,7 @@ import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
 data class FeedType(
+    val id: Int,
     val imagePath: String,
     val userName: String,
     val regDate: String,
@@ -25,34 +26,41 @@ data class FeedType(
     val bookmarkCount: Int
 )
 @Composable
-fun Feed() {
+fun Feed(
+    onItemClick: (Int) -> Unit,
+) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val dummy = listOf(
         FeedType(
+            id = 1,
             imagePath = "https://picsum.photos/id/307/200/300",
             userName = "유저 1",
             regDate = "2023.10.29",
             placeName= "대한민국, 제주특별자치도",
             bookmarkCount = 5,
         ),FeedType(
+            id = 2,
             imagePath = "https://picsum.photos/id/352/200/300",
             userName =  "유저 2",
             regDate = "2023.11.01",
             placeName = "대한민국 서울특별시",
             bookmarkCount = 0,
         ),FeedType(
+            id = 3,
             imagePath ="https://picsum.photos/id/234/200/300",
             userName = "유저 3",
             regDate = "2023.11.01",
             placeName = "대한민국 여수시",
             bookmarkCount = 1342
         ),FeedType(
+            id = 4,
             imagePath = "https://picsum.photos/id/236/200/300",
             userName= "유저 4",
             regDate = "2023.11.01",
             placeName = "대한민국 부산광역시",
             bookmarkCount = 434
         ),FeedType(
+            id = 5,
             imagePath = "https://picsum.photos/id/231/200/300",
             userName =  "유저 5",
             regDate = "2023.11.01",
@@ -78,16 +86,11 @@ fun Feed() {
                     .padding(10.dp)
                     .clip(RoundedCornerShape(15.dp))
                     .background(PlaceAppTheme.colorScheme.mainBackground),
-                onClick = ::onClick
+                onClick = { onItemClick(item.id) }
             )
         }
     }
 
-}
-
-
-fun onClick() {
-    Log.d("Feed", "onClick  ")
 }
 
 /**
@@ -107,6 +110,8 @@ private fun Feed(modifier: Modifier) {
 @Composable
 private fun FeedPreview() {
     PlaceAppTheme {
-        Feed()
+        Feed(
+            onItemClick = { }
+        )
     }
 }

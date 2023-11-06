@@ -14,11 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.easyhz.placeapp.R
@@ -30,9 +30,11 @@ import com.easyhz.placeapp.util.drawBorderTop
 /**
  * BottomNavigation Items
  */
-fun NavGraphBuilder.addHomeGraph() {
+fun NavGraphBuilder.addHomeGraph(
+    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit
+) {
     composable(route = HomeSections.FEED.route) {
-        Feed()
+        Feed(onItemClick = { id -> onNavigateToBoardDetail(id, it)})
     }
     composable(route = HomeSections.PROFILE.route) {
         Profile()
@@ -44,8 +46,8 @@ enum class HomeSections(
     val icon: ImageVector,
     val route: String
 ) {
-    FEED(R.string.home_feed, Icons.Outlined.Home, "home/feed"),
-    PROFILE(R.string.home_profile, Icons.Outlined.Person, "home/profile")
+    FEED(R.string.home_feed, Icons.Outlined.Home, "${MainDestinations.HOME_ROUTE}/feed"),
+    PROFILE(R.string.home_profile, Icons.Outlined.Person, "${MainDestinations.HOME_ROUTE}/profile")
 }
 
 @Composable
