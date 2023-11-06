@@ -55,11 +55,12 @@ fun BottomBar(
     onNavigateToRoute: (String) -> Unit,
 ) {
     val currentTab = tabs.first { it.route == currentRoute }
+    val borderColor = PlaceAppTheme.colorScheme.primaryBorder
     NavigationBar(
         containerColor = PlaceAppTheme.colorScheme.mainBackground,
         modifier = Modifier.drawBehind {
             drawBorderTop(
-                color = Color.Gray,
+                color = borderColor,
                 widthPx = 1.dp.toPx()
             )
         }
