@@ -3,4 +3,11 @@
 
     <string name="home_feed">Home</string>
     <string name="home_profile">Profile</string>
+
+
+    <string name="icon_star">StarIcon</string>
+    <string name="icon_comment">CommentIcon</string>
+    <string name="icon_place">PlaceIcon</string>
+
+    <string name="image_load_error">예기치 못한 오류가 발생했습니다.</string>
 </resources>

@@ -25,7 +25,7 @@ import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.home.feed.Feed
 import com.easyhz.placeapp.ui.home.profile.Profile
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
-import com.easyhz.placeapp.utils.drawBorderTop
+import com.easyhz.placeapp.util.drawBorderTop
 
 /**
  * BottomNavigation Items
@@ -56,7 +56,7 @@ fun BottomBar(
 ) {
     val currentTab = tabs.first { it.route == currentRoute }
     NavigationBar(
-        containerColor = PlaceAppTheme.colorScheme.background,
+        containerColor = PlaceAppTheme.colorScheme.mainBackground,
         modifier = Modifier.drawBehind {
             drawBorderTop(
                 color = Color.Gray,
@@ -81,8 +81,10 @@ fun BottomBar(
                 },
                 colors = NavigationBarItemDefaults.colors(
                     unselectedIconColor = PlaceAppTheme.colorScheme.unselectedIcon,
+                    unselectedTextColor = PlaceAppTheme.colorScheme.unselectedIcon,
                     selectedIconColor = PlaceAppTheme.colorScheme.selectedIcon,
-                    indicatorColor = PlaceAppTheme.colorScheme.background
+                    selectedTextColor = PlaceAppTheme.colorScheme.selectedIcon,
+                    indicatorColor = PlaceAppTheme.colorScheme.mainBackground
                 ),
             )
         }
