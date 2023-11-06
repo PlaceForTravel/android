@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.utils
+package com.easyhz.placeapp.util
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
