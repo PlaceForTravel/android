@@ -26,7 +26,7 @@ fun SimpleIconButton(
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
