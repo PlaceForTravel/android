@@ -25,7 +25,7 @@ import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.home.feed.Feed
 import com.easyhz.placeapp.ui.home.profile.Profile
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
-import com.easyhz.placeapp.util.drawBorderTop
+import com.easyhz.placeapp.util.borderTop
 
 /**
  * BottomNavigation Items
@@ -60,12 +60,10 @@ fun BottomBar(
     val borderColor = PlaceAppTheme.colorScheme.primaryBorder
     NavigationBar(
         containerColor = PlaceAppTheme.colorScheme.mainBackground,
-        modifier = Modifier.drawBehind {
-            drawBorderTop(
-                color = borderColor,
-                widthPx = 1.dp.toPx()
-            )
-        }
+        modifier = Modifier.borderTop(
+            color = PlaceAppTheme.colorScheme.primaryBorder,
+            dp = 1.dp
+        )
     ) {
         tabs.forEach { tab ->
             val label = stringResource(id = tab.label)
