@@ -10,4 +10,13 @@
     <string name="icon_place">PlaceIcon</string>
 
     <string name="image_load_error">예기치 못한 오류가 발생했습니다.</string>
+    <string name="image_refresh">Refresh</string>
+
+    <string name="content_place">위치 </string>
+
+    <string name="content_place_icon">Place</string>
+    <string name="content_user_icon">UserName</string>
+    <string name="content_bookmark_icon">Bookmark</string>
+    <string name="content_map_icon">Map</string>
+
 </resources>

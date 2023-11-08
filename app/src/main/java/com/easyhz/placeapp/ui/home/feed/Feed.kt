@@ -1,8 +1,8 @@
 package com.easyhz.placeapp.ui.home.feed
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
@@ -23,7 +24,9 @@ data class FeedType(
     val userName: String,
     val regDate: String,
     val placeName: String,
-    val bookmarkCount: Int
+    val bookmarkCount: Int,
+    val content: String? = null,
+    val detailPlace: String? = null
 )
 @Composable
 fun Feed(
@@ -74,19 +77,15 @@ fun Feed(
     ) {
         itemsIndexed(dummy) {index, item ->
             ContentCard(
-                userName = item.userName,
-                placeName = item.placeName,
-                regDate = item.regDate,
-                bookmarkCount = item.bookmarkCount,
-                imagePath = item.imagePath,
+                item = item,
                 imageSize = (screenWidth - 100).dp,
                 cardWidth = screenWidth.dp,
                 modifier = Modifier
                     .width(screenWidth.dp)
-                    .padding(10.dp)
+                    .padding(CONTENT_ALL.dp)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(PlaceAppTheme.colorScheme.mainBackground),
-                onClick = { onItemClick(item.id) }
+                    .background(PlaceAppTheme.colorScheme.mainBackground)
+                    .clickable { onItemClick(item.id) },
             )
         }
     }
