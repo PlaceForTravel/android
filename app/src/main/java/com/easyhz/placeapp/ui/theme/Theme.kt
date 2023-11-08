@@ -2,7 +2,6 @@ package com.easyhz.placeapp.ui.theme
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
@@ -10,8 +9,6 @@ import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -21,7 +18,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
@@ -117,6 +113,7 @@ open class PlaceAppColors (
     val subBackground: Color,
     val statusTopBar: Color,
     val statusBottomBar: Color,
+    val subText: Color
 )
 
 object AppLightColors: PlaceAppColors(
@@ -129,7 +126,8 @@ object AppLightColors: PlaceAppColors(
     mainBackground = Neutral1,
     subBackground = Neutral4,
     statusTopBar = Neutral4,
-    statusBottomBar = Neutral1
+    statusBottomBar = Neutral1,
+    subText = Neutral5
 )
 
 object AppDarkColors : PlaceAppColors(
@@ -143,6 +141,7 @@ object AppDarkColors : PlaceAppColors(
     subBackground = Neutral8,
     statusTopBar = Neutral8,
     statusBottomBar = Neutral6,
+    subText = Neutral2
 )
 
 fun appLightColorScheme(
@@ -156,6 +155,7 @@ fun appLightColorScheme(
     subBackground: Color = AppLightColors.subBackground,
     statusTopBar: Color = AppLightColors.statusTopBar,
     statusBottomBar: Color = AppLightColors.statusBottomBar,
+    subText:Color = AppLightColors.subText
 ) : PlaceAppColors =
     PlaceAppColors (
         primary,
@@ -168,6 +168,7 @@ fun appLightColorScheme(
         subBackground,
         statusTopBar,
         statusBottomBar,
+        subText
     )
 
 fun appDarkColorScheme(
@@ -181,6 +182,7 @@ fun appDarkColorScheme(
     subBackground: Color = AppDarkColors.subBackground,
     statusTopBar: Color = AppDarkColors.statusTopBar,
     statusBottomBar: Color =  AppDarkColors.statusBottomBar,
+    subText:Color = AppDarkColors.subText
 ) : PlaceAppColors =
     PlaceAppColors (
         primary,
@@ -192,7 +194,8 @@ fun appDarkColorScheme(
         mainBackground,
         subBackground,
         statusTopBar,
-        statusBottomBar
+        statusBottomBar,
+        subText
     )
 
 @SuppressLint("CompositionLocalNaming")
