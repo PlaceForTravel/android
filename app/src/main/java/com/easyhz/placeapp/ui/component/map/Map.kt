@@ -54,9 +54,10 @@ private fun getMapView(context: Context) = MapView(context)
     .apply {
         getMapAsync { naverMap ->
             val marker = Marker()
-            val cameraUpdate = CameraUpdate.scrollTo(LatLng(37.521715859, 126.924290018))
+            val cameraUpdate = CameraUpdate.zoomTo(15.5)
+            val cameraUpdate2 = CameraUpdate.scrollTo(LatLng(37.521715859, 126.924290018))
             naverMap.moveCamera(cameraUpdate)
-            naverMap.isNightModeEnabled = true
+            naverMap.moveCamera(cameraUpdate2)
             naverMap.isIndoorEnabled = true
             marker.position = LatLng(37.521715859, 126.924290018)
             marker.map = naverMap
