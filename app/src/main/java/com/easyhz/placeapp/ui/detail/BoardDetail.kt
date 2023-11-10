@@ -1,7 +1,12 @@
 package com.easyhz.placeapp.ui.detail
 
+import android.app.Activity
 import android.content.res.Configuration
+import android.view.Window
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -11,14 +16,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,11 +34,11 @@ import androidx.compose.ui.unit.dp
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.component.comment.Comments
-import com.easyhz.placeapp.ui.component.detail.MapBottomSheet
+import com.easyhz.placeapp.ui.component.detail.MapDialog
+import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoardDetail(id: Int) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
@@ -79,44 +87,69 @@ fun BoardDetail(id: Int) {
             regDate = "2023.11.08"
         ),
     )
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isShowBottomSheet by remember { mutableStateOf(false) }
     val screenHeight = LocalConfiguration.current.screenHeightDp
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .background(PlaceAppTheme.colorScheme.subBackground)
+
+    val window = (LocalContext.current as Activity).window
+    val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
+    val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
+
+    Box(
+        contentAlignment = Alignment.Center
     ) {
-        ContentCard(
-            item = dummy,
-            imageSize = (screenWidth - 100).dp,
-            cardWidth = screenWidth.dp,
-            modifier = Modifier
-                .width(screenWidth.dp)
-                .padding(CONTENT_ALL.dp)
-                .clip(RoundedCornerShape(15.dp))
-                .background(PlaceAppTheme.colorScheme.mainBackground),
-            onMapClick = { isShowBottomSheet = true }
-        )
-        Comments(
-            items = mock,
-            modifier = Modifier
-                .width(screenWidth.dp)
-                .padding(CONTENT_ALL.dp)
-                .clip(RoundedCornerShape(15.dp))
-                .background(PlaceAppTheme.colorScheme.mainBackground),
-        )
-        if(isShowBottomSheet) {
-            MapBottomSheet(
-                sheetState = sheetState,
+        Box(
+            modifier = Modifier.clickable {
+                isShowBottomSheet = false
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .background(PlaceAppTheme.colorScheme.subBackground)
+            ) {
+                ContentCard(
+                    item = dummy,
+                    imageSize = (screenWidth - 100).dp,
+                    cardWidth = screenWidth.dp,
+                    modifier = Modifier
+                        .width(screenWidth.dp)
+                        .padding(CONTENT_ALL.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(PlaceAppTheme.colorScheme.mainBackground),
+                    onMapClick = { isShowBottomSheet = true }
+                )
+                Comments(
+                    items = mock,
+                    modifier = Modifier
+                        .width(screenWidth.dp)
+                        .padding(CONTENT_ALL.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(PlaceAppTheme.colorScheme.mainBackground),
+                )
+            }
+        }
+        if (isShowBottomSheet) {
+            WindowShade()
+            MapDialog(
                 context = LocalContext.current,
-                onDismissRequest = { isShowBottomSheet = false},
-                modifier = Modifier.height((screenHeight * 0.8).dp)
+                modifier = Modifier
+                    .height((screenHeight * 0.7).dp)
+                    .width((screenWidth - 100).dp)
             )
+
         }
     }
-
+    val isLightMode = !isSystemInDarkTheme()
+    SideEffect {
+        getStatusBarColors(
+            isShowBottomSheet = isShowBottomSheet,
+            isLightMode = isLightMode,
+            window = window,
+            statusTopBar = statusTopBar,
+            statusBottomBar = statusBottomBar
+        )
+    }
 }
 
 data class CommentType (
@@ -128,6 +161,21 @@ data class CommentType (
 
 private fun onMapClick() {
 
+}
+private fun getStatusBarColors(
+    isShowBottomSheet: Boolean,
+    isLightMode: Boolean,
+    window: Window,
+    statusTopBar: Color,
+    statusBottomBar: Color
+) {
+    if(isShowBottomSheet && isLightMode) {
+        window.statusBarColor = Color.Black.copy(alpha = 0.5f).toArgb()
+        window.navigationBarColor = Color.Black.copy(alpha = 0.5f).toArgb()
+    } else {
+        window.statusBarColor = statusTopBar.toArgb()
+        window.navigationBarColor = statusBottomBar.toArgb()
+    }
 }
 
 @Preview("default")

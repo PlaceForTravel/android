@@ -1,6 +1,5 @@
 package com.easyhz.placeapp.ui.component
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,12 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.PersonPinCircle
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -41,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.easyhz.placeapp.R
+import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_VERTICAL
 import com.easyhz.placeapp.constants.PaddingConstants.IMAGE_HORIZONTAL
@@ -65,9 +57,9 @@ fun ContentCard(
             horizontalAlignment = Alignment.Start,
         ) {
             IconText(
-                icon = ContentCardIconSections.PLACE.icon,
+                icon = ContentCardIcons.PLACE.icon,
                 text = item.placeName,
-                contentDescription = stringResource(id = ContentCardIconSections.PLACE.label),
+                contentDescription = stringResource(id = ContentCardIcons.PLACE.label),
                 onClick = { },
                 modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
             )
@@ -76,9 +68,9 @@ fun ContentCard(
                 Row(
                     modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
                 ) {
-                    Text(stringResource(id = R.string.content_place), fontWeight = FontWeight.ExtraLight, color = Color.Gray)
+//                    Text(stringResource(id = R.string.content_place), fontWeight = FontWeight.ExtraLight, color = Color.Gray)
                     Text(
-                        it,
+                        "📍   $it",
                     )
                 }
                 SpaceDivider(padding = 5)
@@ -99,18 +91,18 @@ fun ContentCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconText(
-                    icon = ContentCardIconSections.USER.icon,
+                    icon = ContentCardIcons.USER.icon,
                     text = item.userName,
-                    contentDescription = stringResource(id = ContentCardIconSections.USER.label),
+                    contentDescription = stringResource(id = ContentCardIcons.USER.label),
                     onClick = { },
                     modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
                 )
                 Text(item.regDate, modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
             }
             IconText(
-                icon = ContentCardIconSections.BOOKMARK.icon,
+                icon = ContentCardIcons.BOOKMARK.icon,
                 text = item.bookmarkCount.toString(),
-                contentDescription = stringResource(id = ContentCardIconSections.BOOKMARK.label),
+                contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
                 onClick = { },
                 modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp)
             )
@@ -124,8 +116,8 @@ fun ContentCard(
                     modifier = Modifier
                         .align(Alignment.End)
                         .padding(horizontal = ICON_TEXT_HORIZONTAL.dp),
-                    icon = Icons.Outlined.Map,
-                    contentDescription = stringResource(id = R.string.content_map_icon),
+                    icon = ContentCardIcons.MAP.icon,
+                    contentDescription = stringResource(id = ContentCardIcons.MAP.label),
                     onClick = onMapClick
                 )
             }
@@ -133,18 +125,6 @@ fun ContentCard(
         }
     }
 }
-
-enum class ContentCardIconSections(
-    @StringRes val label: Int,
-    val icon: ImageVector
-) {
-    PLACE(R.string.content_place_icon, Icons.Outlined.Place,),
-    USER(R.string.content_user_icon, Icons.Outlined.PersonPinCircle),
-    BOOKMARK(R.string.content_bookmark_icon, Icons.Outlined.BookmarkBorder),
-    MAP(R.string.content_map_icon, Icons.Outlined.Map),
-    REFRESH(R.string.image_refresh, Icons.Filled.Refresh)
-}
-
 @Composable
 fun IconText(
     modifier: Modifier = Modifier,
@@ -231,8 +211,8 @@ private fun ErrorImage(
     ) {
         SimpleIconButton(
             modifier = Modifier.align(Alignment.Center),
-            icon = ContentCardIconSections.REFRESH.icon,
-            contentDescription = stringResource(id = ContentCardIconSections.REFRESH.label),
+            icon = ContentCardIcons.REFRESH.icon,
+            contentDescription = stringResource(id = ContentCardIcons.REFRESH.label),
             onClick = onClick
         )
     }

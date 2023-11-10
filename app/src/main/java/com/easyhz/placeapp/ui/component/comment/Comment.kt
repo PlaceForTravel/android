@@ -18,15 +18,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_VERTICAL
-import com.easyhz.placeapp.ui.component.ContentCardIconSections
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.detail.CommentType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
 
-@Composable()
+@Composable
 fun Comments(
     modifier: Modifier = Modifier,
     items: Array<CommentType>
@@ -57,8 +57,8 @@ fun CommentCard(
         modifier = modifier.fillMaxWidth()
     ) {
         Icon(
-            imageVector = ContentCardIconSections.USER.icon,
-            contentDescription = stringResource(id = ContentCardIconSections.USER.label),
+            imageVector = ContentCardIcons.USER.icon,
+            contentDescription = stringResource(id = ContentCardIcons.USER.label),
             modifier = Modifier.size(36.dp)
         )
         Column(

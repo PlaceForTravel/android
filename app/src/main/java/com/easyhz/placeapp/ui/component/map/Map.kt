@@ -2,16 +2,13 @@ package com.easyhz.placeapp.ui.component.map
 
 import android.content.Context
 import android.os.Bundle
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -49,7 +46,7 @@ fun NaverMap(
 
     AndroidView(
         factory = { mapView },
-        modifier = modifier.clip(RoundedCornerShape(15.dp))
+        modifier = modifier
     )
 }
 
