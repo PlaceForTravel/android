@@ -8,6 +8,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.easyhz.placeapp.ui.navigation.PostRoutes.NEW_POST
 
 /**
  *  Destinations .
@@ -16,6 +17,7 @@ object MainDestinations {
     const val HOME_ROUTE = "home"
     const val BOARD_DETAIL_ROUTE = "detail" // Detail
     const val BOARD_ID = "boardId" // Detail
+    const val POST_ROUTE = "post"
 }
 
 /**
@@ -52,6 +54,10 @@ class MainNavController(
     fun navigateToBoardDetail(boardId: Int, from: NavBackStackEntry) {
         // 중복 이벤트 발생할 수도 있기 때문에 체크
         if(from.isResumed()) navController.navigate("${MainDestinations.BOARD_DETAIL_ROUTE}/$boardId")
+    }
+
+    fun navigateToNewPost() {
+        navController.navigate("${MainDestinations.POST_ROUTE}/$NEW_POST")
     }
 
 }

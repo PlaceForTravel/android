@@ -1,5 +1,6 @@
 package com.easyhz.placeapp.ui.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +43,7 @@ import com.easyhz.placeapp.constants.PaddingConstants.TEXT_HORIZONTAL
 import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ContentCard(
     modifier: Modifier = Modifier,
@@ -75,16 +78,20 @@ fun ContentCard(
                 }
                 SpaceDivider(padding = 5)
             }
-            ContentImage(
-                imagePath = item.imagePath,
-                imageSize = imageSize,
-                contentDescription = contentDescription,
-                modifier = Modifier
-                    .width(cardWidth)
-                    .padding(horizontal = IMAGE_HORIZONTAL.dp)
-                    .clip(RoundedCornerShape(15.dp))
-                    .align(Alignment.CenterHorizontally)
-            )
+            ImageSlider(pagerState = rememberPagerState {
+                item.imagePath.size
+            }, itemsCount = item.imagePath.size) {index ->
+                ContentImage(
+                    imagePath = item.imagePath[index],
+                    imageSize = imageSize,
+                    contentDescription = contentDescription,
+                    modifier = Modifier
+                        .width(cardWidth)
+                        .padding(horizontal = IMAGE_HORIZONTAL.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
             Row(
                 modifier = Modifier.width(cardWidth),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -200,24 +207,6 @@ private fun ContentImage(
     }
 }
 
-@Composable
-private fun ErrorImage(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        SimpleIconButton(
-            modifier = Modifier.align(Alignment.Center),
-            icon = ContentCardIcons.REFRESH.icon,
-            contentDescription = stringResource(id = ContentCardIcons.REFRESH.label),
-            onClick = onClick
-        )
-    }
-}
-
 
 @Preview("Feed Case")
 @Composable
@@ -225,10 +214,10 @@ private fun CardPreview() {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val mock = FeedType(
         id = 1,
-        imagePath = "https://picsum.photos/id/307/200/300",
+        imagePath = listOf("https://picsum.photos/id/307/200/300"),
         userName = "유저 1",
         regDate = "2023.10.29",
-        placeName= "대한민국, 제주특별자치도",
+        placeName = "대한민국, 제주특별자치도",
         bookmarkCount = 5,
     )
     PlaceAppTheme {
@@ -246,10 +235,10 @@ private fun DetailCardPreview() {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val mock = FeedType(
         id = 1,
-        imagePath = "https://picsum.photos/id/307/200/300",
+        imagePath = listOf("https://picsum.photos/id/307/200/300"),
         userName = "유저 1",
         regDate = "2023.10.29",
-        placeName= "대한민국, 제주특별자치도",
+        placeName = "대한민국, 제주특별자치도",
         bookmarkCount = 5,
         content = "제가 이번 추석 연후에 연차까지 내서 빈대? 인정 나도 알아 뉴스는 안봄 하지만 근데 우리 강동구는 괜찮은데 지하철이 개무서움\n" +
                 "자리에 앉기무서운데 그래도 앉아\n" +

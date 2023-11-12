@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -44,10 +43,10 @@ fun BoardDetail(id: Int) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val dummy = FeedType(
             id = 1,
-            imagePath = "https://picsum.photos/id/307/200/300",
+            imagePath = listOf("https://picsum.photos/id/307/200/300", "https://picsum.photos/id/337/200/300"),
             userName = "유저 1",
             regDate = "2023.10.29",
-            placeName= "대한민국, 제주특별자치도",
+            placeName = "대한민국, 제주특별자치도",
             bookmarkCount = 5,
             content = "제가 이번 추석 연후에 연차까지 내서 빈대? 인정 나도 알아 뉴스는 안봄 하지만 근데 우리 강동구는 괜찮은데 지하철이 개무서움\n" +
                     "자리에 앉기무서운데 그래도 앉아\n" +
