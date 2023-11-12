@@ -53,6 +53,8 @@ fun ContentCard(
     contentDescription: String = "IMG",
     onMapClick: () -> Unit = { }
 ) {
+    val imagesCount = item.imagePath.size
+    val pagerState = rememberPagerState { imagesCount }
     Box(
         modifier = modifier,
     ) {
@@ -78,9 +80,7 @@ fun ContentCard(
                 }
                 SpaceDivider(padding = 5)
             }
-            ImageSlider(pagerState = rememberPagerState {
-                item.imagePath.size
-            }, itemsCount = item.imagePath.size) {index ->
+            ImageSlider(pagerState = pagerState, itemsCount = imagesCount) {index ->
                 ContentImage(
                     imagePath = item.imagePath[index],
                     imageSize = imageSize,
