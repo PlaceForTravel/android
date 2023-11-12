@@ -15,15 +15,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.easyhz.placeapp.ui.detail.BoardDetail
+import com.easyhz.placeapp.ui.post.NewPost
 import com.easyhz.placeapp.ui.navigation.BottomBar
 import com.easyhz.placeapp.ui.navigation.HomeSections
 import com.easyhz.placeapp.ui.navigation.MainDestinations
 import com.easyhz.placeapp.ui.navigation.MainFloatingActionButton
+import com.easyhz.placeapp.ui.navigation.PostRoutes.NEW_POST
 import com.easyhz.placeapp.ui.navigation.addHomeGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaceApp() {
     PlaceAppTheme {
@@ -45,7 +46,7 @@ fun PlaceApp() {
             floatingActionButton = {
                 if(isFeed) {
                     MainFloatingActionButton(
-                        onClick = { }
+                        onClick = mainNavController::navigateToNewPost
                     )
                 }
             },
@@ -86,5 +87,11 @@ private fun NavGraphBuilder.navGraph(
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)
 
         BoardDetail(id = boardId)
+    }
+
+    composable(
+        route = "${MainDestinations.POST_ROUTE}/$NEW_POST"
+    ) {
+        NewPost()
     }
 }

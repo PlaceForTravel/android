@@ -21,11 +21,15 @@ fun MainFloatingActionButton(
     onClick: () -> Unit
 ) {
     ExtendedFloatingActionButton(
-        onClick = onClick,
+        onClick = onClick ,
         containerColor = PlaceAppTheme.colorScheme.subBackground,
         elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp),
         modifier = Modifier
-            .border(width = 2.dp, color =  PlaceAppTheme.colorScheme.primary, shape = extendedFabShape)
+            .border(
+                width = 2.dp,
+                color = PlaceAppTheme.colorScheme.primary,
+                shape = extendedFabShape
+            )
             .height(40.dp)
     ) {
         Icon(imageVector = ContentCardIcons.ADD.icon, contentDescription = stringResource(id = ContentCardIcons.ADD.label))
