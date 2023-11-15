@@ -35,6 +35,7 @@ import coil.request.ImageRequest
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.util.getImageRequestDefault
 
 @Composable
 fun ImageLoader(
@@ -159,11 +160,7 @@ private fun DotsIndicator(
 private fun ImageSliderPreview() {
     val pagerState = rememberPagerState{ 3 }
     val images = listOf("", "", "")
-    val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(images)
-        .crossfade(true)
-        .build()
-    val image by remember { mutableStateOf(imageRequest) }
+    val imageRequest = getImageRequestDefault(data = images, context = LocalContext.current)
     PlaceAppTheme {
         ImageSlider(pagerState = pagerState, itemsCount = 3, modifier = Modifier.width(300.dp).height(300.dp)) {
             ImageLoader(image = imageRequest, contentDescription = "", modifier = Modifier.width(300.dp).height(300.dp))

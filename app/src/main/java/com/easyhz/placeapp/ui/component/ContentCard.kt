@@ -42,6 +42,7 @@ import com.easyhz.placeapp.constants.PaddingConstants.IMAGE_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.TEXT_HORIZONTAL
 import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.util.getImageRequestDefault
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -176,10 +177,7 @@ private fun ContentImage(
     imageSize: Dp,
     contentDescription: String = "IMG",
 ) {
-    val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(imagePath)
-        .crossfade(true)
-        .build()
+    val imageRequest = getImageRequestDefault(data = imagePath, context = LocalContext.current)
     var image by remember { mutableStateOf(imageRequest) }
     val painter = rememberAsyncImagePainter(model = image)
 
