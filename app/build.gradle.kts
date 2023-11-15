@@ -4,6 +4,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
+    id("kotlin-kapt")
 }
 
 val localProperties = Properties()
@@ -79,6 +81,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
     val navVersion = "2.5.3"
+    //noinspection GradleDependency
     implementation("androidx.navigation:navigation-compose:$navVersion")
 
     // Coil
@@ -87,4 +90,17 @@ dependencies {
     // Naver Maps SDK
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+
+    val pagingVersion = "3.1.1"
+    //noinspection GradleDependency
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    implementation("androidx.paging:paging-compose:3.3.0-alpha02")
+
+    //dagger-hilt
+    implementation("com.google.dagger:hilt-android:2.43.2")
+    kapt("com.google.dagger:hilt-compiler:2.43.2")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+
 }
