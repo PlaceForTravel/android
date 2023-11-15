@@ -86,7 +86,7 @@ fun BoardDetail(id: Int) {
             regDate = "2023.11.08"
         ),
     )
-    var isShowBottomSheet by remember { mutableStateOf(false) }
+    var isShowDialog by remember { mutableStateOf(false) }
     val screenHeight = LocalConfiguration.current.screenHeightDp
 
     val window = (LocalContext.current as Activity).window
@@ -98,7 +98,7 @@ fun BoardDetail(id: Int) {
     ) {
         Box(
             modifier = Modifier.clickable {
-                isShowBottomSheet = false
+                isShowDialog = false
             }
         ) {
             Column(
@@ -116,7 +116,7 @@ fun BoardDetail(id: Int) {
                         .padding(CONTENT_ALL.dp)
                         .clip(RoundedCornerShape(15.dp))
                         .background(PlaceAppTheme.colorScheme.mainBackground),
-                    onMapClick = { isShowBottomSheet = true }
+                    onMapClick = { isShowDialog = true }
                 )
                 Comments(
                     items = mock,
@@ -128,7 +128,7 @@ fun BoardDetail(id: Int) {
                 )
             }
         }
-        if (isShowBottomSheet) {
+        if (isShowDialog) {
             WindowShade()
             MapDialog(
                 context = LocalContext.current,
@@ -142,7 +142,7 @@ fun BoardDetail(id: Int) {
     val isLightMode = !isSystemInDarkTheme()
     SideEffect {
         getStatusBarColors(
-            isShowBottomSheet = isShowBottomSheet,
+            isShowBottomSheet = isShowDialog,
             isLightMode = isLightMode,
             window = window,
             statusTopBar = statusTopBar,
