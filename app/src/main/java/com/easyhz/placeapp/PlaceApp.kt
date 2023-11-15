@@ -1,7 +1,6 @@
 package com.easyhz.placeapp
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -15,7 +14,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.easyhz.placeapp.ui.detail.BoardDetail
-import com.easyhz.placeapp.ui.post.NewPost
 import com.easyhz.placeapp.ui.navigation.BottomBar
 import com.easyhz.placeapp.ui.navigation.HomeSections
 import com.easyhz.placeapp.ui.navigation.MainDestinations
@@ -23,6 +21,7 @@ import com.easyhz.placeapp.ui.navigation.MainFloatingActionButton
 import com.easyhz.placeapp.ui.navigation.PostRoutes.NEW_POST
 import com.easyhz.placeapp.ui.navigation.addHomeGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
+import com.easyhz.placeapp.ui.post.GalleryScreen
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
 @Composable
@@ -92,6 +91,7 @@ private fun NavGraphBuilder.navGraph(
     composable(
         route = "${MainDestinations.POST_ROUTE}/$NEW_POST"
     ) {
-        NewPost()
+//        NewPost()
+        GalleryScreen()
     }
 }

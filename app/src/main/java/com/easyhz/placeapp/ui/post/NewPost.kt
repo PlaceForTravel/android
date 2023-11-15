@@ -1,51 +1,32 @@
 package com.easyhz.placeapp.ui.post
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import coil.request.ImageRequest
-import com.easyhz.placeapp.ui.component.ImageLoader
+import androidx.hilt.navigation.compose.hiltViewModel
 
+//const val GRID_CELL = 4
 @Composable
-fun NewPost() {
-    var selectedImageUris by remember {
-        mutableStateOf<List<Uri>>(emptyList())
-    }
+fun NewPost(
+    viewModel: NewPostViewModel = hiltViewModel()
+) {
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = { uris -> selectedImageUris = uris }
-    )
-    Button(onClick = {
-        imagePickerLauncher.launch(
-            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-        )
-    }) {
-
-    }
-
-    LazyColumn{
-        itemsIndexed(selectedImageUris) { index, item ->
-            val imageRequest = ImageRequest.Builder(LocalContext.current)
-                .data(item)
-                .crossfade(true)
-                .build()
-            ImageLoader(image = imageRequest, contentDescription = "")
-        }
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        Text(text = "NewPost")
     }
 }
 
+@Composable
+private fun Selected() {
+
+}
 @Preview
 @Composable
 fun NewPostPreview() {
