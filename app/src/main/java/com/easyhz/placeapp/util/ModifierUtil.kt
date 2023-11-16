@@ -13,20 +13,40 @@ fun Modifier.borderTop(
     dp: Dp
 ): Modifier {
     return this.drawBehind {
-        drawBorderTop(
+        drawBorder(
+            start = Offset(0f, 0f),
+            end = Offset(size.width, 0f),
             color = color,
             widthPx = dp.toPx()
         )
     }
 }
-fun DrawScope.drawBorderTop(
+
+
+fun Modifier.borderBottom(
+    color: Color,
+    dp: Dp
+): Modifier {
+    return this.drawBehind {
+        drawBorder(
+            start = Offset(0f, size.height),
+            end = Offset(size.width, size.height),
+            color = color,
+            widthPx = dp.toPx()
+        )
+    }
+}
+
+fun DrawScope.drawBorder(
+    start: Offset,
+    end: Offset,
     color: Color,
     widthPx: Float,
 ) {
     drawLine(
         color = color, // 테두리 색상을 원하는 색상으로 변경
-        start = Offset(0f, 0f), // 시작점 (왼쪽 상단)
-        end = Offset(size.width, 0f), // 끝점 (오른쪽 상단)
+        start = start, // 시작점 (왼쪽 상단)
+        end = end, // 끝점 (오른쪽 상단)
         strokeWidth = widthPx // 테두리 두께
     )
 }
