@@ -1,8 +1,7 @@
 package com.easyhz.placeapp
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,26 +17,39 @@ import com.easyhz.placeapp.ui.detail.BoardDetail
 import com.easyhz.placeapp.ui.navigation.BottomBar
 import com.easyhz.placeapp.ui.navigation.HomeSections
 import com.easyhz.placeapp.ui.navigation.MainDestinations
+import com.easyhz.placeapp.ui.navigation.MainFloatingActionButton
+import com.easyhz.placeapp.ui.navigation.PostRoutes.GALLERY
 import com.easyhz.placeapp.ui.navigation.addHomeGraph
+import com.easyhz.placeapp.ui.navigation.addNewPostGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaceApp() {
     PlaceAppTheme {
         val mainNavController = rememberMainNavController()
         mainNavController.navController.currentBackStackEntryAsState().value?.destination
+        val isHome = mainNavController.currentRoute?.startsWith(MainDestinations.HOME_ROUTE) == true
+        val isFeed = mainNavController.currentRoute?.equals(HomeSections.FEED.route) == true
         Scaffold(
             bottomBar = {
-                if(mainNavController.currentRoute?.startsWith(MainDestinations.HOME_ROUTE) == true) {
+                if(isHome) {
                     BottomBar(
                         tabs = HomeSections.values(),
                         currentRoute = mainNavController.currentRoute ?: HomeSections.FEED.route,
                         onNavigateToRoute = mainNavController::navigateToBottomBarRoute
                     )
                 }
-            }
+            },
+            floatingActionButtonPosition = FabPosition.Center,
+            floatingActionButton = {
+                if(isFeed) {
+                    MainFloatingActionButton(
+                        onClick = mainNavController::navigateToNewPost
+                    )
+                }
+            },
+
         ) { paddingValue ->
             NavHost(
                 navController = mainNavController.navController,
@@ -45,7 +57,9 @@ fun PlaceApp() {
                 modifier = Modifier.padding(paddingValue)
             ) {
                 navGraph(
-                    onNavigateToBoardDetail = mainNavController::navigateToBoardDetail
+                    onNavigateToBoardDetail = mainNavController::navigateToBoardDetail,
+                    onNavigateToBack = mainNavController::navigateToBack,
+                    onNavigateToNext = mainNavController::navigateToNext
                 )
             }
         }
@@ -56,7 +70,9 @@ fun PlaceApp() {
  * Navigation 관리
  */
 private fun NavGraphBuilder.navGraph(
-    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit
+    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
+    onNavigateToBack: () -> Unit,
+    onNavigateToNext: () -> Unit,
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
@@ -74,5 +90,14 @@ private fun NavGraphBuilder.navGraph(
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)
 
         BoardDetail(id = boardId)
+    }
+    navigation(
+        route = MainDestinations.NEW_POST_ROUTE,
+        startDestination = GALLERY
+    ) {
+        addNewPostGraph(
+            onNavigateToBack = onNavigateToBack,
+            onNavigateToNext = onNavigateToNext
+        )
     }
 }

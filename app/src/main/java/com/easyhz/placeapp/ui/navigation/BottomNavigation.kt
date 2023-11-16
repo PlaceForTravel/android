@@ -10,10 +10,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +23,7 @@ import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.home.feed.Feed
 import com.easyhz.placeapp.ui.home.profile.Profile
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
-import com.easyhz.placeapp.util.drawBorderTop
+import com.easyhz.placeapp.util.borderTop
 
 /**
  * BottomNavigation Items
@@ -57,22 +55,16 @@ fun BottomBar(
     onNavigateToRoute: (String) -> Unit,
 ) {
     val currentTab = tabs.first { it.route == currentRoute }
-    val borderColor = PlaceAppTheme.colorScheme.primaryBorder
     NavigationBar(
         containerColor = PlaceAppTheme.colorScheme.mainBackground,
-        modifier = Modifier.drawBehind {
-            drawBorderTop(
-                color = borderColor,
-                widthPx = 1.dp.toPx()
-            )
-        }
+        modifier = Modifier.borderTop(
+            color = PlaceAppTheme.colorScheme.primaryBorder,
+            dp = 1.dp
+        )
     ) {
         tabs.forEach { tab ->
             val label = stringResource(id = tab.label)
             NavigationBarItem(
-                label = {
-                    Text(text = label)
-                },
                 selected = tab == currentTab,
                 onClick = { onNavigateToRoute(tab.route) },
                 icon = {
