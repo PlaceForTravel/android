@@ -92,16 +92,6 @@ fun Feed(
 
 }
 
-/**
- * TODO:
- * 1. cardView component 작성
- * 2. 글 작성 화면 고민
- */
-
-@Composable
-private fun Feed(modifier: Modifier) {
-
-}
 
 
 @Preview("default")

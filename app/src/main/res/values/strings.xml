@@ -21,4 +21,8 @@
     <string name="content_bookmark_icon">Bookmark</string>
     <string name="content_map_icon">Map</string>
 
+    <string name="post_gallery_header">사진 선택</string>
+    <string name="post_new_post_header">새 게시물</string>
+
+
 </resources>

@@ -18,10 +18,10 @@ import com.easyhz.placeapp.ui.navigation.BottomBar
 import com.easyhz.placeapp.ui.navigation.HomeSections
 import com.easyhz.placeapp.ui.navigation.MainDestinations
 import com.easyhz.placeapp.ui.navigation.MainFloatingActionButton
-import com.easyhz.placeapp.ui.navigation.PostRoutes.NEW_POST
+import com.easyhz.placeapp.ui.navigation.PostRoutes.GALLERY
 import com.easyhz.placeapp.ui.navigation.addHomeGraph
+import com.easyhz.placeapp.ui.navigation.addNewPostGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
-import com.easyhz.placeapp.ui.post.GalleryScreen
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
 @Composable
@@ -57,7 +57,9 @@ fun PlaceApp() {
                 modifier = Modifier.padding(paddingValue)
             ) {
                 navGraph(
-                    onNavigateToBoardDetail = mainNavController::navigateToBoardDetail
+                    onNavigateToBoardDetail = mainNavController::navigateToBoardDetail,
+                    onNavigateToBack = mainNavController::navigateToBack,
+                    onNavigateToNext = mainNavController::navigateToNext
                 )
             }
         }
@@ -68,7 +70,9 @@ fun PlaceApp() {
  * Navigation 관리
  */
 private fun NavGraphBuilder.navGraph(
-    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit
+    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
+    onNavigateToBack: () -> Unit,
+    onNavigateToNext: () -> Unit,
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
@@ -87,11 +91,13 @@ private fun NavGraphBuilder.navGraph(
 
         BoardDetail(id = boardId)
     }
-
-    composable(
-        route = "${MainDestinations.POST_ROUTE}/$NEW_POST"
+    navigation(
+        route = MainDestinations.NEW_POST_ROUTE,
+        startDestination = GALLERY
     ) {
-//        NewPost()
-        GalleryScreen()
+        addNewPostGraph(
+            onNavigateToBack = onNavigateToBack,
+            onNavigateToNext = onNavigateToNext
+        )
     }
 }

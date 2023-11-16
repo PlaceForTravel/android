@@ -1,5 +1,6 @@
 package com.easyhz.placeapp.ui.post
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,9 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,8 +35,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.gallery.Gallery
 import com.easyhz.placeapp.ui.component.ImageLoader
+import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.detail.WindowShade
-import com.easyhz.placeapp.ui.post.NewPostViewModel.Companion.MAX_SELECT_COUNT
+import com.easyhz.placeapp.ui.component.post.PostHeader
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.getImageRequestDefault
 
@@ -45,6 +46,8 @@ const val GRID_CELL = 4
 @Composable
 fun GalleryScreen(
     viewModel: NewPostViewModel = hiltViewModel(),
+    onNavigateToBack: () -> Unit,
+    onNavigateToNext: () -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val pagingImageList = viewModel.imageList.collectAsLazyPagingItems()
@@ -58,6 +61,17 @@ fun GalleryScreen(
             .fillMaxSize()
             .background(PlaceAppTheme.colorScheme.mainBackground),
     ) {
+        PostHeader(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            title = stringResource(id = R.string.post_gallery_header),
+            onBackClick = { onNavigateToBack() },
+            onNextClick = {
+                if(viewModel.selectedImageList.size == 0) Log.d("GalleryScreen", "한 장 이상 선택")// 사진 한 장 이상 선택 스낵바
+                else onNavigateToNext()
+            }
+        )
         if (pagingImageList.itemCount == 0) {
             Column(verticalArrangement = Arrangement.Center) {
                 Text(
@@ -73,7 +87,7 @@ fun GalleryScreen(
             val imageRequest = getImageRequestDefault(data = find?.uri, context = LocalContext.current)
 
             ImageLoader(image = imageRequest, contentDescription = find?.name ?: "currentImage", modifier = Modifier.size(screenWidth.dp))
-            SelectedStatus(modifier = Modifier.padding(10.dp), selectedSize = viewModel.selectedImageList.size)
+            SpaceDivider(padding = 10)
             LazyVerticalGrid(
                 modifier = Modifier
                     .background(PlaceAppTheme.colorScheme.mainBackground),
@@ -154,16 +168,6 @@ private fun SelectBox(
     }
 }
 
-@Composable
-private fun SelectedStatus(
-    modifier: Modifier = Modifier,
-    selectedSize: Int,
-    fontSize: TextUnit = 20.sp
-) {
-    Row(modifier = modifier) {
-        Text(text = "$selectedSize / $MAX_SELECT_COUNT", fontSize = fontSize)
-    }
-}
 
 @Preview
 @Composable
