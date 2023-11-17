@@ -59,7 +59,8 @@ fun PlaceApp() {
                 navGraph(
                     onNavigateToBoardDetail = mainNavController::navigateToBoardDetail,
                     onNavigateToBack = mainNavController::navigateToBack,
-                    onNavigateToNext = mainNavController::navigateToNext
+                    onNavigateToNext = mainNavController::navigateToNext,
+                    onNavBackStack = mainNavController::getNewPostNavBackStack
                 )
             }
         }
@@ -73,6 +74,7 @@ private fun NavGraphBuilder.navGraph(
     onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
+    onNavBackStack: (String) -> NavBackStackEntry,
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
@@ -85,7 +87,7 @@ private fun NavGraphBuilder.navGraph(
     composable(
         route = "${MainDestinations.BOARD_DETAIL_ROUTE}/{${MainDestinations.BOARD_ID}}",
         arguments = listOf(navArgument(MainDestinations.BOARD_ID) { type = NavType.IntType })
-    ) {backStackEntry ->
+    ) { backStackEntry ->
         val arguments = requireNotNull(backStackEntry.arguments)
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)
 
@@ -97,7 +99,8 @@ private fun NavGraphBuilder.navGraph(
     ) {
         addNewPostGraph(
             onNavigateToBack = onNavigateToBack,
-            onNavigateToNext = onNavigateToNext
+            onNavigateToNext = onNavigateToNext,
+            onNavBackStack = onNavBackStack
         )
     }
 }

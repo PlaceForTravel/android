@@ -70,6 +70,8 @@ class MainNavController(
         navController.navigate(next)
     }
 
+    fun getNewPostNavBackStack(route: String): NavBackStackEntry = navController.getBackStackEntry(route)
+
     private fun getNextNewPostOrder(): String {
         val orders = NewPostOrder.values()
         val currentIndex = orders.indexOfFirst { it.route == currentRoute }
