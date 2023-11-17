@@ -13,7 +13,7 @@ import com.easyhz.placeapp.ui.post.NewPost
 fun NavGraphBuilder.addNewPostGraph(
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
-    onNavBackStack: (String) -> NavBackStackEntry,
+    onNavBackStack: () -> NavBackStackEntry,
 ) {
     composable(
         route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.GALLERY}"
@@ -26,7 +26,7 @@ fun NavGraphBuilder.addNewPostGraph(
     composable(
         route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.NEW_POST}"
     ) { backStackEntry ->
-        val backEntry = remember(backStackEntry) { onNavBackStack("${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.GALLERY}") }
+        val backEntry = remember(backStackEntry) { onNavBackStack() }
         NewPost(
             viewModel = hiltViewModel(backEntry),
             onNavigateToBack = onNavigateToBack,

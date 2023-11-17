@@ -74,7 +74,7 @@ private fun NavGraphBuilder.navGraph(
     onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
-    onNavBackStack: (String) -> NavBackStackEntry,
+    onNavBackStack: () -> NavBackStackEntry,
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
