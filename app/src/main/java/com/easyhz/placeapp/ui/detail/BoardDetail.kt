@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.component.comment.Comments
-import com.easyhz.placeapp.ui.component.detail.MapDialog
+import com.easyhz.placeapp.ui.component.detail.MapModal
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
@@ -98,7 +98,7 @@ fun BoardDetail(id: Int) {
     ) {
         Box(
             modifier = Modifier.clickable {
-                isShowDialog = false
+                isShowModal = false
             }
         ) {
             Column(
@@ -116,7 +116,7 @@ fun BoardDetail(id: Int) {
                         .padding(CONTENT_ALL.dp)
                         .clip(RoundedCornerShape(15.dp))
                         .background(PlaceAppTheme.colorScheme.mainBackground),
-                    onMapClick = { isShowDialog = true }
+                    onMapClick = { isShowModal = true }
                 )
                 Comments(
                     items = mock,
@@ -128,9 +128,9 @@ fun BoardDetail(id: Int) {
                 )
             }
         }
-        if (isShowDialog) {
+        if (isShowModal) {
             WindowShade()
-            MapDialog(
+            MapModal(
                 context = LocalContext.current,
                 modifier = Modifier
                     .height((screenHeight * 0.7).dp)
@@ -142,7 +142,7 @@ fun BoardDetail(id: Int) {
     val isLightMode = !isSystemInDarkTheme()
     SideEffect {
         getStatusBarColors(
-            isShowBottomSheet = isShowDialog,
+            isShowBottomSheet = isShowModal,
             isLightMode = isLightMode,
             window = window,
             statusTopBar = statusTopBar,
