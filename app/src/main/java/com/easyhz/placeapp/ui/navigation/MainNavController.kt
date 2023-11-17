@@ -73,17 +73,28 @@ class MainNavController(
     fun getNewPostNavBackStack(): NavBackStackEntry = navController.getBackStackEntry(getBeforeNewPostOrder())
 
     private fun getNextNewPostOrder(): String {
-        val orders = NewPostOrder.values()
-        val currentIndex = orders.indexOfFirst { it.route == currentRoute }
+        return getNextOrBeforeNewPostOrder(true)
 
-        return if (currentIndex >= 0 && currentIndex < orders.lastIndex - 1) orders[currentIndex + 1].route else orders.last().route
     }
 
     private fun getBeforeNewPostOrder(): String {
+        return getNextOrBeforeNewPostOrder(false)
+    }
+
+    /**
+     *  제한 범위 : NewPostOrder
+     *  @param isNext next = true, before = false
+     *  @return route 반환
+     */
+    private fun getNextOrBeforeNewPostOrder(isNext: Boolean): String {
         val orders = NewPostOrder.values()
         val currentIndex = orders.indexOfFirst { it.route == currentRoute }
 
-        return if (currentIndex > 0 ) orders[currentIndex - 1].route else orders.last().route
+        val targetIndex = if (isNext) currentIndex + 1 else currentIndex - 1
+        /* `coerceIn` - 값이 범위 안에 있으면 해당 값을, 값이 범위 안에 없으면 경계 값을 리턴 */
+        val validIndex = targetIndex.coerceIn(orders.indices)
+
+        return orders[validIndex].route
     }
 }
 
