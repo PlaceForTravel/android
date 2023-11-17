@@ -2,5 +2,27 @@
     <string name="app_name">PlaceApp</string>
 
     <string name="home_feed">Home</string>
+    <string name="home_add">Add</string>
     <string name="home_profile">Profile</string>
+
+
+    <string name="icon_star">StarIcon</string>
+    <string name="icon_comment">CommentIcon</string>
+    <string name="icon_place">PlaceIcon</string>
+
+    <string name="image_load_error">예기치 못한 오류가 발생했습니다.</string>
+    <string name="no_image_error">이미지가 존재 하지 않습니다.</string>
+    <string name="image_refresh">Refresh</string>
+
+    <string name="content_place">위치 </string>
+
+    <string name="content_place_icon">Place</string>
+    <string name="content_user_icon">UserName</string>
+    <string name="content_bookmark_icon">Bookmark</string>
+    <string name="content_map_icon">Map</string>
+
+    <string name="post_gallery_header">사진 선택</string>
+    <string name="post_new_post_header">새 게시물</string>
+
+
 </resources>

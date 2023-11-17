@@ -2,8 +2,6 @@ package com.easyhz.placeapp.ui.theme
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
@@ -11,8 +9,6 @@ import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -22,42 +18,13 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Neutral0,
-    onPrimary = Neutral8,
-    secondary = Neutral0,
-    onSecondary = Neutral8,
-    tertiary = Neutral0,
-    onTertiary = Neutral8,
-    error = FunctionalRed,
-    onError = Neutral8,
-    background = Neutral8,
-    onBackground = Neutral1,
-    outline = Neutral0,
-    surface = Neutral8,
-    surfaceVariant = Neutral8,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Neutral8,
-    onPrimary = Neutral0,
-    secondary = Neutral8,
-    onSecondary = Neutral0,
-    tertiary = Neutral8,
-    onTertiary = Neutral0,
-    error = FunctionalRed,
-    onError = Neutral0,
-    background = Neutral1,
-    onBackground = Neutral8,
-    outline = Neutral8,
-    surface = Neutral0,
-    surfaceVariant = Neutral0,
-    secondaryContainer = Transparent,
-    onSecondaryContainer = Transparent
 )
 
 private val AppLightThemeColors = appLightColorScheme()
@@ -71,10 +38,10 @@ fun PlaceAppTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//            val context = LocalContext.current
+//            if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//        }정
 
         isDarkTheme -> DarkColorScheme
         else -> LightColorScheme
@@ -89,8 +56,8 @@ fun PlaceAppTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = appColorScheme.transparent.toArgb()
-            window.navigationBarColor = appColorScheme.transparent.toArgb()
+            window.statusBarColor = appColorScheme.statusTopBar.toArgb()
+            window.navigationBarColor = appColorScheme.statusBottomBar.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isDarkTheme
         }
     }
@@ -120,9 +87,6 @@ fun ProvidePlaceAppTheme(
 ) {
     CompositionLocalProvider(
         CustomLocalColorScheme provides appColorScheme,
-        content = content
-    )
-    CompositionLocalProvider(
         LocalRippleTheme provides NoRippleTheme,
         content = content
     )
@@ -145,7 +109,11 @@ open class PlaceAppColors (
     val primaryBorder: Color,
     val selectedIcon: Color,
     val unselectedIcon: Color,
-    val background: Color,
+    val mainBackground: Color,
+    val subBackground: Color,
+    val statusTopBar: Color,
+    val statusBottomBar: Color,
+    val subText: Color
 )
 
 object AppLightColors: PlaceAppColors(
@@ -155,7 +123,11 @@ object AppLightColors: PlaceAppColors(
     primaryBorder = Neutral4,
     selectedIcon = Neutral8,
     unselectedIcon = Neutral5,
-    background = Neutral1
+    mainBackground = Neutral1,
+    subBackground = Neutral4,
+    statusTopBar = Neutral4,
+    statusBottomBar = Neutral1,
+    subText = Neutral5
 )
 
 object AppDarkColors : PlaceAppColors(
@@ -165,7 +137,11 @@ object AppDarkColors : PlaceAppColors(
     primaryBorder = Neutral4,
     selectedIcon = Neutral0,
     unselectedIcon = Neutral3,
-    background = Neutral8
+    mainBackground = Neutral6,
+    subBackground = Neutral8,
+    statusTopBar = Neutral8,
+    statusBottomBar = Neutral6,
+    subText = Neutral2
 )
 
 fun appLightColorScheme(
@@ -175,7 +151,11 @@ fun appLightColorScheme(
     primaryBorder: Color = AppLightColors.primaryBorder,
     selectedIcon: Color = AppLightColors.selectedIcon,
     unselectedIcon: Color = AppLightColors.unselectedIcon,
-    background: Color = AppLightColors.background
+    mainBackground: Color = AppLightColors.mainBackground,
+    subBackground: Color = AppLightColors.subBackground,
+    statusTopBar: Color = AppLightColors.statusTopBar,
+    statusBottomBar: Color = AppLightColors.statusBottomBar,
+    subText:Color = AppLightColors.subText
 ) : PlaceAppColors =
     PlaceAppColors (
         primary,
@@ -184,7 +164,11 @@ fun appLightColorScheme(
         primaryBorder,
         selectedIcon,
         unselectedIcon,
-        background
+        mainBackground,
+        subBackground,
+        statusTopBar,
+        statusBottomBar,
+        subText
     )
 
 fun appDarkColorScheme(
@@ -194,7 +178,11 @@ fun appDarkColorScheme(
     primaryBorder: Color = AppDarkColors.primaryBorder,
     selectedIcon: Color = AppDarkColors.selectedIcon,
     unselectedIcon: Color = AppDarkColors.unselectedIcon,
-    background: Color = AppDarkColors.background
+    mainBackground: Color = AppDarkColors.mainBackground,
+    subBackground: Color = AppDarkColors.subBackground,
+    statusTopBar: Color = AppDarkColors.statusTopBar,
+    statusBottomBar: Color =  AppDarkColors.statusBottomBar,
+    subText:Color = AppDarkColors.subText
 ) : PlaceAppColors =
     PlaceAppColors (
         primary,
@@ -203,7 +191,11 @@ fun appDarkColorScheme(
         primaryBorder,
         selectedIcon,
         unselectedIcon,
-        background
+        mainBackground,
+        subBackground,
+        statusTopBar,
+        statusBottomBar,
+        subText
     )
 
 @SuppressLint("CompositionLocalNaming")

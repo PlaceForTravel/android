@@ -10,29 +10,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.home.feed.Feed
 import com.easyhz.placeapp.ui.home.profile.Profile
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
-import com.easyhz.placeapp.utils.drawBorderTop
+import com.easyhz.placeapp.util.borderTop
 
 /**
  * BottomNavigation Items
  */
-fun NavGraphBuilder.addHomeGraph() {
+fun NavGraphBuilder.addHomeGraph(
+    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit
+) {
     composable(route = HomeSections.FEED.route) {
-        Feed()
+        Feed(onItemClick = { id -> onNavigateToBoardDetail(id, it)})
     }
     composable(route = HomeSections.PROFILE.route) {
         Profile()
@@ -44,8 +44,8 @@ enum class HomeSections(
     val icon: ImageVector,
     val route: String
 ) {
-    FEED(R.string.home_feed, Icons.Outlined.Home, "home/feed"),
-    PROFILE(R.string.home_profile, Icons.Outlined.Person, "home/profile")
+    FEED(R.string.home_feed, Icons.Outlined.Home, "${MainDestinations.HOME_ROUTE}/feed"),
+    PROFILE(R.string.home_profile, Icons.Outlined.Person, "${MainDestinations.HOME_ROUTE}/profile")
 }
 
 @Composable
@@ -56,20 +56,15 @@ fun BottomBar(
 ) {
     val currentTab = tabs.first { it.route == currentRoute }
     NavigationBar(
-        containerColor = PlaceAppTheme.colorScheme.background,
-        modifier = Modifier.drawBehind {
-            drawBorderTop(
-                color = Color.Gray,
-                widthPx = 1.dp.toPx()
-            )
-        }
+        containerColor = PlaceAppTheme.colorScheme.mainBackground,
+        modifier = Modifier.borderTop(
+            color = PlaceAppTheme.colorScheme.primaryBorder,
+            dp = 1.dp
+        )
     ) {
         tabs.forEach { tab ->
             val label = stringResource(id = tab.label)
             NavigationBarItem(
-                label = {
-                    Text(text = label)
-                },
                 selected = tab == currentTab,
                 onClick = { onNavigateToRoute(tab.route) },
                 icon = {
@@ -81,8 +76,10 @@ fun BottomBar(
                 },
                 colors = NavigationBarItemDefaults.colors(
                     unselectedIconColor = PlaceAppTheme.colorScheme.unselectedIcon,
+                    unselectedTextColor = PlaceAppTheme.colorScheme.unselectedIcon,
                     selectedIconColor = PlaceAppTheme.colorScheme.selectedIcon,
-                    indicatorColor = PlaceAppTheme.colorScheme.background
+                    selectedTextColor = PlaceAppTheme.colorScheme.selectedIcon,
+                    indicatorColor = PlaceAppTheme.colorScheme.mainBackground
                 ),
             )
         }
