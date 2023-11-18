@@ -56,6 +56,11 @@ fun NewPost(
     val searchValue = searchModalViewModel.searchValue.value
     val searchActive = searchModalViewModel.searchActive.value
 
+    /*
+        TODO: 1. 서치 모달 키보드 자동 포커스
+        TODO: 2. 범위 밖 클릭 시 키보드 언포커싱
+        TODO: 3. TextContent 포커싱 시 스크롤 처리
+     */
 
     Box(
         modifier = Modifier
@@ -72,6 +77,7 @@ fun NewPost(
                     .height(50.dp)
                     .borderBottom(color = PlaceAppTheme.colorScheme.primaryBorder, width = 1.dp),
                 title = stringResource(id = R.string.post_new_post_header),
+                next = stringResource(id = R.string.post_complete_header),
                 onBackClick = { onNavigateToBack() },
                 onNextClick = { onNavigateToNext() }
             )
