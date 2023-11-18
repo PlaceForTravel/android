@@ -39,6 +39,7 @@ class MainNavController(
 ) {
     val currentRoute: String?
         get() = navController.currentDestination?.route
+
     fun navigateToBottomBarRoute(route: String) {
         if(route != currentRoute) {
             navController.navigate(route) {
@@ -65,22 +66,36 @@ class MainNavController(
     }
 
     fun navigateToNext() {
-        val next = when(currentRoute) {
-            NewPostOrder.GALLERY.route -> NewPostOrder.NEW_POST.route
-            NewPostOrder.NEW_POST.route -> NewPostOrder.COMPLETE.route
-            else -> NewPostOrder.COMPLETE.route
-        }
+        val next = getNextNewPostOrder()
         navController.navigate(next)
     }
 
-}
+    fun getNewPostNavBackStack(): NavBackStackEntry = navController.getBackStackEntry(getBeforeNewPostOrder())
 
-enum class NewPostOrder(
-    val route: String
-) {
-    GALLERY(route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.GALLERY}"),
-    NEW_POST(route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.NEW_POST}"),
-    COMPLETE(route = HomeSections.FEED.route)
+    private fun getNextNewPostOrder(): String {
+        return getNextOrBeforeNewPostOrder(true)
+
+    }
+
+    private fun getBeforeNewPostOrder(): String {
+        return getNextOrBeforeNewPostOrder(false)
+    }
+
+    /**
+     *  제한 범위 : NewPostOrder
+     *  @param isNext next = true, before = false
+     *  @return route 반환
+     */
+    private fun getNextOrBeforeNewPostOrder(isNext: Boolean): String {
+        val orders = NewPostOrder.values()
+        val currentIndex = orders.indexOfFirst { it.route == currentRoute }
+
+        val targetIndex = if (isNext) currentIndex + 1 else currentIndex - 1
+        /* `coerceIn` - 값이 범위 안에 있으면 해당 값을, 값이 범위 안에 없으면 경계 값을 리턴 */
+        val validIndex = targetIndex.coerceIn(orders.indices)
+
+        return orders[validIndex].route
+    }
 }
 
 private fun NavBackStackEntry.isResumed() = this.getLifecycle().currentState == Lifecycle.State.RESUMED

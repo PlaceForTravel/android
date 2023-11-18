@@ -1,7 +1,9 @@
 package com.easyhz.placeapp.di
 
-import com.easyhz.placeapp.repository.gallery.ImageRepository
-import com.easyhz.placeapp.repository.gallery.ImageRepositoryImpl
+import com.easyhz.placeapp.domain.repository.MapRepository
+import com.easyhz.placeapp.domain.repository.MapRepositoryImpl
+import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
+import com.easyhz.placeapp.domain.repository.gallery.ImageRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,10 @@ abstract class RepositoryModule {
     abstract fun bindImageRepository(
         imageRepositoryImpl: ImageRepositoryImpl,
     ): ImageRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindMapRepository(
+        mapRepositoryImpl: MapRepositoryImpl,
+    ): MapRepository
 }

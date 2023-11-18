@@ -23,6 +23,15 @@
 
     <string name="post_gallery_header">사진 선택</string>
     <string name="post_new_post_header">새 게시물</string>
+    <string name="post_complete_header">게시</string>
+    <string name="post_next_header">다음</string>
+
+    <string name="post_add_place">장소를 추가해 주세요.</string>
+    <string name="post_add_text">내용을 작성해 주세요.</string>
+    <string name="place_search">장소 검색</string>
+
+
+    <string name="no_search_data">검색 결과가 없습니다.</string>
 
 
 </resources>

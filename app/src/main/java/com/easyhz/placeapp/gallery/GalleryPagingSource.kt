@@ -2,7 +2,7 @@ package com.easyhz.placeapp.gallery
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.easyhz.placeapp.repository.gallery.ImageRepository
+import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 
 /**
  * https://developer.android.com/reference/kotlin/androidx/paging/PagingSource

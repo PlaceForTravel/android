@@ -107,13 +107,16 @@ open class PlaceAppColors (
     val secondary: Color,
     val transparent: Color,
     val primaryBorder: Color,
+    val secondaryBorder: Color,
     val selectedIcon: Color,
     val unselectedIcon: Color,
     val mainBackground: Color,
     val subBackground: Color,
     val statusTopBar: Color,
     val statusBottomBar: Color,
-    val subText: Color
+    val mainText: Color,
+    val subText: Color,
+    val error: Color
 )
 
 object AppLightColors: PlaceAppColors(
@@ -121,13 +124,16 @@ object AppLightColors: PlaceAppColors(
     secondary = Sky3,
     transparent = Transparent,
     primaryBorder = Neutral4,
+    secondaryBorder = Neutral5,
     selectedIcon = Neutral8,
     unselectedIcon = Neutral5,
     mainBackground = Neutral1,
     subBackground = Neutral4,
     statusTopBar = Neutral4,
     statusBottomBar = Neutral1,
-    subText = Neutral5
+    mainText = Neutral8,
+    subText = Neutral5,
+    error = FunctionalRed,
 )
 
 object AppDarkColors : PlaceAppColors(
@@ -135,13 +141,16 @@ object AppDarkColors : PlaceAppColors(
     secondary = Sky1,
     transparent = Transparent,
     primaryBorder = Neutral4,
+    secondaryBorder = Neutral4,
     selectedIcon = Neutral0,
     unselectedIcon = Neutral3,
     mainBackground = Neutral6,
     subBackground = Neutral8,
     statusTopBar = Neutral8,
     statusBottomBar = Neutral6,
-    subText = Neutral2
+    mainText = Neutral1,
+    subText = Neutral2,
+    error = FunctionalRed,
 )
 
 fun appLightColorScheme(
@@ -149,26 +158,32 @@ fun appLightColorScheme(
     secondary: Color = AppLightColors.secondary,
     transparent: Color = AppLightColors.transparent,
     primaryBorder: Color = AppLightColors.primaryBorder,
+    secondaryBorder: Color = AppLightColors.secondaryBorder,
     selectedIcon: Color = AppLightColors.selectedIcon,
     unselectedIcon: Color = AppLightColors.unselectedIcon,
     mainBackground: Color = AppLightColors.mainBackground,
     subBackground: Color = AppLightColors.subBackground,
     statusTopBar: Color = AppLightColors.statusTopBar,
     statusBottomBar: Color = AppLightColors.statusBottomBar,
-    subText:Color = AppLightColors.subText
+    mainText: Color = AppLightColors.mainText,
+    subText: Color = AppLightColors.subText,
+    error: Color = AppLightColors.error
 ) : PlaceAppColors =
     PlaceAppColors (
         primary,
         secondary,
         transparent,
         primaryBorder,
+        secondaryBorder,
         selectedIcon,
         unselectedIcon,
         mainBackground,
         subBackground,
         statusTopBar,
         statusBottomBar,
-        subText
+        mainText,
+        subText,
+        error
     )
 
 fun appDarkColorScheme(
@@ -176,26 +191,32 @@ fun appDarkColorScheme(
     secondary: Color = AppDarkColors.secondary,
     transparent: Color = AppDarkColors.transparent,
     primaryBorder: Color = AppDarkColors.primaryBorder,
+    secondaryBorder: Color = AppDarkColors.secondaryBorder,
     selectedIcon: Color = AppDarkColors.selectedIcon,
     unselectedIcon: Color = AppDarkColors.unselectedIcon,
     mainBackground: Color = AppDarkColors.mainBackground,
     subBackground: Color = AppDarkColors.subBackground,
     statusTopBar: Color = AppDarkColors.statusTopBar,
     statusBottomBar: Color =  AppDarkColors.statusBottomBar,
-    subText:Color = AppDarkColors.subText
+    mainText: Color = AppDarkColors.mainText,
+    subText: Color = AppDarkColors.subText,
+    error: Color = AppDarkColors.error
 ) : PlaceAppColors =
     PlaceAppColors (
         primary,
         secondary,
         transparent,
         primaryBorder,
+        secondaryBorder,
         selectedIcon,
         unselectedIcon,
         mainBackground,
         subBackground,
         statusTopBar,
         statusBottomBar,
-        subText
+        mainText,
+        subText,
+        error
     )
 
 @SuppressLint("CompositionLocalNaming")
