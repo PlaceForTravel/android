@@ -1,6 +1,5 @@
 package com.easyhz.placeapp.ui.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
@@ -9,7 +8,6 @@ import androidx.navigation.compose.composable
 import com.easyhz.placeapp.ui.post.GalleryScreen
 import com.easyhz.placeapp.ui.post.NewPost
 
-@SuppressLint("RememberReturnType")
 fun NavGraphBuilder.addNewPostGraph(
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
