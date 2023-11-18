@@ -1,10 +1,14 @@
 package com.easyhz.placeapp
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -23,6 +27,7 @@ import com.easyhz.placeapp.ui.navigation.addHomeGraph
 import com.easyhz.placeapp.ui.navigation.addNewPostGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.util.checkGalleryPermission
 
 @Composable
 fun PlaceApp() {
@@ -31,6 +36,17 @@ fun PlaceApp() {
         mainNavController.navController.currentBackStackEntryAsState().value?.destination
         val isHome = mainNavController.currentRoute?.startsWith(MainDestinations.HOME_ROUTE) == true
         val isFeed = mainNavController.currentRoute?.equals(HomeSections.FEED.route) == true
+        val context = LocalContext.current
+        val launcher = rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                mainNavController.navigateToNewPost()
+                Log.d("PlaceApp", "권한 수락")
+            } else {
+                Log.d("PlaceApp", "권한 필요")
+            }
+        }
         Scaffold(
             bottomBar = {
                 if(isHome) {
@@ -45,7 +61,12 @@ fun PlaceApp() {
             floatingActionButton = {
                 if(isFeed) {
                     MainFloatingActionButton(
-                        onClick = mainNavController::navigateToNewPost
+                        onClick = {
+                            checkGalleryPermission(
+                                context = context,
+                                launcher = launcher,
+                                action = mainNavController::navigateToNewPost
+                        ) }
                     )
                 }
             },

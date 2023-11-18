@@ -111,7 +111,7 @@ fun NewPost(
         WindowShade()
         MapSearchModal(
             query = searchValue,
-            onQueryChange ={
+            onQueryChange = {
                 searchModalViewModel.setSearchValue(it)
                 if (searchValue.isNotEmpty()) searchModalViewModel.setSearchActive(true)
             },
