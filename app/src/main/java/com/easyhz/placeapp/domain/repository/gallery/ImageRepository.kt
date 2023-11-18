@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.repository.gallery
+package com.easyhz.placeapp.domain.repository.gallery
 
 import com.easyhz.placeapp.gallery.Gallery
 

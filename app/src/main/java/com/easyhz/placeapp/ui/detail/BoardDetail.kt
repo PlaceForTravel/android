@@ -86,7 +86,7 @@ fun BoardDetail(id: Int) {
             regDate = "2023.11.08"
         ),
     )
-    var isShowDialog by remember { mutableStateOf(false) }
+    var isShowModal by remember { mutableStateOf(false) }
     val screenHeight = LocalConfiguration.current.screenHeightDp
 
     val window = (LocalContext.current as Activity).window
@@ -161,7 +161,7 @@ data class CommentType (
 private fun onMapClick() {
 
 }
-private fun getStatusBarColors(
+fun getStatusBarColors(
     isShowBottomSheet: Boolean,
     isLightMode: Boolean,
     window: Window,

@@ -59,7 +59,7 @@ fun BottomBar(
         containerColor = PlaceAppTheme.colorScheme.mainBackground,
         modifier = Modifier.borderTop(
             color = PlaceAppTheme.colorScheme.primaryBorder,
-            dp = 1.dp
+            width = 1.dp
         )
     ) {
         tabs.forEach { tab ->

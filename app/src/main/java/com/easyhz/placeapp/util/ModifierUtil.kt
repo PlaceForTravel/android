@@ -10,14 +10,14 @@ import androidx.compose.ui.unit.Dp
 
 fun Modifier.borderTop(
     color: Color,
-    dp: Dp
+    width: Dp
 ): Modifier {
     return this.drawBehind {
         drawBorder(
             start = Offset(0f, 0f),
             end = Offset(size.width, 0f),
             color = color,
-            widthPx = dp.toPx()
+            widthPx = width.toPx()
         )
     }
 }
@@ -25,14 +25,14 @@ fun Modifier.borderTop(
 
 fun Modifier.borderBottom(
     color: Color,
-    dp: Dp
+    width: Dp
 ): Modifier {
     return this.drawBehind {
         drawBorder(
             start = Offset(0f, size.height),
             end = Offset(size.width, size.height),
             color = color,
-            widthPx = dp.toPx()
+            widthPx = width.toPx()
         )
     }
 }
