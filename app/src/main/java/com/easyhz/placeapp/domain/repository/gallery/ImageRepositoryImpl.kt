@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.repository.gallery
+package com.easyhz.placeapp.domain.repository.gallery
 
 import android.content.ContentResolver
 import android.content.Context

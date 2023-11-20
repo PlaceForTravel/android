@@ -26,7 +26,7 @@ import com.easyhz.placeapp.ui.component.map.NaverMap
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
 @Composable
-fun MapDialog(
+fun MapModal(
     modifier: Modifier = Modifier,
     context: Context,
 ) {
@@ -38,7 +38,7 @@ fun MapDialog(
                 .background(color = PlaceAppTheme.colorScheme.mainBackground)
                 .clip(RoundedCornerShape(15.dp))
         ) {
-            MapBottomSheetHeader()
+            MapModalHeader()
             NaverMap(
                 context = context,
                 modifier = modifier
@@ -48,7 +48,7 @@ fun MapDialog(
     }
 }
 @Composable
-private fun MapBottomSheetHeader() {
+private fun MapModalHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,7 +69,7 @@ private fun MapBottomSheetHeader() {
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center
         ) {
-            Text("여수 시청")
+            Text("당근")
         }
         Box(
             modifier = Modifier.weight(1f),
@@ -92,6 +92,6 @@ fun WindowShade(alpha: Float = 0.5f) {
 @Composable
 private fun MapBottomSheetHeaderPreview() {
     PlaceAppTheme {
-        MapBottomSheetHeader()
+        MapModalHeader()
     }
 }

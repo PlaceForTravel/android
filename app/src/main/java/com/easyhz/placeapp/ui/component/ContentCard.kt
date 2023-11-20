@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -137,6 +139,8 @@ fun ContentCard(
 fun IconText(
     modifier: Modifier = Modifier,
     icon: ImageVector,
+    iconSize: Dp = 36.dp,
+    tint: Color = LocalContentColor.current,
     text: String,
     contentDescription: String,
     onClick: () -> Unit,
@@ -158,8 +162,9 @@ fun IconText(
             SimpleIconButton(
                 icon = icon,
                 contentDescription = contentDescription,
-                modifier = Modifier.size(36.dp),
-                onClick = onClick
+                modifier = Modifier.size(iconSize),
+                tint = tint,
+                onClick = onClick,
             )
             Text(
                 text = text,

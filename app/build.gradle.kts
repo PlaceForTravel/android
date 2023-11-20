@@ -28,6 +28,8 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "NAVER_MAP_SDK_KEY", "" + localProperties["NAVER_MAP_SDK_KEY"] + "")
+        buildConfigField("String", "NAVER_MAP_API_CLIENT_ID", "" + localProperties["NAVER_MAP_API_CLIENT_ID"] + "")
+        buildConfigField("String", "NAVER_MAP_API_CLIENT_SECRET", "" + localProperties["NAVER_MAP_API_CLIENT_SECRET"] + "")
     }
 
     buildTypes {
@@ -71,7 +73,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
     testImplementation("junit:junit:4.13.2")
+//    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("com.google.dagger:hilt-android-testing:2.44")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
@@ -101,6 +106,16 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.43.2")
     kapt("com.google.dagger:hilt-compiler:2.43.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+
+    // retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    testImplementation("org.mockito:mockito-core:3.11.0")
 
 
 }

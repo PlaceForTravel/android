@@ -69,7 +69,10 @@ fun GalleryScreen(
             onBackClick = { onNavigateToBack() },
             onNextClick = {
                 if(viewModel.selectedImageList.size == 0) Log.d("GalleryScreen", "한 장 이상 선택")// 사진 한 장 이상 선택 스낵바
-                else onNavigateToNext()
+                else {
+                    onNavigateToNext()
+                    viewModel.initPlaceList()
+                }
             }
         )
         if (pagingImageList.itemCount == 0) {
