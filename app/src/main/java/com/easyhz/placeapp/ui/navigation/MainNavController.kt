@@ -67,6 +67,10 @@ class MainNavController(
 
     fun navigateToNext() {
         val next = getNextNewPostOrder()
+
+        if (next == NewPostOrder.COMPLETE.route) {
+            navController.popBackStack(NewPostOrder.COMPLETE.route, true)
+        }
         navController.navigate(next)
     }
 
