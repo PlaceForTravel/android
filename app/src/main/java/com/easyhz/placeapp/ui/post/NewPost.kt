@@ -15,10 +15,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -82,8 +78,7 @@ fun NewPost(
                 onNextClick = { onNavigateToNext() }
             )
             ImagesContent(
-                images = viewModel.selectedImageList,
-                places = viewModel.selectedPlaceList,
+                contents = viewModel.selectedImagePlaceList,
                 pagerState = pagerState,
                 imageSize = screenWidth.dp,
                 modifier = Modifier.padding(10.dp),

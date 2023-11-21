@@ -1,21 +1,20 @@
 package com.easyhz.placeapp.ui.post
 
-import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.core.content.ContextCompat.getString
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.easyhz.placeapp.R
 import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import com.easyhz.placeapp.domain.model.place.PlaceItem
+import com.easyhz.placeapp.domain.model.post.Place
 import com.easyhz.placeapp.domain.repository.MapRepository
 import com.easyhz.placeapp.gallery.Gallery
 import com.easyhz.placeapp.gallery.GalleryPagingSource
@@ -35,7 +34,6 @@ class NewPostViewModel
 @Inject constructor(
     private val imageRepository: ImageRepository,
     private val mapRepository: MapRepository,
-    private val application: Application = Application()
 ) : ViewModel() {
 
     private val _imageList = MutableStateFlow<PagingData<Gallery>>(PagingData.empty())
@@ -46,14 +44,13 @@ class NewPostViewModel
     val placeList: State<PlaceResponse?>
         get() = _placeList
 
+    private var _selectedImagePlaceList = mutableStateListOf<Place>()
+    val selectedImagePlaceList: SnapshotStateList<Place>
+        get() = _selectedImagePlaceList
 
     private val _selectedImageList = mutableStateListOf<Gallery>()
     val selectedImageList: SnapshotStateList<Gallery>
         get() = _selectedImageList
-
-    private val _selectedPlaceList = mutableStateListOf<String>()
-    val selectedPlaceList: SnapshotStateList<String>
-        get() = _selectedPlaceList
 
     private val _textContent = mutableStateOf("")
     val textContent: State<String>
@@ -116,14 +113,23 @@ class NewPostViewModel
         }
 
     fun initPlaceList() {
-        val init = getString(application, R.string.post_add_place)
-        selectedImageList.forEach{ _ ->
-            _selectedPlaceList.add(init)
-        }
+        _selectedImagePlaceList = selectedImageList.map { item ->
+            Place(
+                placeName = null,
+                latitude = null,
+                longitude = null,
+                address = null,
+                imageFile = item.path,
+                imageName = item.name,
+            )
+        }.toMutableStateList()
     }
 
     fun setPlaceList(index: Int, placeItem: PlaceItem) {
-        _selectedPlaceList[index] = placeItem.title.withoutHTML()
+        _selectedImagePlaceList[index].apply {
+            placeName = placeItem.title.withoutHTML()
+            address = placeItem.roadAddress.ifEmpty { placeItem.roadAddress }
+        }
         _placeList.value = null
     }
 

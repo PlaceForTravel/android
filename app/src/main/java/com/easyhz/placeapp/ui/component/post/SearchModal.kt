@@ -157,7 +157,7 @@ private fun PlaceItem(
     modifier: Modifier = Modifier,
     item: PlaceItem
 ) {
-    val address = if (!item.roadAddress.isEmpty()) item.roadAddress else item.address
+    val address = item.roadAddress.ifEmpty { item.address }
     Column(modifier = modifier) {
         Row(
             modifier = Modifier.padding(vertical = 10.dp),
