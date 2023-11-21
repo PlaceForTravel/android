@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModel
 
 class SearchModalViewModel: ViewModel() {
 
+    private val _isShowModal = mutableStateOf(false)
+    val isShowModal : State<Boolean>
+        get() = _isShowModal
+
     private val _searchValue = mutableStateOf("")
     val searchValue: State<String>
         get() = _searchValue
@@ -15,6 +19,10 @@ class SearchModalViewModel: ViewModel() {
     val searchActive: State<Boolean>
         get() = _searchActive
 
+
+    fun setIsShowModal(value: Boolean) {
+        _isShowModal.value = value
+    }
 
     fun setSearchValue(value: String) {
         _searchValue.value = value

@@ -52,7 +52,7 @@ fun NewPost(
     val modalHeight = 760.dp
 
     val pagerState = rememberPagerState { viewModel.selectedImageList.size }
-    var isShowModal by remember { mutableStateOf(false) }
+    val isShowModal = searchModalViewModel.isShowModal.value
     val searchValue = searchModalViewModel.searchValue.value
     val searchActive = searchModalViewModel.searchActive.value
 
@@ -66,7 +66,7 @@ fun NewPost(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                isShowModal = false
+                searchModalViewModel.setIsShowModal(false)
                 searchModalViewModel.setSearchValue("")
             }
     ) {
@@ -87,7 +87,7 @@ fun NewPost(
                 pagerState = pagerState,
                 imageSize = screenWidth.dp,
                 modifier = Modifier.padding(10.dp),
-                onPlaceClick = { isShowModal = true }
+                onPlaceClick = { searchModalViewModel.setIsShowModal(true) }
             )
             TextContent(
                 modifier = Modifier
@@ -123,7 +123,7 @@ fun NewPost(
             placeList = viewModel.placeList.value?.placeItems,
             onItemClick = { item ->
                 viewModel.setPlaceList(pagerState.currentPage, item)
-                isShowModal = false
+                searchModalViewModel.setIsShowModal(false)
                 searchModalViewModel.setSearchValue("")
                 // TODO: 추가를 알리는 스낵바 필요
             },
