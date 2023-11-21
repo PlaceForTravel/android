@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easyhz.placeapp.R
-import com.easyhz.placeapp.domain.model.PlaceItem
+import com.easyhz.placeapp.domain.model.place.PlaceItem
 import com.easyhz.placeapp.ui.component.CircleDivider
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
@@ -244,7 +244,8 @@ private fun MapSearchModalPreview() {
 //            active = false,
             onActiveChange = { },
 //            onCancel = { },
-            placeList = listOf(PlaceItem(
+            placeList = listOf(
+                PlaceItem(
                 title = "맛집" ,
                 link= "",
                 category = "음식점>한식>육류,고기요리>닭볶음탕",
@@ -254,7 +255,8 @@ private fun MapSearchModalPreview() {
                 roadAddress = "경기도 수원시 팔달구 향교로 27-1 1층 홍미집",
                 mapx = "",
                 mapy = ""
-            )),
+            )
+            ),
             modifier = Modifier.height(760.dp),
             onItemClick = { }
         )

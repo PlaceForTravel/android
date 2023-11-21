@@ -14,8 +14,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.easyhz.placeapp.R
-import com.easyhz.placeapp.domain.model.MapResponse
-import com.easyhz.placeapp.domain.model.PlaceItem
+import com.easyhz.placeapp.domain.model.place.PlaceResponse
+import com.easyhz.placeapp.domain.model.place.PlaceItem
 import com.easyhz.placeapp.domain.repository.MapRepository
 import com.easyhz.placeapp.gallery.Gallery
 import com.easyhz.placeapp.gallery.GalleryPagingSource
@@ -42,8 +42,8 @@ class NewPostViewModel
     val imageList: StateFlow<PagingData<Gallery>>
         get() = _imageList.asStateFlow()
 
-    private var _placeList = mutableStateOf<MapResponse?>(null)
-    val placeList: State<MapResponse?>
+    private var _placeList = mutableStateOf<PlaceResponse?>(null)
+    val placeList: State<PlaceResponse?>
         get() = _placeList
 
 

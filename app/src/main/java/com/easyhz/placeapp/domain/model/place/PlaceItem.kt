@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.domain.model
+package com.easyhz.placeapp.domain.model.place
 
 data class PlaceItem(
     val address: String,

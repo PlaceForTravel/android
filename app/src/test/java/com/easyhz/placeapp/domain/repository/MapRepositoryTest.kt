@@ -1,7 +1,7 @@
 package com.easyhz.placeapp.domain.repository
 
 import com.easyhz.placeapp.api.MapService
-import com.easyhz.placeapp.domain.model.MapResponse
+import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import org.junit.Test
@@ -21,7 +21,7 @@ class MapRepositoryTest {
         val sort = "random"
         `when`(mapService.getPlaces(query, display, start, sort))
             .thenReturn(
-                Response.success(MapResponse(5, placeItems = listOf(), "1", 1, 5))
+                Response.success(PlaceResponse(5, placeItems = listOf(), "1", 1, 5))
             )
 
         val result = repository.getPlaces(query, display, start, sort)

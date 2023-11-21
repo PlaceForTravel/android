@@ -1,7 +1,7 @@
 package com.easyhz.placeapp.domain.repository
 
 import com.easyhz.placeapp.api.MapService
-import com.easyhz.placeapp.domain.model.MapResponse
+import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -14,5 +14,5 @@ class MapRepositoryImpl
         display: Int,
         start: Int,
         sort: String
-    ): Response<MapResponse> = mapService.getPlaces(query, display, start, sort)
+    ): Response<PlaceResponse> = mapService.getPlaces(query, display, start, sort)
 }
