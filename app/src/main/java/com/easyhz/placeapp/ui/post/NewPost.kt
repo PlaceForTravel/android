@@ -1,6 +1,7 @@
 package com.easyhz.placeapp.ui.post
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -75,7 +76,11 @@ fun NewPost(
                 title = stringResource(id = R.string.post_new_post_header),
                 next = stringResource(id = R.string.post_complete_header),
                 onBackClick = { onNavigateToBack() },
-                onNextClick = { onNavigateToNext() }
+                onNextClick = {
+                    if (viewModel.hasAllPlaces()) onNavigateToNext()
+                    else Log.d("NewPost:: ", "장소를 선택해 주세요")
+                    // TODO: 장소 선택 알림 필요
+                }
             )
             ImagesContent(
                 contents = viewModel.selectedImagePlaceList,
@@ -117,8 +122,13 @@ fun NewPost(
             onActiveChange = { searchModalViewModel.setSearchActive(it) },
             placeList = viewModel.placeList.value?.placeItems,
             onItemClick = { item ->
-                viewModel.setPlaceList(pagerState.currentPage, item)
-                searchModalViewModel.setIsShowModal(false)
+                if (viewModel.hasEqualCity(item)) {
+                    viewModel.setPlaceList(pagerState.currentPage, item)
+                    searchModalViewModel.setIsShowModal(false)
+                } else {
+                    Log.d("NewPost", "도시가 달라요.")
+                    // TODO: 같은 도시를 선택 하라는 알림 필요
+                }
                 searchModalViewModel.setSearchValue("")
                 // TODO: 추가를 알리는 스낵바 필요
             },

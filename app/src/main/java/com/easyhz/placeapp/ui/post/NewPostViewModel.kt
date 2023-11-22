@@ -20,6 +20,8 @@ import com.easyhz.placeapp.gallery.Gallery
 import com.easyhz.placeapp.gallery.GalleryPagingSource
 import com.easyhz.placeapp.gallery.GalleryPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
+import com.easyhz.placeapp.util.toAddress
+import com.easyhz.placeapp.util.toLatLng
 import com.easyhz.placeapp.util.withoutHTML
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -129,8 +131,27 @@ class NewPostViewModel
         _selectedImagePlaceList[index].apply {
             placeName = placeItem.title.withoutHTML()
             address = placeItem.roadAddress.ifEmpty { placeItem.roadAddress }
+            longitude = (placeItem.mapx * POSITION_FORMAT).toLatLng(LAT_LNG_SCALE)
+            latitude = (placeItem.mapy * POSITION_FORMAT).toLatLng(LAT_LNG_SCALE)
         }
         _placeList.value = null
+    }
+
+    fun hasEqualCity(placeItem: PlaceItem): Boolean {
+        val address = placeItem.address.toAddress().ifEmpty { placeItem.roadAddress.toAddress() }
+        if (isInitPlaceSelect()) return true
+        return _selectedImagePlaceList.any {
+            println(it.address?.toAddress())
+            it.address?.toAddress() ==  address
+        }
+    }
+
+    fun isInitPlaceSelect() : Boolean  = _selectedImagePlaceList.all {
+        listOfNotNull(it.placeName, it.address, it.latitude, it.longitude).isEmpty()
+    }
+
+    fun hasAllPlaces() : Boolean = _selectedImagePlaceList.all {
+        listOfNotNull(it.placeName, it.address, it.latitude, it.longitude).size == 4
     }
 
     private fun setCurrentImage(image: Gallery? = _selectedImageList.lastOrNull()) {
@@ -143,5 +164,7 @@ class NewPostViewModel
 
     companion object {
         const val MAX_SELECT_COUNT = 2
+        const val POSITION_FORMAT = (1 / 10_000_000.0)
+        const val LAT_LNG_SCALE = 7
     }
 }

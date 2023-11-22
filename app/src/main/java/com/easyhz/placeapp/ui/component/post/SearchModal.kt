@@ -208,8 +208,8 @@ private fun PlaceItemPreview() {
                 telephone = "",
                 address = "경기도 수원시 팔달구 매산로2가 27-14 1층 홍미집",
                 roadAddress = "경기도 수원시 팔달구 향교로 27-1 1층 홍미집",
-                mapx = "",
-                mapy = ""
+                mapx = 0,
+                mapy = 0
             )
         )
     }
@@ -253,8 +253,8 @@ private fun MapSearchModalPreview() {
                 telephone = "",
                 address = "경기도 수원시 팔달구 매산로2가 27-14 1층 홍미집",
                 roadAddress = "경기도 수원시 팔달구 향교로 27-1 1층 홍미집",
-                mapx = "",
-                mapy = ""
+                mapx = 0,
+                mapy = 0
             )
             ),
             modifier = Modifier.height(760.dp),

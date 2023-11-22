@@ -5,8 +5,8 @@ data class PlaceItem(
     val category: String,
     val description: String,
     val link: String,
-    val mapx: String,
-    val mapy: String,
+    val mapx: Int,
+    val mapy: Int,
     val roadAddress: String,
     val telephone: String,
     val title: String
