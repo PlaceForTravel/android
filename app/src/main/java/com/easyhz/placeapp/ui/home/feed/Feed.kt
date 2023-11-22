@@ -36,10 +36,10 @@ fun Feed(
     val dummy = listOf(
         FeedType(
             id = 1,
-            imagePath = listOf("https://picsum.photos/id/307/200/300", "https://picsum.photos/id/337/200/300"),
-            userName = "유저 1",
+            imagePath = listOf("https://picsum.photos/id/177/200/300", "https://picsum.photos/id/337/200/300"),
+            userName = "북치는 라이언",
             regDate = "2023.10.29",
-            placeName = "대한민국, 제주특별자치도",
+            placeName = "경기도 성남시 분당구",
             bookmarkCount = 5,
         ),FeedType(
             id = 2,
