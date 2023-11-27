@@ -95,6 +95,19 @@ fun Feed(
         }
     }
 
+    val window = (LocalContext.current as Activity).window
+    val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
+    val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
+    val isLightMode = !isSystemInDarkTheme()
+
+    SideEffect {
+        getStatusBarColors(
+            isLightMode = isLightMode,
+            window = window,
+            statusTopBar = statusTopBar,
+            statusBottomBar = statusBottomBar
+        )
+    }
 }
 
 

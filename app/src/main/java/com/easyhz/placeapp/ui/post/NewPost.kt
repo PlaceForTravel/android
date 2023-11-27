@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -34,9 +37,11 @@ import com.easyhz.placeapp.ui.component.post.PostHeader
 import com.easyhz.placeapp.ui.component.post.TextContent
 import com.easyhz.placeapp.ui.detail.getStatusBarColors
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.borderBottom
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NewPost(
     viewModel: NewPostViewModel = hiltViewModel(),
@@ -48,10 +53,14 @@ fun NewPost(
     val window = (LocalContext.current as Activity).window
     val statusTopBar = PlaceAppTheme.colorScheme.statusBottomBar
     val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
+    val placeBorderError = PlaceAppTheme.colorScheme.error
+    val placeBorderDefault = PlaceAppTheme.colorScheme.secondaryBorder
     val isLightMode = !isSystemInDarkTheme()
     val modalHeight = 760.dp
     val focusManager = LocalFocusManager.current
 
+    val scope = rememberCoroutineScope()
+    var isUnselected by remember { mutableStateOf(false) }
     val pagerState = rememberPagerState { viewModel.selectedImageList.size }
     val isShowModal = searchModalViewModel.isShowModal.value
     val searchValue = searchModalViewModel.searchValue.value
@@ -76,9 +85,17 @@ fun NewPost(
                 next = stringResource(id = R.string.post_complete_header),
                 onBackClick = { onNavigateToBack() },
                 onNextClick = {
-                    if (viewModel.hasAllPlaces()) onNavigateToNext()
-                    else Log.d("NewPost:: ", "장소를 선택해 주세요")
-                    // TODO: 장소 선택 알림 필요
+                    viewModel.onNextClick {
+                        onNavigateToNext()
+                    }
+                    if (viewModel.unselectedImagePlaceIndices.isNotEmpty()) {
+                        viewModel.setPlaceBorder(placeBorderDefault, placeBorderError)
+                        scope.launch {
+                            isUnselected = true
+                            pagerState.animateScrollToPage(viewModel.unselectedImagePlaceIndices.first())
+                            isUnselected = false
+                        }
+                    }
                 }
             )
             LazyColumn {
