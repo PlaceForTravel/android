@@ -44,6 +44,7 @@ import com.easyhz.placeapp.constants.PaddingConstants.IMAGE_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.TEXT_HORIZONTAL
 import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.getImageRequestDefault
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -91,7 +92,7 @@ fun ContentCard(
                     modifier = Modifier
                         .width(cardWidth)
                         .padding(horizontal = IMAGE_HORIZONTAL.dp)
-                        .clip(RoundedCornerShape(15.dp))
+                        .clip(roundShape)
                         .align(Alignment.CenterHorizontally)
                 )
             }

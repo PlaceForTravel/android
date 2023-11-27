@@ -24,6 +24,7 @@ import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.ui.component.SimpleIconButton
 import com.easyhz.placeapp.ui.component.map.NaverMap
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 
 @Composable
 fun MapModal(
@@ -36,7 +37,7 @@ fun MapModal(
         Column(
             modifier = Modifier
                 .background(color = PlaceAppTheme.colorScheme.mainBackground)
-                .clip(RoundedCornerShape(15.dp))
+                .clip(roundShape)
         ) {
             MapModalHeader()
             NaverMap(
@@ -66,7 +67,7 @@ private fun MapModalHeader() {
             )
         }
         Box(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(2f),
             contentAlignment = Alignment.Center
         ) {
             Text("당근")

@@ -48,6 +48,7 @@ import com.easyhz.placeapp.domain.model.place.PlaceItem
 import com.easyhz.placeapp.ui.component.CircleDivider
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.borderBottom
 import com.easyhz.placeapp.util.toBasicCategory
 import com.easyhz.placeapp.util.withoutHTML
@@ -76,17 +77,17 @@ fun MapSearchModal(
         Column(
             modifier = modifier
                 .background(color = PlaceAppTheme.colorScheme.mainBackground)
-                .clip(RoundedCornerShape(15.dp))
+                .clip(roundShape)
         ) {
             Box(
                 modifier = Modifier
                     .padding(20.dp)
-                    .clip(RoundedCornerShape(15.dp))
+                    .clip(roundShape)
                     .background(PlaceAppTheme.colorScheme.mainBackground)
                     .border(
                         width = 1.dp,
                         color = PlaceAppTheme.colorScheme.secondaryBorder,
-                        shape = RoundedCornerShape(15.dp),
+                        shape = roundShape,
                     )
             ) {
                 TextField(

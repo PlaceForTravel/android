@@ -86,6 +86,7 @@ fun NewPost(
                     ImagesContent(
                         contents = viewModel.selectedImagePlaceList,
                         pagerState = pagerState,
+                        isUnselected = isUnselected,
                         imageSize = screenWidth.dp,
                         modifier = Modifier.padding(10.dp),
                         onPlaceClick = { searchModalViewModel.setIsShowModal(true) }
@@ -100,7 +101,7 @@ fun NewPost(
                             .border(
                                 width = 1.dp,
                                 color = PlaceAppTheme.colorScheme.secondaryBorder,
-                                shape = RoundedCornerShape(15.dp)
+                                shape = roundShape
                             ),
                         value = viewModel.textContent.value,
                         onValueChange = { viewModel.setTextContent(it)},
