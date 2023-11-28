@@ -16,7 +16,7 @@ import androidx.paging.cachedIn
 import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import com.easyhz.placeapp.domain.model.place.PlaceItem
 import com.easyhz.placeapp.domain.model.post.Place
-import com.easyhz.placeapp.domain.repository.MapRepository
+import com.easyhz.placeapp.domain.repository.PlaceRepository
 import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.data.dataSource.GalleryPagingSource
 import com.easyhz.placeapp.data.dataSource.GalleryPagingSource.Companion.PAGE_SIZE
@@ -36,7 +36,7 @@ import javax.inject.Inject
 class NewPostViewModel
 @Inject constructor(
     private val imageRepository: ImageRepository,
-    private val mapRepository: MapRepository,
+    private val placeRepository: PlaceRepository,
 ) : ViewModel() {
 
     private val _imageList = MutableStateFlow<PagingData<Gallery>>(PagingData.empty())
@@ -98,7 +98,7 @@ class NewPostViewModel
     }
 
     fun getPlaces(query: String, display: Int, start: Int, sort: String) = viewModelScope.launch {
-        mapRepository.getPlaces(query, display, start, sort).let {response ->
+        placeRepository.getPlaces(query, display, start, sort).let { response ->
             if(response.isSuccessful) {
                 _placeList.value = response.body()
             } else {

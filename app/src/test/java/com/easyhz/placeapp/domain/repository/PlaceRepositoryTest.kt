@@ -1,6 +1,6 @@
 package com.easyhz.placeapp.domain.repository
 
-import com.easyhz.placeapp.api.MapService
+import com.easyhz.placeapp.api.PlaceService
 import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
@@ -9,17 +9,17 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 
 
-class MapRepositoryTest {
+class PlaceRepositoryTest {
 
-    private var mapService: MapService = mock(MapService::class.java)
-    private var repository = MapRepositoryImpl(mapService)
+    private var placeService: PlaceService = mock(PlaceService::class.java)
+    private var repository = PlaceRepositoryImpl(placeService)
     @Test
     fun `Map getPlaces`() = runBlocking {
         val query = ""
         val display = 5
         val start = 1
         val sort = "random"
-        `when`(mapService.getPlaces(query, display, start, sort))
+        `when`(placeService.getPlaces(query, display, start, sort))
             .thenReturn(
                 Response.success(PlaceResponse(5, placeItems = listOf(), "1", 1, 5))
             )

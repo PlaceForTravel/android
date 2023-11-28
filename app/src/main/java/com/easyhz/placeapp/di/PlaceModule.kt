@@ -1,7 +1,7 @@
 package com.easyhz.placeapp.di
 
-import com.easyhz.placeapp.api.MapService
-import com.easyhz.placeapp.helper.Constants.MAP_API_BASE_URL
+import com.easyhz.placeapp.api.PlaceService
+import com.easyhz.placeapp.helper.Constants.PLACE_API_BASE_URL
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -16,28 +16,28 @@ import javax.inject.Qualifier
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MapModule {
+object PlaceModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
-    annotation class MapRetrofit
+    annotation class PlaceRetrofit
 
     @Provides
     @Singleton
-    fun provideMapService(
-        @MapRetrofit retrofit: Retrofit
-    ) : MapService = retrofit.create(MapService::class.java)
+    fun providePlaceService(
+        @PlaceRetrofit retrofit: Retrofit
+    ) : PlaceService = retrofit.create(PlaceService::class.java)
 
 
     @Provides
     @Singleton
-    @MapRetrofit
-    fun provideMapRetrofit(
+    @PlaceRetrofit
+    fun providePlaceRetrofit(
         @CommonModule.InterceptorOkhttpClient client: OkHttpClient,
         @CommonModule.ProvideGson gson: Gson,
     ): Retrofit = Retrofit.Builder()
         .client(client)
-        .baseUrl(MAP_API_BASE_URL)
+        .baseUrl(PLACE_API_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 }

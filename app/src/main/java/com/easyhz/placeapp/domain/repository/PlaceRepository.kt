@@ -3,7 +3,7 @@ package com.easyhz.placeapp.domain.repository
 import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import retrofit2.Response
 
-interface MapRepository {
+interface PlaceRepository {
 
     suspend fun getPlaces(
         query: String,

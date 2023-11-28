@@ -5,7 +5,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface MapService {
+interface PlaceService {
 
     @GET("/v1/search/local.json")
     suspend fun getPlaces(
