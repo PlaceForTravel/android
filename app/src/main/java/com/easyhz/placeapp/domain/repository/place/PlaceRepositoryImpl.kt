@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.domain.repository
+package com.easyhz.placeapp.domain.repository.place
 
 import com.easyhz.placeapp.api.PlaceService
 import com.easyhz.placeapp.domain.model.place.PlaceResponse

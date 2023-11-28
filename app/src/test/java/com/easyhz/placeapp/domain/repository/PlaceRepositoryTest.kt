@@ -2,6 +2,7 @@ package com.easyhz.placeapp.domain.repository
 
 import com.easyhz.placeapp.api.PlaceService
 import com.easyhz.placeapp.domain.model.place.PlaceResponse
+import com.easyhz.placeapp.domain.repository.place.PlaceRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import org.junit.Test

@@ -16,7 +16,7 @@ import androidx.paging.cachedIn
 import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import com.easyhz.placeapp.domain.model.place.PlaceItem
 import com.easyhz.placeapp.domain.model.post.Place
-import com.easyhz.placeapp.domain.repository.PlaceRepository
+import com.easyhz.placeapp.domain.repository.place.PlaceRepository
 import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.data.dataSource.GalleryPagingSource
 import com.easyhz.placeapp.data.dataSource.GalleryPagingSource.Companion.PAGE_SIZE

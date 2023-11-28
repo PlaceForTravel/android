@@ -1,7 +1,7 @@
 package com.easyhz.placeapp.di
 
-import com.easyhz.placeapp.domain.repository.PlaceRepository
-import com.easyhz.placeapp.domain.repository.PlaceRepositoryImpl
+import com.easyhz.placeapp.domain.repository.place.PlaceRepository
+import com.easyhz.placeapp.domain.repository.place.PlaceRepositoryImpl
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepositoryImpl
 import dagger.Binds
