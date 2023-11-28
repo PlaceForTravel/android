@@ -1,6 +1,5 @@
 package com.easyhz.placeapp.ui.post
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.R
-import com.easyhz.placeapp.gallery.Gallery
+import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.ui.component.ImageLoader
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.detail.WindowShade

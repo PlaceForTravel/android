@@ -17,11 +17,10 @@ import com.easyhz.placeapp.domain.model.place.PlaceResponse
 import com.easyhz.placeapp.domain.model.place.PlaceItem
 import com.easyhz.placeapp.domain.model.post.Place
 import com.easyhz.placeapp.domain.repository.MapRepository
-import com.easyhz.placeapp.gallery.Gallery
-import com.easyhz.placeapp.gallery.GalleryPagingSource
-import com.easyhz.placeapp.gallery.GalleryPagingSource.Companion.PAGE_SIZE
+import com.easyhz.placeapp.domain.model.gallery.Gallery
+import com.easyhz.placeapp.data.dataSource.GalleryPagingSource
+import com.easyhz.placeapp.data.dataSource.GalleryPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
-import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.toAddress
 import com.easyhz.placeapp.util.toLatLng
 import com.easyhz.placeapp.util.withoutHTML

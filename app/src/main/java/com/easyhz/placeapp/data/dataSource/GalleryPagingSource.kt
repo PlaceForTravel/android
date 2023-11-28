@@ -1,7 +1,8 @@
-package com.easyhz.placeapp.gallery
+package com.easyhz.placeapp.data.dataSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 
 /**
