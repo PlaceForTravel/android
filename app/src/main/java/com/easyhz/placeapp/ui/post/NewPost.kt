@@ -145,16 +145,18 @@ fun NewPost(
             },
             onActiveChange = { searchModalViewModel.setSearchActive(it) },
             placeList = viewModel.placeList.value?.placeItems,
+            isEqualCity = viewModel.isEqualCity.value,
+            tempCityName = viewModel.tempCityName.value,
             onItemClick = { item ->
-                if (viewModel.hasEqualCity(item)) {
-                    viewModel.setPlaceList(pagerState.currentPage, item)
+                if (viewModel.hasEqualCity(item, pagerState.currentPage)) {
+                    viewModel.setPlaceList(pagerState.currentPage, item, placeBorderDefault)
                     searchModalViewModel.setIsShowModal(false)
+                    viewModel.setTempCityName(item)
+                    viewModel.setIsEqualCity(true)
                 } else {
-                    Log.d("NewPost", "도시가 달라요.")
-                    // TODO: 같은 도시를 선택 하라는 알림 필요
+                    viewModel.setIsEqualCity(false)
                 }
                 searchModalViewModel.setSearchValue("")
-                // TODO: 추가를 알리는 스낵바 필요
             },
             modifier = Modifier.height(modalHeight)
         )

@@ -33,5 +33,8 @@
 
     <string name="no_search_data">검색 결과가 없습니다.</string>
 
+    <string name="setting_error">Setting Error</string>
+    <string name="notice_please_select_same_city">같은 도시를 선택해 주세요.</string>
+
 
 </resources>

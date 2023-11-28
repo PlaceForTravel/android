@@ -68,6 +68,14 @@ class NewPostViewModel
     val currentImage: State<Gallery?>
         get() = _currentImage
 
+    private val _isEqualCity = mutableStateOf(false)
+    val isEqualCity: State<Boolean>
+        get() = _isEqualCity
+
+    private val _tempCityName = mutableStateOf("")
+    val tempCityName: State<String>
+        get() = _tempCityName
+
     private val _isOver = mutableStateOf(false)
     val isOver: State<Boolean>
         get() = _isOver
@@ -133,23 +141,32 @@ class NewPostViewModel
         }.toMutableStateList()
     }
 
-    fun setPlaceList(index: Int, placeItem: PlaceItem) {
+    fun setPlaceList(index: Int, placeItem: PlaceItem, placeBorderDefault: Color) {
         _selectedImagePlaceList[index].apply {
             placeName = placeItem.title.withoutHTML()
             address = placeItem.roadAddress.ifEmpty { placeItem.roadAddress }
             longitude = (placeItem.mapx * POSITION_FORMAT).toLatLng(LAT_LNG_SCALE)
             latitude = (placeItem.mapy * POSITION_FORMAT).toLatLng(LAT_LNG_SCALE)
+            placeBorderColor = placeBorderDefault
         }
         _placeList.value = null
     }
 
-    fun hasEqualCity(placeItem: PlaceItem): Boolean {
+    fun hasEqualCity(placeItem: PlaceItem, page: Int): Boolean {
         val address = placeItem.address.toAddress().ifEmpty { placeItem.roadAddress.toAddress() }
         if (isInitPlaceSelect()) return true
+        if (_selectedImagePlaceList[page].address != null && isFirstEdit()) return true
         return _selectedImagePlaceList.any {
-            println(it.address?.toAddress())
             it.address?.toAddress() ==  address
         }
+    }
+
+    fun setTempCityName(item: PlaceItem) {
+        _tempCityName.value = item.address.toAddress().ifEmpty { item.roadAddress.toAddress() }
+    }
+
+    fun setIsEqualCity(value: Boolean) {
+        _isEqualCity.value = value
     }
 
     private fun findUnselectedPlace() {
@@ -171,11 +188,15 @@ class NewPostViewModel
         else findUnselectedPlace()
     }
 
-    fun isInitPlaceSelect() : Boolean  = _selectedImagePlaceList.all {
+    private fun isInitPlaceSelect() : Boolean  = _selectedImagePlaceList.all {
         listOfNullItems(it).isEmpty()
     }
 
-    fun hasAllPlaces() : Boolean = _selectedImagePlaceList.all {
+    private fun isFirstEdit() : Boolean = _selectedImagePlaceList.filter {
+        listOfNullItems(it).isNotEmpty()
+    }.size == 1
+
+    private fun hasAllPlaces() : Boolean = _selectedImagePlaceList.all {
         listOfNullItems(it).size == 4
     }
 
