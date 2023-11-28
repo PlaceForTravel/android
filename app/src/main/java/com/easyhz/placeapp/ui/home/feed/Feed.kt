@@ -1,22 +1,27 @@
 package com.easyhz.placeapp.ui.home.feed
 
+import android.app.Activity
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.ui.component.ContentCard
+import com.easyhz.placeapp.ui.detail.getStatusBarColors
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 
 data class FeedType(
     val id: Int,
@@ -83,13 +88,26 @@ fun Feed(
                 modifier = Modifier
                     .width(screenWidth.dp)
                     .padding(CONTENT_ALL.dp)
-                    .clip(RoundedCornerShape(15.dp))
+                    .clip(roundShape)
                     .background(PlaceAppTheme.colorScheme.mainBackground)
                     .clickable { onItemClick(item.id) },
             )
         }
     }
 
+    val window = (LocalContext.current as Activity).window
+    val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
+    val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
+    val isLightMode = !isSystemInDarkTheme()
+
+    SideEffect {
+        getStatusBarColors(
+            isLightMode = isLightMode,
+            window = window,
+            statusTopBar = statusTopBar,
+            statusBottomBar = statusBottomBar
+        )
+    }
 }
 
 

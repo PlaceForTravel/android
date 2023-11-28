@@ -23,10 +23,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -43,6 +48,7 @@ import com.easyhz.placeapp.domain.model.place.PlaceItem
 import com.easyhz.placeapp.ui.component.CircleDivider
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.borderBottom
 import com.easyhz.placeapp.util.toBasicCategory
 import com.easyhz.placeapp.util.withoutHTML
@@ -57,6 +63,12 @@ fun MapSearchModal(
     placeList: List<PlaceItem>?,
     onItemClick: (PlaceItem) -> Unit,
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+    }
+
     Card(
         modifier = modifier
             .padding(30.dp)
@@ -65,22 +77,23 @@ fun MapSearchModal(
         Column(
             modifier = modifier
                 .background(color = PlaceAppTheme.colorScheme.mainBackground)
-                .clip(RoundedCornerShape(15.dp))
+                .clip(roundShape)
         ) {
             Box(
                 modifier = Modifier
                     .padding(20.dp)
-                    .clip(RoundedCornerShape(15.dp))
+                    .clip(roundShape)
                     .background(PlaceAppTheme.colorScheme.mainBackground)
                     .border(
                         width = 1.dp,
                         color = PlaceAppTheme.colorScheme.secondaryBorder,
-                        shape = RoundedCornerShape(15.dp),
+                        shape = roundShape,
                     )
             ) {
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .focusRequester(focusRequester)
                         .onFocusChanged { if (it.isFocused) onActiveChange(true) },
                     value = query,
                     onValueChange = onQueryChange,
@@ -99,7 +112,8 @@ fun MapSearchModal(
                         unfocusedContainerColor = PlaceAppTheme.colorScheme.transparent,
                         disabledContainerColor = PlaceAppTheme.colorScheme.transparent,
                         cursorColor = PlaceAppTheme.colorScheme.mainText,
-                        focusedIndicatorColor = PlaceAppTheme.colorScheme.transparent
+                        focusedIndicatorColor = PlaceAppTheme.colorScheme.transparent,
+                        unfocusedIndicatorColor = PlaceAppTheme.colorScheme.transparent,
                     ),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
@@ -117,7 +131,10 @@ fun MapSearchModal(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .borderBottom(width = 0.7.dp, color = PlaceAppTheme.colorScheme.secondaryBorder)
+                        .borderBottom(
+                            width = 0.7.dp,
+                            color = PlaceAppTheme.colorScheme.secondaryBorder
+                        )
                         .padding(horizontal = 20.dp)
                         .padding(bottom = 10.dp),
                     verticalAlignment = Alignment.CenterVertically

@@ -44,6 +44,7 @@ import com.easyhz.placeapp.constants.PaddingConstants.IMAGE_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.TEXT_HORIZONTAL
 import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.getImageRequestDefault
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -54,6 +55,7 @@ fun ContentCard(
     cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
     imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
     contentDescription: String = "IMG",
+    isProfile: Boolean = false,
     onMapClick: () -> Unit = { }
 ) {
     val imagesCount = item.imagePath.size
@@ -91,45 +93,47 @@ fun ContentCard(
                     modifier = Modifier
                         .width(cardWidth)
                         .padding(horizontal = IMAGE_HORIZONTAL.dp)
-                        .clip(RoundedCornerShape(15.dp))
+                        .clip(roundShape)
                         .align(Alignment.CenterHorizontally)
                 )
             }
-            Row(
-                modifier = Modifier.width(cardWidth),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if (!isProfile) {
+                Row(
+                    modifier = Modifier.width(cardWidth),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconText(
+                        icon = ContentCardIcons.USER.icon,
+                        text = item.userName,
+                        contentDescription = stringResource(id = ContentCardIcons.USER.label),
+                        onClick = { },
+                        modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
+                    )
+                    Text(item.regDate, modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
+                }
                 IconText(
-                    icon = ContentCardIcons.USER.icon,
-                    text = item.userName,
-                    contentDescription = stringResource(id = ContentCardIcons.USER.label),
+                    icon = ContentCardIcons.BOOKMARK.icon,
+                    text = item.bookmarkCount.toString(),
+                    contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
                     onClick = { },
-                    modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
+                    modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp)
                 )
-                Text(item.regDate, modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
-            }
-            IconText(
-                icon = ContentCardIcons.BOOKMARK.icon,
-                text = item.bookmarkCount.toString(),
-                contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
-                onClick = { },
-                modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp)
-            )
-            item.content?.let {
-                SpaceDivider(10)
-                Text(
-                    it,
-                    modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
-                )
-                SimpleIconButton(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(horizontal = ICON_TEXT_HORIZONTAL.dp),
-                    icon = ContentCardIcons.MAP.icon,
-                    contentDescription = stringResource(id = ContentCardIcons.MAP.label),
-                    onClick = onMapClick
-                )
+                item.content?.let {
+                    SpaceDivider(10)
+                    Text(
+                        it,
+                        modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
+                    )
+                    SimpleIconButton(
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(horizontal = ICON_TEXT_HORIZONTAL.dp),
+                        icon = ContentCardIcons.MAP.icon,
+                        contentDescription = stringResource(id = ContentCardIcons.MAP.label),
+                        onClick = onMapClick
+                    )
+                }
             }
             SpaceDivider(10)
         }

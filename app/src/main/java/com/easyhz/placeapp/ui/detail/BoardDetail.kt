@@ -37,6 +37,7 @@ import com.easyhz.placeapp.ui.component.detail.MapModal
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 
 @Composable
 fun BoardDetail(id: Int) {
@@ -114,7 +115,7 @@ fun BoardDetail(id: Int) {
                     modifier = Modifier
                         .width(screenWidth.dp)
                         .padding(CONTENT_ALL.dp)
-                        .clip(RoundedCornerShape(15.dp))
+                        .clip(roundShape)
                         .background(PlaceAppTheme.colorScheme.mainBackground),
                     onMapClick = { isShowModal = true }
                 )
@@ -123,7 +124,7 @@ fun BoardDetail(id: Int) {
                     modifier = Modifier
                         .width(screenWidth.dp)
                         .padding(CONTENT_ALL.dp)
-                        .clip(RoundedCornerShape(15.dp))
+                        .clip(roundShape)
                         .background(PlaceAppTheme.colorScheme.mainBackground),
                 )
             }
@@ -162,7 +163,7 @@ private fun onMapClick() {
 
 }
 fun getStatusBarColors(
-    isShowBottomSheet: Boolean,
+    isShowBottomSheet: Boolean = false,
     isLightMode: Boolean,
     window: Window,
     statusTopBar: Color,

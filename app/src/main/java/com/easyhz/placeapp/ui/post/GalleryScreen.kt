@@ -68,8 +68,8 @@ fun GalleryScreen(
             title = stringResource(id = R.string.post_gallery_header),
             onBackClick = { onNavigateToBack() },
             onNextClick = {
-                if(viewModel.selectedImageList.size == 0) Log.d("GalleryScreen", "한 장 이상 선택")// 사진 한 장 이상 선택 스낵바
-                else {
+                /* 사진 선택 필수 */
+                if(viewModel.selectedImageList.size != 0) {
                     onNavigateToNext()
                     viewModel.initPlaceList()
                 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -20,6 +21,7 @@ import com.easyhz.placeapp.gallery.Gallery
 import com.easyhz.placeapp.gallery.GalleryPagingSource
 import com.easyhz.placeapp.gallery.GalleryPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
+import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.toAddress
 import com.easyhz.placeapp.util.toLatLng
 import com.easyhz.placeapp.util.withoutHTML
@@ -53,6 +55,10 @@ class NewPostViewModel
     private val _selectedImageList = mutableStateListOf<Gallery>()
     val selectedImageList: SnapshotStateList<Gallery>
         get() = _selectedImageList
+
+    private var _unselectedImagePlaceIndices = mutableStateListOf<Int>()
+    val unselectedImagePlaceIndices: SnapshotStateList<Int>
+        get() = _unselectedImagePlaceIndices
 
     private val _textContent = mutableStateOf("")
     val textContent: State<String>
@@ -122,7 +128,7 @@ class NewPostViewModel
                 longitude = null,
                 address = null,
                 imageFile = item.path,
-                imageName = item.name,
+                imageName = item.name
             )
         }.toMutableStateList()
     }
@@ -146,13 +152,34 @@ class NewPostViewModel
         }
     }
 
+    private fun findUnselectedPlace() {
+        _unselectedImagePlaceIndices = _selectedImagePlaceList.indices
+            .filter { listOfNullItems(_selectedImagePlaceList[it]).isEmpty() }.toMutableStateList()
+    }
+
+    fun setPlaceBorder(placeBorderDefault: Color, placeBorderError:Color) {
+        _unselectedImagePlaceIndices.forEach { index ->
+            _selectedImagePlaceList[index].placeBorderColor =
+                if (index in _unselectedImagePlaceIndices) placeBorderError
+                else placeBorderDefault
+        }
+    }
+    fun onNextClick(
+        onNavigateToNext: () -> Unit,
+    ) {
+        if (hasAllPlaces()) onNavigateToNext()
+        else findUnselectedPlace()
+    }
+
     fun isInitPlaceSelect() : Boolean  = _selectedImagePlaceList.all {
-        listOfNotNull(it.placeName, it.address, it.latitude, it.longitude).isEmpty()
+        listOfNullItems(it).isEmpty()
     }
 
     fun hasAllPlaces() : Boolean = _selectedImagePlaceList.all {
-        listOfNotNull(it.placeName, it.address, it.latitude, it.longitude).size == 4
+        listOfNullItems(it).size == 4
     }
+
+    private fun listOfNullItems(item: Place) = listOfNotNull(item.placeName, item.address, item.latitude, item.longitude)
 
     private fun setCurrentImage(image: Gallery? = _selectedImageList.lastOrNull()) {
         _currentImage.value = image
