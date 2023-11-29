@@ -44,6 +44,7 @@ import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.getImageRequestDefault
+import com.easyhz.placeapp.util.toTimeFormat
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -107,7 +108,7 @@ fun ContentCard(
                         onClick = { },
                         modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
                     )
-                    Text(item.regDate, modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
+                    Text(item.regDate.toTimeFormat(), modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
                 }
                 IconText(
                     icon = ContentCardIcons.BOOKMARK.icon,
