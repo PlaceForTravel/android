@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,13 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_VERTICAL
 import com.easyhz.placeapp.constants.PaddingConstants.IMAGE_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.TEXT_HORIZONTAL
-import com.easyhz.placeapp.ui.home.feed.FeedType
+import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.getImageRequestDefault
@@ -51,14 +49,14 @@ import com.easyhz.placeapp.util.getImageRequestDefault
 @Composable
 fun ContentCard(
     modifier: Modifier = Modifier,
-    item: FeedType,
+    item: Content,
     cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
     imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
     contentDescription: String = "IMG",
     isProfile: Boolean = false,
     onMapClick: () -> Unit = { }
 ) {
-    val imagesCount = item.imagePath.size
+    val imagesCount = item.imgUrl.size
     val pagerState = rememberPagerState { imagesCount }
     Box(
         modifier = modifier,
@@ -68,17 +66,16 @@ fun ContentCard(
         ) {
             IconText(
                 icon = ContentCardIcons.PLACE.icon,
-                text = item.placeName,
+                text = item.cityName,
                 contentDescription = stringResource(id = ContentCardIcons.PLACE.label),
                 onClick = { },
                 modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
             )
             // TODO: Confirm
-            item.detailPlace?.let {
+            item.places?.let {
                 Row(
                     modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
                 ) {
-//                    Text(stringResource(id = R.string.content_place), fontWeight = FontWeight.ExtraLight, color = Color.Gray)
                     Text(
                         "📍   $it",
                     )
@@ -87,7 +84,7 @@ fun ContentCard(
             }
             ImageSlider(pagerState = pagerState, itemsCount = imagesCount) {index ->
                 ContentImage(
-                    imagePath = item.imagePath[index],
+                    imagePath = item.imgUrl[index],
                     imageSize = imageSize,
                     contentDescription = contentDescription,
                     modifier = Modifier
@@ -105,7 +102,7 @@ fun ContentCard(
                 ) {
                     IconText(
                         icon = ContentCardIcons.USER.icon,
-                        text = item.userName,
+                        text = item.nickname,
                         contentDescription = stringResource(id = ContentCardIcons.USER.label),
                         onClick = { },
                         modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
@@ -114,12 +111,12 @@ fun ContentCard(
                 }
                 IconText(
                     icon = ContentCardIcons.BOOKMARK.icon,
-                    text = item.bookmarkCount.toString(),
+                    text = item.likeCount.toString(),
                     contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
                     onClick = { },
                     modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp)
                 )
-                item.content?.let {
+                item.text?.let {
                     SpaceDivider(10)
                     Text(
                         it,
@@ -219,13 +216,18 @@ private fun ContentImage(
 @Composable
 private fun CardPreview() {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
-    val mock = FeedType(
-        id = 1,
-        imagePath = listOf("https://picsum.photos/id/307/200/300"),
-        userName = "유저 1",
+    val mock = Content(
+        boardId = 1,
+        imgUrl = listOf("https://picsum.photos/id/307/200/300"),
+        nickname = "유저 1",
         regDate = "2023.10.29",
-        placeName = "대한민국, 제주특별자치도",
-        bookmarkCount = 5,
+        cityName = "대한민국, 제주특별자치도",
+        likeCount = 5,
+        text = null,
+        places = null,
+        deletedDate = "",
+        modifiedDate = "",
+        userId = "유저 1"
     )
     PlaceAppTheme {
         ContentCard(
@@ -240,17 +242,20 @@ private fun CardPreview() {
 @Composable
 private fun DetailCardPreview() {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
-    val mock = FeedType(
-        id = 1,
-        imagePath = listOf("https://picsum.photos/id/307/200/300"),
-        userName = "유저 1",
+    val mock = Content(
+        boardId = 1,
+        imgUrl = listOf("https://picsum.photos/id/307/200/300"),
+        nickname = "유저 1",
         regDate = "2023.10.29",
-        placeName = "대한민국, 제주특별자치도",
-        bookmarkCount = 5,
-        content = "제가 이번 추석 연후에 연차까지 내서 빈대? 인정 나도 알아 뉴스는 안봄 하지만 근데 우리 강동구는 괜찮은데 지하철이 개무서움\n" +
+        cityName = "대한민국, 제주특별자치도",
+        likeCount = 5,
+        text = "제가 이번 추석 연후에 연차까지 내서 빈대? 인정 나도 알아 뉴스는 안봄 하지만 근데 우리 강동구는 괜찮은데 지하철이 개무서움\n" +
                 "자리에 앉기무서운데 그래도 앉아\n" +
                 "현생이 힘드니까",
-        detailPlace = "제주 흑돼지"
+        places = "제주 흑돼지",
+        deletedDate = "",
+        modifiedDate = "",
+        userId = "유저 1"
     )
     PlaceAppTheme {
         ContentCard(

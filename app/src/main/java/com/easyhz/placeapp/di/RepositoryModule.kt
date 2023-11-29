@@ -1,5 +1,7 @@
 package com.easyhz.placeapp.di
 
+import com.easyhz.placeapp.domain.repository.feed.FeedRepository
+import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
 import com.easyhz.placeapp.domain.repository.place.PlaceRepository
 import com.easyhz.placeapp.domain.repository.place.PlaceRepositoryImpl
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindPlaceRepository(
         placeRepositoryImpl: PlaceRepositoryImpl,
     ): PlaceRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindFeedRepository(
+        feedRepositoryImpl: FeedRepositoryImpl,
+    ): FeedRepository
 }

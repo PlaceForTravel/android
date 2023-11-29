@@ -9,5 +9,7 @@ data class Content(
     val modifiedDate: Any,
     val nickname: String,
     val regDate: String,
-    val userId: String
+    val userId: String,
+    val text: String?,
+    val places: String?,
 )

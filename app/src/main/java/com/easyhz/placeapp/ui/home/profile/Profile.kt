@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.constants.PaddingConstants
+import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.ui.component.ContentCard
-import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
 
@@ -41,41 +41,20 @@ const val GRID_CELL = 2
 fun Profile() {
     val screenWidth = LocalConfiguration.current.screenWidthDp / GRID_CELL
     val dummy = listOf(
-        FeedType(
-            id = 1,
-            imagePath = listOf("https://picsum.photos/id/177/200/300", "https://picsum.photos/id/337/200/300"),
-            userName = "북치는 라이언",
+        Content(
+            boardId = 1,
+            imgUrl = listOf("https://picsum.photos/id/307/200/300"),
+            nickname = "유저 1",
             regDate = "2023.10.29",
-            placeName = "경기도 성남시 분당구",
-            bookmarkCount = 5,
-        ), FeedType(
-            id = 2,
-            imagePath = listOf("https://picsum.photos/id/352/200/300"),
-            userName =  "유저 2",
-            regDate = "2023.11.01",
-            placeName = "대한민국 서울특별시",
-            bookmarkCount = 0,
-        ), FeedType(
-            id = 3,
-            imagePath = listOf("https://picsum.photos/id/234/200/300"),
-            userName = "유저 3",
-            regDate = "2023.11.01",
-            placeName = "대한민국 여수시",
-            bookmarkCount = 1342
-        ), FeedType(
-            id = 4,
-            imagePath = listOf("https://picsum.photos/id/236/200/300"),
-            userName= "유저 4",
-            regDate = "2023.11.01",
-            placeName = "대한민국 부산광역시",
-            bookmarkCount = 434
-        ), FeedType(
-            id = 5,
-            imagePath = listOf("https://picsum.photos/id/231/200/300"),
-            userName =  "유저 5",
-            regDate = "2023.11.01",
-            placeName = "대한민국 대전광역시",
-            bookmarkCount = 12
+            cityName = "대한민국, 제주특별자치도",
+            likeCount = 5,
+            text = "제가 이번 추석 연후에 연차까지 내서 빈대? 인정 나도 알아 뉴스는 안봄 하지만 근데 우리 강동구는 괜찮은데 지하철이 개무서움\n" +
+                    "자리에 앉기무서운데 그래도 앉아\n" +
+                    "현생이 힘드니까",
+            places = "제주 흑돼지",
+            deletedDate = "",
+            modifiedDate = "",
+            userId = "유저 1"
         )
     )
     Column(
