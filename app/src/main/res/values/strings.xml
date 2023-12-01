@@ -36,5 +36,7 @@
     <string name="setting_error">Setting Error</string>
     <string name="notice_please_select_same_city">같은 도시를 선택해 주세요.</string>
 
+    <string name="place_icon">📍</string>
+
 
 </resources>

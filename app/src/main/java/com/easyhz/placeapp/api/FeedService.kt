@@ -1,6 +1,7 @@
 package com.easyhz.placeapp.api
 
 import com.easyhz.placeapp.domain.model.feed.Feed
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.Response
@@ -18,9 +19,9 @@ interface FeedService {
 
     /* 글 상세 조회 (수정 필요) */
     @GET("/board/detail/{boardId}")
-    suspend fun getBoardDetail(
+    suspend fun getFeedDetail(
         @Path("boardId") id: Int
-    )
+    ) : Response<FeedDetail>
 
     /* 댓글 조회 (수정 필요) */
     @GET("/board/{boardId}/comment")

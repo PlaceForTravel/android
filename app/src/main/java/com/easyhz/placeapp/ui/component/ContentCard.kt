@@ -35,12 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.easyhz.placeapp.R
 import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_VERTICAL
 import com.easyhz.placeapp.constants.PaddingConstants.IMAGE_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.TEXT_HORIZONTAL
 import com.easyhz.placeapp.domain.model.feed.Content
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.getImageRequestDefault
@@ -55,7 +57,6 @@ fun ContentCard(
     imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
     contentDescription: String = "IMG",
     isProfile: Boolean = false,
-    onMapClick: () -> Unit = { }
 ) {
     val imagesCount = item.imgUrl.size
     val pagerState = rememberPagerState { imagesCount }
@@ -65,24 +66,7 @@ fun ContentCard(
         Column(
             horizontalAlignment = Alignment.Start,
         ) {
-            IconText(
-                icon = ContentCardIcons.PLACE.icon,
-                text = item.cityName,
-                contentDescription = stringResource(id = ContentCardIcons.PLACE.label),
-                onClick = { },
-                modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
-            )
-            // TODO: Confirm
-            item.places?.let {
-                Row(
-                    modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
-                ) {
-                    Text(
-                        "📍   $it",
-                    )
-                }
-                SpaceDivider(padding = 5)
-            }
+            PlaceContentInfo(item.cityName)
             ImageSlider(pagerState = pagerState, itemsCount = imagesCount) {index ->
                 ContentImage(
                     imagePath = item.imgUrl[index],
@@ -96,43 +80,65 @@ fun ContentCard(
                 )
             }
             if (!isProfile) {
-                Row(
-                    modifier = Modifier.width(cardWidth),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconText(
-                        icon = ContentCardIcons.USER.icon,
-                        text = item.nickname,
-                        contentDescription = stringResource(id = ContentCardIcons.USER.label),
-                        onClick = { },
-                        modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
-                    )
-                    Text(item.regDate.toTimeFormat(), modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
-                }
-                IconText(
-                    icon = ContentCardIcons.BOOKMARK.icon,
-                    text = item.likeCount.toString(),
-                    contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
-                    onClick = { },
-                    modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp)
-                )
-                item.text?.let {
-                    SpaceDivider(10)
-                    Text(
-                        it,
-                        modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
-                    )
-                    SimpleIconButton(
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(horizontal = ICON_TEXT_HORIZONTAL.dp),
-                        icon = ContentCardIcons.MAP.icon,
-                        contentDescription = stringResource(id = ContentCardIcons.MAP.label),
-                        onClick = onMapClick
-                    )
-                }
+                ContentInfo(name = item.nickname, regDate = item.regDate, likeCount = item.likeCount)
             }
+            SpaceDivider(10)
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DetailContentCard(
+    modifier: Modifier = Modifier,
+    item: FeedDetail,
+    cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
+    imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
+    contentDescription: String = "IMG",
+    onMapClick: () -> Unit = { }
+) {
+    val imagesCount = item.placeResponseDTOS.size
+    val pagerState = rememberPagerState { imagesCount }
+    Box(
+        modifier = modifier,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+        ) {
+            PlaceContentInfo(item.cityName)
+            Row(
+                modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
+            ) {
+                Text(text = stringResource(id = R.string.place_icon), modifier = Modifier.padding(end = 13.dp))
+                Text(text = item.placeResponseDTOS[pagerState.currentPage].placeName)
+            }
+            SpaceDivider(padding = 5)
+            ImageSlider(pagerState = pagerState, itemsCount = imagesCount) { index ->
+                ContentImage(
+                    imagePath = item.placeResponseDTOS[index].imgUrl,
+                    imageSize = imageSize,
+                    contentDescription = contentDescription,
+                    modifier = Modifier
+                        .width(cardWidth)
+                        .padding(horizontal = IMAGE_HORIZONTAL.dp)
+                        .clip(roundShape)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+            ContentInfo(name = item.nickname, regDate = item.regDate, likeCount = item.likeCount)
+            SpaceDivider(10)
+            Text(
+                item.content,
+                modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
+            )
+            SimpleIconButton(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(horizontal = ICON_TEXT_HORIZONTAL.dp),
+                icon = ContentCardIcons.MAP.icon,
+                contentDescription = stringResource(id = ContentCardIcons.MAP.label),
+                onClick = onMapClick
+            )
             SpaceDivider(10)
         }
     }
@@ -175,6 +181,47 @@ fun IconText(
             )
         }
     }
+}
+
+@Composable
+private fun ContentInfo(
+    name: String,
+    regDate: String,
+    likeCount: Int,
+    cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
+) {
+    Row(
+        modifier = Modifier.width(cardWidth),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconText(
+            icon = ContentCardIcons.USER.icon,
+            text = name,
+            contentDescription = stringResource(id = ContentCardIcons.USER.label),
+            onClick = { },
+            modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
+        )
+        Text(regDate.toTimeFormat(), modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
+    }
+    IconText(
+        icon = ContentCardIcons.BOOKMARK.icon,
+        text = likeCount.toString(),
+        contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
+        onClick = { },
+        modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp)
+    )
+}
+
+@Composable
+private fun PlaceContentInfo(name: String) {
+    IconText(
+        icon = ContentCardIcons.PLACE.icon,
+        text = name,
+        contentDescription = stringResource(id = ContentCardIcons.PLACE.label),
+        onClick = { },
+        modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
+    )
 }
 
 @Composable

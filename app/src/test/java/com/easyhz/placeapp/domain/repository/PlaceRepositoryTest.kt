@@ -26,8 +26,6 @@ class PlaceRepositoryTest {
             )
 
         val result = repository.getPlaces(query, display, start, sort)
-
         assert(result.isSuccessful)
-
     }
 }
