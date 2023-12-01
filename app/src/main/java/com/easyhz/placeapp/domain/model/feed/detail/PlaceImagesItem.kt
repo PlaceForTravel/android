@@ -1,8 +1,11 @@
 package com.easyhz.placeapp.domain.model.feed.detail
 
-data class PlaceResponseDTOS(
+import com.google.gson.annotations.SerializedName
+
+data class PlaceImagesItem(
     val address: String,
-    val boardPlaceid: Int,
+    @SerializedName("boardPlaceid")
+    val boardPlaceId: Int,
     val imgUrl: String,
     val latitude: Double,
     val longitude: Double,

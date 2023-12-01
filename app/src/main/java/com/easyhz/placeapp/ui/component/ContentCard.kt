@@ -97,7 +97,7 @@ fun DetailContentCard(
     contentDescription: String = "IMG",
     onMapClick: () -> Unit = { }
 ) {
-    val imagesCount = item.placeResponseDTOS.size
+    val imagesCount = item.placeImages.size
     val pagerState = rememberPagerState { imagesCount }
     Box(
         modifier = modifier,
@@ -110,12 +110,12 @@ fun DetailContentCard(
                 modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
             ) {
                 Text(text = stringResource(id = R.string.place_icon), modifier = Modifier.padding(end = 13.dp))
-                Text(text = item.placeResponseDTOS[pagerState.currentPage].placeName)
+                Text(text = item.placeImages[pagerState.currentPage].placeName)
             }
             SpaceDivider(padding = 5)
             ImageSlider(pagerState = pagerState, itemsCount = imagesCount) { index ->
                 ContentImage(
-                    imagePath = item.placeResponseDTOS[index].imgUrl,
+                    imagePath = item.placeImages[index].imgUrl,
                     imageSize = imageSize,
                     contentDescription = contentDescription,
                     modifier = Modifier
