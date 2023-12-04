@@ -37,6 +37,8 @@
     <string name="notice_please_select_same_city">같은 도시를 선택해 주세요.</string>
 
     <string name="place_icon">📍</string>
+    <string name="view_all_place">모두 보기</string>
+    <string name="view_one_place">하나씩 보기</string>
 
 
 </resources>
