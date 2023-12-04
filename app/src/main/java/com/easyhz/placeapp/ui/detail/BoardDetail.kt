@@ -8,14 +8,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,120 +29,145 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.easyhz.placeapp.constants.PaddingConstants
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
-import com.easyhz.placeapp.ui.component.ContentCard
-import com.easyhz.placeapp.ui.component.comment.Comments
+import com.easyhz.placeapp.ui.component.DetailContentCard
+import com.easyhz.placeapp.ui.component.SpaceDivider
+import com.easyhz.placeapp.ui.component.comment.CommentCard
+import com.easyhz.placeapp.ui.component.comment.CommentTextField
 import com.easyhz.placeapp.ui.component.detail.MapModal
 import com.easyhz.placeapp.ui.component.detail.WindowShade
-import com.easyhz.placeapp.ui.home.feed.FeedType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundBottomShape
+import com.easyhz.placeapp.ui.theme.roundShape
+import com.easyhz.placeapp.ui.theme.roundTopShape
 
 @Composable
-fun BoardDetail(id: Int) {
+fun BoardDetail(
+    viewModel: BoardDetailViewModel = hiltViewModel(),
+    id: Int
+) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
-    val dummy = FeedType(
-            id = 1,
-            imagePath = listOf("https://picsum.photos/id/307/200/300", "https://picsum.photos/id/337/200/300"),
-            userName = "유저 1",
-            regDate = "2023.10.29",
-            placeName = "대한민국, 제주특별자치도",
-            bookmarkCount = 5,
-            content = "제가 이번 추석 연후에 연차까지 내서 빈대? 인정 나도 알아 뉴스는 안봄 하지만 근데 우리 강동구는 괜찮은데 지하철이 개무서움\n" +
-                    "자리에 앉기무서운데 그래도 앉아\n" +
-                    "현생이 힘드니까",
-            detailPlace = "제주 흑돼지"
-        )
-    val mock = arrayOf(
-        CommentType(
-            id = 1,
-            userName = "유저1",
-            content = "댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 2,
-            userName = "유저2",
-            content = "댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 3,
-            userName = "유저3",
-            content = "댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 4,
-            userName = "유저4",
-            content = "댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 5,
-            userName = "유저5",
-            content = "댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 6,
-            userName = "유저6",
-            content = "댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.댓글 입니다.",
-            regDate = "2023.11.08"
-        ),
-    )
+
     var isShowModal by remember { mutableStateOf(false) }
     val screenHeight = LocalConfiguration.current.screenHeightDp
+    val focusManager = LocalFocusManager.current
 
     val window = (LocalContext.current as Activity).window
     val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
     val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
 
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier.clickable {
-                isShowModal = false
-            }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .background(PlaceAppTheme.colorScheme.subBackground)
-            ) {
-                ContentCard(
-                    item = dummy,
-                    imageSize = (screenWidth - 100).dp,
-                    cardWidth = screenWidth.dp,
-                    modifier = Modifier
-                        .width(screenWidth.dp)
-                        .padding(CONTENT_ALL.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(PlaceAppTheme.colorScheme.mainBackground),
-                    onMapClick = { isShowModal = true }
-                )
-                Comments(
-                    items = mock,
-                    modifier = Modifier
-                        .width(screenWidth.dp)
-                        .padding(CONTENT_ALL.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(PlaceAppTheme.colorScheme.mainBackground),
-                )
-            }
-        }
-        if (isShowModal) {
-            WindowShade()
-            MapModal(
-                context = LocalContext.current,
-                modifier = Modifier
-                    .height((screenHeight * 0.7).dp)
-                    .width((screenWidth - 100).dp)
-            )
-
-        }
+    val comments = viewModel.comments.collectAsLazyPagingItems()
+    
+    LaunchedEffect(key1 = Unit) {
+        viewModel.fetchFeedDetail(id)
+        viewModel.fetchComments(id)
     }
+
+    viewModel.feedDetail.value?.let { feedDetail ->
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier.clickable {
+                    isShowModal = false
+                    viewModel.setIsViewAll()
+                    focusManager.clearFocus()
+                }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .background(PlaceAppTheme.colorScheme.subBackground)
+                ) {
+                    LazyColumn(
+                        Modifier.weight(1f)
+                    ) {
+                        item {
+                            DetailContentCard(
+                                item = feedDetail,
+                                imageSize = (screenWidth - 100).dp,
+                                cardWidth = screenWidth.dp,
+                                modifier = Modifier
+                                    .width(screenWidth.dp)
+                                    .padding(CONTENT_ALL.dp)
+                                    .clip(roundShape)
+                                    .background(PlaceAppTheme.colorScheme.mainBackground),
+                                onMapClick = { placeImagesItem ->
+                                    viewModel.setPlaceImagesItem(placeImagesItem)
+                                    isShowModal = true
+                                }
+                            )
+                        }
+                        items(comments.itemCount) { index ->
+                            val isTop = index == 0
+                            val isBottom = index == comments.itemCount - 1
+
+                            Box(
+                                modifier = Modifier
+                                    .width(screenWidth.dp)
+                                    .padding(horizontal = CONTENT_ALL.dp)
+                                    .clip(
+                                        if (isTop) roundTopShape
+                                        else if (isBottom) roundBottomShape
+                                        else RectangleShape
+                                    )
+                                    .background(PlaceAppTheme.colorScheme.mainBackground),
+                            ) {
+                                comments[index]?.let {
+                                    CommentCard(
+                                        item = it,
+                                        modifier = Modifier.padding(
+                                            horizontal = PaddingConstants.ICON_TEXT_HORIZONTAL.dp,
+                                            vertical = PaddingConstants.ICON_TEXT_VERTICAL.dp
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            SpaceDivider(padding = 5)
+                        }
+                    }
+                    CommentTextField(
+                        modifier = Modifier
+                            .padding(CONTENT_ALL.dp)
+                            .fillMaxHeight(0.9F)
+                            .fillMaxWidth(),
+                        value = viewModel.commentText.value,
+                        onValueChange = { viewModel.setCommentText(it) },
+                        enabled = !isShowModal,
+                        onSendClick = { println("보냈음") }
+                    )
+                }
+
+            }
+            if (isShowModal) {
+                WindowShade()
+                viewModel.placeImagesItem.value?.let { placeImageItem ->
+                    MapModal(
+                        item = placeImageItem,
+                        places = viewModel.allPlaces,
+                        modifier = Modifier
+                            .height((screenHeight * 0.7).dp)
+                            .width((screenWidth - 100).dp),
+                        isViewAll = viewModel.isViewAll.value,
+                        onViewAllClick = { viewModel.setIsViewAll() }
+                    )
+                }
+            }
+        }
+    } ?: Text(text = "오류") // TODO:: 없을 때 잡기
     val isLightMode = !isSystemInDarkTheme()
     SideEffect {
         getStatusBarColors(
@@ -162,7 +191,7 @@ private fun onMapClick() {
 
 }
 fun getStatusBarColors(
-    isShowBottomSheet: Boolean,
+    isShowBottomSheet: Boolean = false,
     isLightMode: Boolean,
     window: Window,
     statusTopBar: Color,

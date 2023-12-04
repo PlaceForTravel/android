@@ -1,7 +1,8 @@
-package com.easyhz.placeapp.gallery
+package com.easyhz.placeapp.data.dataSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 
 /**
@@ -25,9 +26,9 @@ class GalleryPagingSource(
             currentLocation = currentLocation,
         )
 
-        val end = data.isEmpty()
+        val isEnd = data.isEmpty()
         val prev = if(position == START_PAGE_INDEX) null else position - 1
-        val next = if(end) null else position + (params.loadSize / PAGE_SIZE)
+        val next = if(isEnd) null else position + (params.loadSize / PAGE_SIZE)
         LoadResult.Page(data, prev, next)
     } catch (exception: Exception) {
         LoadResult.Error(exception)

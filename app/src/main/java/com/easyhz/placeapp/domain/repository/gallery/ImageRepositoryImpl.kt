@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.core.os.bundleOf
-import com.easyhz.placeapp.gallery.Gallery
+import com.easyhz.placeapp.domain.model.gallery.Gallery
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

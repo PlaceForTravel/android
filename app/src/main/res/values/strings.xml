@@ -28,10 +28,18 @@
 
     <string name="post_add_place">장소를 추가해 주세요.</string>
     <string name="post_add_text">내용을 작성해 주세요.</string>
+    <string name="post_add_comment">댓글을 작성해 보세요.</string>
     <string name="place_search">장소 검색</string>
 
 
     <string name="no_search_data">검색 결과가 없습니다.</string>
+
+    <string name="setting_error">Setting Error</string>
+    <string name="notice_please_select_same_city">같은 도시를 선택해 주세요.</string>
+
+    <string name="place_icon">📍</string>
+    <string name="view_all_place">모두 보기</string>
+    <string name="view_one_place">하나씩 보기</string>
 
 
 </resources>
