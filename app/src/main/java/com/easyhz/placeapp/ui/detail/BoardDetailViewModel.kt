@@ -35,6 +35,10 @@ class BoardDetailViewModel
     val isViewAll: State<Boolean>
         get() = _isViewAll
 
+    private val _commentText = mutableStateOf("")
+    val commentText: State<String>
+        get() = _commentText
+
     fun fetchFeedDetail(id: Int) = viewModelScope.launch {
         val response = feedRepository.fetchFeedDetail(id)
         if(response.isSuccessful) {
@@ -53,11 +57,11 @@ class BoardDetailViewModel
         _isViewAll.value = !_isViewAll.value
     }
 
-    fun getAllPlaceLatLng() {
-        feedDetail.value?.placeImages?.forEach {
-            _allPlaces.add(LatLngType(it.latitude, it.longitude))
-        }
-//        _allPlaces.addAll(feedDetail.value?.placeImages?.map { LatLngType(it.latitude, it.longitude) } ?: emptyList())
+    fun setCommentText(value: String) {
+        _commentText.value = value
+    }
 
+    private fun getAllPlaceLatLng() {
+        _allPlaces.addAll(feedDetail.value?.placeImages?.map { LatLngType(it.latitude, it.longitude) } ?: emptyList())
     }
 }

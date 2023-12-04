@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.FmdBad
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.PersonPinCircle
 import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.Send
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.easyhz.placeapp.R
 
@@ -25,5 +26,7 @@ enum class ContentCardIcons(
 
     ADD(R.string.home_add, Icons.Outlined.Edit),
 
-    ERROR(R.string.setting_error, Icons.Outlined.FmdBad)
+    ERROR(R.string.setting_error, Icons.Outlined.FmdBad),
+
+    SEND(R.string.post_add_comment, Icons.Outlined.Send)
 }

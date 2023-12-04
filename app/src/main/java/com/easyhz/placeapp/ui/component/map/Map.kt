@@ -74,7 +74,7 @@ private fun setMap(mapView: MapView, places: List<LatLngType>) {
 }
 
 const val ALL_PLACE_ZOOM_SIZE = 13.0
-const val ONE_PLACE_ZOOM_SIZE = 13.0
+const val ONE_PLACE_ZOOM_SIZE = 15.5
 
 private fun setCamera(places: List<LatLngType>): CameraUpdate {
     val zoom = if (places.size > 1) ALL_PLACE_ZOOM_SIZE else ONE_PLACE_ZOOM_SIZE
