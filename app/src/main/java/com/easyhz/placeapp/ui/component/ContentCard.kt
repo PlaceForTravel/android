@@ -43,6 +43,7 @@ import com.easyhz.placeapp.constants.PaddingConstants.IMAGE_HORIZONTAL
 import com.easyhz.placeapp.constants.PaddingConstants.TEXT_HORIZONTAL
 import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.getImageRequestDefault
@@ -95,7 +96,7 @@ fun DetailContentCard(
     cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
     imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
     contentDescription: String = "IMG",
-    onMapClick: () -> Unit = { }
+    onMapClick: (PlaceImagesItem) -> Unit = { }
 ) {
     val imagesCount = item.placeImages.size
     val pagerState = rememberPagerState { imagesCount }
@@ -137,7 +138,7 @@ fun DetailContentCard(
                     .padding(horizontal = ICON_TEXT_HORIZONTAL.dp),
                 icon = ContentCardIcons.MAP.icon,
                 contentDescription = stringResource(id = ContentCardIcons.MAP.label),
-                onClick = onMapClick
+                onClick = { onMapClick(item.placeImages[pagerState.currentPage]) }
             )
             SpaceDivider(10)
         }

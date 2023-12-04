@@ -33,8 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
-import com.easyhz.placeapp.domain.model.feed.Content
-import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.component.DetailContentCard
 import com.easyhz.placeapp.ui.component.comment.Comments
 import com.easyhz.placeapp.ui.component.detail.MapModal
