@@ -1,6 +1,7 @@
 package com.easyhz.placeapp.api
 
 import com.easyhz.placeapp.domain.model.feed.Feed
+import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -28,7 +29,7 @@ interface FeedService {
     suspend fun getComments(
         @Path("boardId") id: Int,
         @Query("page") page: Int
-    )
+    ) : Response<Comment>
 
     /* 글 등록 -> 헤더에 토큰 TODO: 파라미터 수정 필요 */
     @POST("/board/save")

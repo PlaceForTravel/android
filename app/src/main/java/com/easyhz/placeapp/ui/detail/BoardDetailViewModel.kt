@@ -5,11 +5,22 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.easyhz.placeapp.data.dataSource.CommentPagingSource
+import com.easyhz.placeapp.data.dataSource.CommentPagingSource.Companion.PAGE_SIZE
+import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.ui.component.map.LatLngType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +32,10 @@ class BoardDetailViewModel
     private val _feedDetail = mutableStateOf<FeedDetail?>(null)
     val feedDetail: State<FeedDetail?>
         get() = _feedDetail
+
+    private val _comments = MutableStateFlow<PagingData<CommentContent>>(PagingData.empty())
+    val comments: StateFlow<PagingData<CommentContent>>
+        get() = _comments.asStateFlow()
 
     private val _placeImagesItem = mutableStateOf<PlaceImagesItem?>(null)
     val placeImagesItem: State<PlaceImagesItem?>
@@ -46,6 +61,23 @@ class BoardDetailViewModel
             getAllPlaceLatLng()
         } else {
             Log.e(":: ${this::class.java.simpleName}", "fetchFeedDetail Error : ${response.code()}")
+        }
+    }
+
+    fun fetchComments(id: Int) = viewModelScope.launch {
+        Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                CommentPagingSource(
+                    feedRepository = feedRepository,
+                    id = id
+                )
+            }
+        ).flow.cachedIn(viewModelScope).collectLatest {
+            _comments.value = it
         }
     }
 

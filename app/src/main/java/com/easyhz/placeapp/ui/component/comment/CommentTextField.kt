@@ -66,7 +66,7 @@ private fun SendButton(
     onSendClick: () -> Unit,
     enabled: Boolean
 ) {
-    val iconColor = if (enabled) PlaceAppTheme.colorScheme.mainText else PlaceAppTheme.colorScheme.secondaryBorder
+    val iconColor = if (enabled) PlaceAppTheme.colorScheme.mainText else PlaceAppTheme.colorScheme.unselectedIcon
     IconButton(
         onClick = { if (enabled) onSendClick() }
     ) {
