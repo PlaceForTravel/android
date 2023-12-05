@@ -2,7 +2,9 @@ package com.easyhz.placeapp.ui.detail
 
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -12,11 +14,14 @@ import androidx.paging.cachedIn
 import com.easyhz.placeapp.data.dataSource.CommentPagingSource
 import com.easyhz.placeapp.data.dataSource.CommentPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
+import com.easyhz.placeapp.domain.model.feed.comment.post.CommentState
+import com.easyhz.placeapp.domain.model.feed.comment.post.updateContent
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.ui.component.map.LatLngType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,11 +55,18 @@ class BoardDetailViewModel
     val isViewAll: State<Boolean>
         get() = _isViewAll
 
-    private val _commentText = mutableStateOf("")
-    val commentText: State<String>
-        get() = _commentText
+    var commentState by mutableStateOf(CommentState())
+
+    private val _isSuccessful = mutableStateOf(false)
+    val isSuccessful: State<Boolean>
+        get() = _isSuccessful
+
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean>
+        get() = _isLoading
 
     fun fetchFeedDetail(id: Int) = viewModelScope.launch {
+        setIsLoading(true)
         val response = feedRepository.fetchFeedDetail(id)
         if(response.isSuccessful) {
             _feedDetail.value = response.body()
@@ -62,6 +74,7 @@ class BoardDetailViewModel
         } else {
             Log.e(":: ${this::class.java.simpleName}", "fetchFeedDetail Error : ${response.code()}")
         }
+        setIsLoading(false)
     }
 
     fun fetchComments(id: Int) = viewModelScope.launch {
@@ -81,6 +94,32 @@ class BoardDetailViewModel
         }
     }
 
+    fun saveComment(id: Int) = viewModelScope.launch {
+        try {
+            commentState = commentState.copy(isLoading = true)
+            feedRepository.saveComment(id, commentState.postComment) { isSuccessful ->
+                commentState = if (isSuccessful) {
+                    Log.d(this::class.java.simpleName, "Success")
+                    setCommentText("")
+                    commentState.copy(isSuccessful = true)
+                } else {
+                    Log.d(this::class.java.simpleName, "Fail")
+                    commentState.copy(isSuccessful = false)
+                }
+            }
+        } catch (e: Exception) {
+            commentState = commentState.copy(error = e.localizedMessage)
+        } finally {
+            commentState = commentState.copy(isLoading = false)
+        }
+    }
+    fun resetCommentState() {
+        commentState = commentState.copy(
+            isLoading = false,
+            isSuccessful = false,
+            error = null
+        )
+    }
     fun setPlaceImagesItem(item: PlaceImagesItem) {
         _placeImagesItem.value = item
     }
@@ -90,10 +129,14 @@ class BoardDetailViewModel
     }
 
     fun setCommentText(value: String) {
-        _commentText.value = value
+        commentState = commentState.updateContent(value)
     }
 
     private fun getAllPlaceLatLng() {
         _allPlaces.addAll(feedDetail.value?.placeImages?.map { LatLngType(it.latitude, it.longitude) } ?: emptyList())
+    }
+
+    private fun setIsLoading(value: Boolean) {
+        _isLoading.value = value
     }
 }

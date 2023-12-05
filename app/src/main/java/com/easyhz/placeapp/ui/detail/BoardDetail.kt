@@ -41,6 +41,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.ui.component.DetailContentCard
+import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.comment.CommentCard
 import com.easyhz.placeapp.ui.component.comment.CommentTextField
@@ -71,6 +72,12 @@ fun BoardDetail(
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchFeedDetail(id)
         viewModel.fetchComments(id)
+    }
+
+    LaunchedEffect(key1 = viewModel.commentState.isSuccessful) {
+        viewModel.fetchComments(id)
+        viewModel.resetCommentState()
+        focusManager.clearFocus()
     }
 
     viewModel.feedDetail.value?.let { feedDetail ->
@@ -144,13 +151,12 @@ fun BoardDetail(
                             .padding(CONTENT_ALL.dp)
                             .fillMaxHeight(0.9F)
                             .fillMaxWidth(),
-                        value = viewModel.commentText.value,
+                        value = viewModel.commentState.postComment.content,
                         onValueChange = { viewModel.setCommentText(it) },
                         enabled = !isShowModal,
-                        onSendClick = { println("보냈음") }
+                        onSendClick = { viewModel.saveComment(id) }
                     )
                 }
-
             }
             if (isShowModal) {
                 WindowShade()
@@ -165,6 +171,9 @@ fun BoardDetail(
                         onViewAllClick = { viewModel.setIsViewAll(!viewModel.isViewAll.value) }
                     )
                 }
+            }
+            if (viewModel.isLoading.value || viewModel.commentState.isLoading) {
+                CircularLoading(this)
             }
         }
     } ?: Text(text = "오류") // TODO:: 없을 때 잡기

@@ -49,7 +49,6 @@ fun CommentCard(
             Text(item.content)
         }
     }
-
 }
 
 @Composable
