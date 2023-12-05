@@ -5,6 +5,8 @@ import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.Feed
 import com.easyhz.placeapp.domain.model.feed.Pageable
 import com.easyhz.placeapp.domain.model.feed.SortX
+import com.easyhz.placeapp.domain.model.feed.comment.Comment
+import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
@@ -44,6 +46,30 @@ class FeedRepositoryTest {
         )
 
         val result = repository.fetchFeedDetail(1)
+        assert(result.isSuccessful)
+    }
+
+    @Test
+    fun `fetch comments`() = runBlocking {
+        `when`(feedService.getComments(1,1)).thenReturn(
+            Response.success(
+                Comment(
+                    content = listOf(CommentContent(1, "", "", "", "")),
+                    empty = false,
+                    first = false,
+                    last = false,
+                    number = 1,
+                    numberOfElements = 1,
+                    pageable = Pageable(0, 0, 0, true, SortX(true, true, true), false),
+                    size = 10,
+                    sort = SortX(true, true, true),
+                    totalElements = 1,
+                    totalPages = 1
+                )
+            )
+        )
+
+        val result = repository.fetchComments(1, 1)
         assert(result.isSuccessful)
     }
 }
