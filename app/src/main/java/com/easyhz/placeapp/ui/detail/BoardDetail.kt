@@ -80,7 +80,7 @@ fun BoardDetail(
             Box(
                 modifier = Modifier.clickable {
                     isShowModal = false
-                    viewModel.setIsViewAll()
+                    viewModel.setIsViewAll(false)
                     focusManager.clearFocus()
                 }
             ) {
@@ -162,7 +162,7 @@ fun BoardDetail(
                             .height((screenHeight * 0.7).dp)
                             .width((screenWidth - 100).dp),
                         isViewAll = viewModel.isViewAll.value,
-                        onViewAllClick = { viewModel.setIsViewAll() }
+                        onViewAllClick = { viewModel.setIsViewAll(!viewModel.isViewAll.value) }
                     )
                 }
             }

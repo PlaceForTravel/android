@@ -85,8 +85,8 @@ class BoardDetailViewModel
         _placeImagesItem.value = item
     }
 
-    fun setIsViewAll() {
-        _isViewAll.value = !_isViewAll.value
+    fun setIsViewAll(value: Boolean) {
+        _isViewAll.value = value
     }
 
     fun setCommentText(value: String) {
