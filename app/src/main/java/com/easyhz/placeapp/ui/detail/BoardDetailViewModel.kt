@@ -42,6 +42,8 @@ class BoardDetailViewModel
     val comments: StateFlow<PagingData<CommentContent>>
         get() = _comments.asStateFlow()
 
+    var commentState by mutableStateOf(CommentState())
+
     private val _placeImagesItem = mutableStateOf<PlaceImagesItem?>(null)
     val placeImagesItem: State<PlaceImagesItem?>
         get() = _placeImagesItem
@@ -50,16 +52,9 @@ class BoardDetailViewModel
     val allPlaces: MutableList<LatLngType>
         get() = _allPlaces
 
-
     private val _isViewAll = mutableStateOf(false)
     val isViewAll: State<Boolean>
         get() = _isViewAll
-
-    var commentState by mutableStateOf(CommentState())
-
-    private val _isSuccessful = mutableStateOf(false)
-    val isSuccessful: State<Boolean>
-        get() = _isSuccessful
 
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean>
