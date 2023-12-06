@@ -41,6 +41,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.ui.component.DetailContentCard
+import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.comment.CommentCard
 import com.easyhz.placeapp.ui.component.comment.CommentTextField
@@ -73,6 +74,12 @@ fun BoardDetail(
         viewModel.fetchComments(id)
     }
 
+    LaunchedEffect(key1 = viewModel.commentState.isSuccessful) {
+        viewModel.fetchComments(id)
+        viewModel.resetCommentState()
+        focusManager.clearFocus()
+    }
+
     viewModel.feedDetail.value?.let { feedDetail ->
         Box(
             contentAlignment = Alignment.Center
@@ -80,7 +87,7 @@ fun BoardDetail(
             Box(
                 modifier = Modifier.clickable {
                     isShowModal = false
-                    viewModel.setIsViewAll()
+                    viewModel.setIsViewAll(false)
                     focusManager.clearFocus()
                 }
             ) {
@@ -144,13 +151,12 @@ fun BoardDetail(
                             .padding(CONTENT_ALL.dp)
                             .fillMaxHeight(0.9F)
                             .fillMaxWidth(),
-                        value = viewModel.commentText.value,
+                        value = viewModel.commentState.postComment.content,
                         onValueChange = { viewModel.setCommentText(it) },
                         enabled = !isShowModal,
-                        onSendClick = { println("보냈음") }
+                        onSendClick = { viewModel.saveComment(id) }
                     )
                 }
-
             }
             if (isShowModal) {
                 WindowShade()
@@ -162,9 +168,13 @@ fun BoardDetail(
                             .height((screenHeight * 0.7).dp)
                             .width((screenWidth - 100).dp),
                         isViewAll = viewModel.isViewAll.value,
-                        onViewAllClick = { viewModel.setIsViewAll() }
+                        onViewAllClick = { viewModel.setIsViewAll(!viewModel.isViewAll.value) }
                     )
                 }
+            }
+            if (viewModel.isLoading.value || viewModel.commentState.isLoading) {
+                WindowShade()
+                CircularLoading(this)
             }
         }
     } ?: Text(text = "오류") // TODO:: 없을 때 잡기
@@ -180,16 +190,6 @@ fun BoardDetail(
     }
 }
 
-data class CommentType (
-    val id: Int,
-    val userName: String,
-    val content: String,
-    val regDate: String
-)
-
-private fun onMapClick() {
-
-}
 fun getStatusBarColors(
     isShowBottomSheet: Boolean = false,
     isLightMode: Boolean,
