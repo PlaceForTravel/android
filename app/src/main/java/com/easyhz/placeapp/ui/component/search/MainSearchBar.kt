@@ -40,7 +40,7 @@ fun MainSearchBar(
     modifier: Modifier = Modifier,
     value: String = "",
     onValueChange: (String) -> Unit = { },
-    focus: Boolean = false,
+    isFocus: Boolean = false,
     enabled: Boolean = true,
     onSearch: () -> Unit = { },
     onCanceled: () -> Unit = { },
@@ -70,7 +70,7 @@ fun MainSearchBar(
             },
             enabled = enabled,
             trailingIcon = {
-                if (focus && value.isNotEmpty()) {
+                if (isFocus && value.isNotEmpty()) {
                     Icon(
                         modifier = Modifier.clickable {
                             onCanceled()
@@ -85,7 +85,7 @@ fun MainSearchBar(
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = { onSearch() })
         )
-        if (focus) {
+        if (isFocus) {
             searchHistory.forEach {
                 Row(
                     modifier = Modifier
