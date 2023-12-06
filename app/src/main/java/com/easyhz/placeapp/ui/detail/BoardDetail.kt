@@ -173,6 +173,7 @@ fun BoardDetail(
                 }
             }
             if (viewModel.isLoading.value || viewModel.commentState.isLoading) {
+                WindowShade()
                 CircularLoading(this)
             }
         }
@@ -189,16 +190,6 @@ fun BoardDetail(
     }
 }
 
-data class CommentType (
-    val id: Int,
-    val userName: String,
-    val content: String,
-    val regDate: String
-)
-
-private fun onMapClick() {
-
-}
 fun getStatusBarColors(
     isShowBottomSheet: Boolean = false,
     isLightMode: Boolean,
