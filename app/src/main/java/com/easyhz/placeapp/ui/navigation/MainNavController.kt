@@ -18,6 +18,7 @@ object MainDestinations {
     const val BOARD_DETAIL_ROUTE = "detail" // Detail
     const val BOARD_ID = "boardId" // Detail
     const val NEW_POST_ROUTE = "post"
+    const val SEARCH_ROUTE = "search"
 }
 
 /**
@@ -55,6 +56,10 @@ class MainNavController(
     fun navigateToBoardDetail(boardId: Int, from: NavBackStackEntry) {
         // 중복 이벤트 발생할 수도 있기 때문에 체크
         if(from.isResumed()) navController.navigate("${MainDestinations.BOARD_DETAIL_ROUTE}/$boardId")
+    }
+
+    fun navigateToSearch(from: NavBackStackEntry) {
+        if (from.isResumed()) navController.navigate(MainDestinations.SEARCH_ROUTE)
     }
 
     fun navigateToNewPost() {

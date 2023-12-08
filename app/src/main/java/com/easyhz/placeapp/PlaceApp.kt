@@ -18,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.easyhz.placeapp.ui.detail.BoardDetail
+import com.easyhz.placeapp.ui.home.search.Search
 import com.easyhz.placeapp.ui.navigation.BottomBar
 import com.easyhz.placeapp.ui.navigation.HomeSections
 import com.easyhz.placeapp.ui.navigation.MainDestinations
@@ -81,7 +82,8 @@ fun PlaceApp() {
                     onNavigateToBoardDetail = mainNavController::navigateToBoardDetail,
                     onNavigateToBack = mainNavController::navigateToBack,
                     onNavigateToNext = mainNavController::navigateToNext,
-                    onNavBackStack = mainNavController::getNewPostNavBackStack
+                    onNavBackStack = mainNavController::getNewPostNavBackStack,
+                    onNavigateToSearch = mainNavController::navigateToSearch
                 )
             }
         }
@@ -96,13 +98,15 @@ private fun NavGraphBuilder.navGraph(
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
     onNavBackStack: () -> NavBackStackEntry,
+    onNavigateToSearch: (NavBackStackEntry) -> Unit
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
         addHomeGraph(
-            onNavigateToBoardDetail = onNavigateToBoardDetail
+            onNavigateToBoardDetail = onNavigateToBoardDetail,
+            onNavigateToSearch = onNavigateToSearch
         )
     }
     composable(
@@ -122,6 +126,13 @@ private fun NavGraphBuilder.navGraph(
             onNavigateToBack = onNavigateToBack,
             onNavigateToNext = onNavigateToNext,
             onNavBackStack = onNavBackStack
+        )
+    }
+    composable(
+        route = MainDestinations.SEARCH_ROUTE,
+    ) {
+        Search(
+            onNavigateToBack = onNavigateToBack
         )
     }
 }

@@ -1,11 +1,14 @@
 package com.easyhz.placeapp.di
 
+import com.easyhz.placeapp.domain.repository.DataStoreRepository
+import com.easyhz.placeapp.domain.repository.DataStoreRepositoryImpl
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
 import com.easyhz.placeapp.domain.repository.place.PlaceRepository
 import com.easyhz.placeapp.domain.repository.place.PlaceRepositoryImpl
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepositoryImpl
+import com.google.gson.Gson
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +36,10 @@ abstract class RepositoryModule {
     abstract fun bindFeedRepository(
         feedRepositoryImpl: FeedRepositoryImpl,
     ): FeedRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindDataStoreRepository(
+        dataStoreRepositoryImpl: DataStoreRepositoryImpl,
+    ): DataStoreRepository
 }
