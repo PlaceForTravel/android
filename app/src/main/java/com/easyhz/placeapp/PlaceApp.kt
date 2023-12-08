@@ -131,6 +131,8 @@ private fun NavGraphBuilder.navGraph(
     composable(
         route = MainDestinations.SEARCH_ROUTE,
     ) {
-        Search()
+        Search(
+            onNavigateToBack = onNavigateToBack
+        )
     }
 }

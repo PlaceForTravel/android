@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -45,6 +47,7 @@ fun MainSearchBar(
     isFocus: Boolean = false,
     enabled: Boolean = true,
     onSearch: (String) -> Unit = { },
+    onBackClick: () -> Unit
 ) {
     LaunchedEffect(key1 = isFocus) {
         if (isFocus) {
@@ -52,42 +55,48 @@ fun MainSearchBar(
         }
     }
     Column {
-        TextField(
+        Row(
             modifier = modifier
                 .fillMaxWidth(),
-            value = viewModel.text,
-            onValueChange = {
-                viewModel.onValueChange(it)
-            },
-            placeholder = {
-                Text(text = stringResource(id = R.string.search_comment))
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = SearchIcons.SEARCH.icon,
-                    contentDescription = stringResource(id = SearchIcons.SEARCH.label)
-                )
-            },
-            enabled = enabled,
-            trailingIcon = {
-                if (isFocus && viewModel.text.isNotEmpty()) {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            BackIconButton(onClick = { onBackClick() })
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = viewModel.text,
+                onValueChange = {
+                    viewModel.onValueChange(it)
+                },
+                placeholder = {
+                    Text(text = stringResource(id = R.string.search_comment))
+                },
+                leadingIcon = {
                     Icon(
-                        modifier = Modifier.clickable {
-                            viewModel.onCanceled()
-                        },
-                        imageVector = SearchIcons.CANCEL.icon,
-                        contentDescription = stringResource(id = SearchIcons.CANCEL.label)
+                        imageVector = SearchIcons.SEARCH.icon,
+                        contentDescription = stringResource(id = SearchIcons.SEARCH.label)
                     )
-                }
-            },
-            colors = setSearchBarColors(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = {
-                onSearch(viewModel.text)
-                viewModel.updateSearchHistory()
-            })
-        )
+                },
+                enabled = enabled,
+                trailingIcon = {
+                    if (isFocus && viewModel.text.isNotEmpty()) {
+                        Icon(
+                            modifier = Modifier.clickable {
+                                viewModel.onCanceled()
+                            },
+                            imageVector = SearchIcons.CANCEL.icon,
+                            contentDescription = stringResource(id = SearchIcons.CANCEL.label)
+                        )
+                    }
+                },
+                colors = setSearchBarColors(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    onSearch(viewModel.text)
+                    viewModel.updateSearchHistory()
+                })
+            )
+        }
         if (isFocus) {
             viewModel.searchHistoryList.value.forEach {
                 SearchHistory(
@@ -166,6 +175,17 @@ fun setSearchBarColors() = TextFieldDefaults.colors(
 )
 
 @Composable
+private fun BackIconButton(
+    onClick: () -> Unit
+) {
+    Icon(
+        modifier= Modifier.padding(start = 10.dp).clickable { onClick() },
+        imageVector = Icons.Outlined.ArrowBackIos,
+        contentDescription = "BackButton"
+    )
+}
+
+@Composable
 private fun SearchHistory(
     value: String,
     onClick: () -> Unit,
@@ -193,7 +213,7 @@ private fun SearchHistory(
         Icon(
             imageVector = SearchIcons.CLOSE.icon,
             contentDescription = stringResource(id = SearchIcons.CLOSE.label),
-            modifier = Modifier.clickable {
+            modifier = Modifier.padding(end = 1.dp).clickable {
                 onDeleteClick()
             }
         )
@@ -203,7 +223,9 @@ private fun SearchHistory(
 @Preview
 @Composable
 private fun MainSearchBarPreview() {
-    MainSearchBar()
+    MainSearchBar() {
+
+    }
 }
 
 @Preview

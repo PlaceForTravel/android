@@ -19,7 +19,9 @@ import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.borderBottom
 
 @Composable
-fun Search() {
+fun Search(
+    onNavigateToBack: () -> Unit
+) {
     var isFocus by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val focusRequester = remember {
@@ -43,6 +45,7 @@ fun Search() {
             isFocus = false
             focusManager.clearFocus()
         },
+        onBackClick = onNavigateToBack
     )
     if (!isFocus) {
         Text(text = "검색 결과")
