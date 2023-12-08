@@ -90,34 +90,16 @@ fun MainSearchBar(
         )
         if (isFocus) {
             viewModel.searchHistoryList.value.forEach {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .padding(15.dp),
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .weight(1F)
-                            .clickable {
-                                viewModel.onValueChange(it)
-                                onSearch(viewModel.text)
-                            }
-                    ) {
-                        Icon(
-                            modifier = Modifier.padding(end = 10.dp),
-                            imageVector = SearchIcons.HISTORY.icon,
-                            contentDescription = stringResource(id = SearchIcons.HISTORY.label)
-                        )
-                        Text(text = it)
+                SearchHistory(
+                    value = it,
+                    onClick = {
+                        viewModel.onValueChange(it)
+                        onSearch(viewModel.text)
+                    },
+                    onDeleteClick = {
+                        viewModel.deleteSearchHistory(it)
                     }
-                    Icon(
-                        imageVector = SearchIcons.CLOSE.icon,
-                        contentDescription = stringResource(id = SearchIcons.CLOSE.label),
-                        modifier = Modifier.clickable {
-                            viewModel.deleteSearchHistory(it)
-                        }
-                    )
-                }
+                )
             }
         }
     }
@@ -182,6 +164,41 @@ fun setSearchBarColors() = TextFieldDefaults.colors(
     unfocusedIndicatorColor = PlaceAppTheme.colorScheme.transparent,
     disabledIndicatorColor = PlaceAppTheme.colorScheme.transparent,
 )
+
+@Composable
+private fun SearchHistory(
+    value: String,
+    onClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .padding(15.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .weight(1F)
+                .clickable {
+                    onClick()
+                }
+        ) {
+            Icon(
+                modifier = Modifier.padding(end = 10.dp),
+                imageVector = SearchIcons.HISTORY.icon,
+                contentDescription = stringResource(id = SearchIcons.HISTORY.label)
+            )
+            Text(text = value)
+        }
+        Icon(
+            imageVector = SearchIcons.CLOSE.icon,
+            contentDescription = stringResource(id = SearchIcons.CLOSE.label),
+            modifier = Modifier.clickable {
+                onDeleteClick()
+            }
+        )
+    }
+}
 
 @Preview
 @Composable
