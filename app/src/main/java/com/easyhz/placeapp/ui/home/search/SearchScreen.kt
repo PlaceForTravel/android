@@ -47,5 +47,4 @@ fun Search() {
     if (!isFocus) {
         Text(text = "검색 결과")
     }
-
 }
