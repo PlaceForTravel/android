@@ -20,8 +20,6 @@ import com.easyhz.placeapp.util.borderBottom
 
 @Composable
 fun Search() {
-    var text by remember { mutableStateOf("") }
-    val items = remember { mutableListOf<String>() }
     var isFocus by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val focusRequester = remember {
@@ -37,21 +35,14 @@ fun Search() {
             .padding(5.dp)
             .focusRequester(focusRequester)
             .onFocusChanged {
-                println("focus")
                 isFocus = it.isFocused
             },
-        value = text,
-        onValueChange = { text = it },
         isFocus = isFocus,
         enabled = true,
         onSearch = {
-            println("onSearch")
-            items.add(text)
             isFocus = false
             focusManager.clearFocus()
         },
-        onCanceled = { text = "" },
-        searchHistory = items
     )
     if (!isFocus) {
         Text(text = "검색 결과")

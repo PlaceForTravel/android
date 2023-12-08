@@ -118,5 +118,6 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     testImplementation("org.mockito:mockito-core:3.11.0")
 
-
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }

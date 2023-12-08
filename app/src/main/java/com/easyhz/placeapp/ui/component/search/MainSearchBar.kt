@@ -3,6 +3,7 @@ package com.easyhz.placeapp.ui.component.search
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.constants.PaddingConstants.SEARCH_BAR_HORIZONTAL
@@ -38,27 +41,24 @@ import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 @Composable
 fun MainSearchBar(
     modifier: Modifier = Modifier,
-    value: String = "",
-    onValueChange: (String) -> Unit = { },
+    viewModel: MainSearchBarViewModel = hiltViewModel(),
     isFocus: Boolean = false,
     enabled: Boolean = true,
-    onSearch: () -> Unit = { },
-    onCanceled: () -> Unit = { },
-    searchHistory: List<String> = emptyList()
+    onSearch: (String) -> Unit = { },
 ) {
-//    var text by remember { mutableStateOf("") }
-//    var active by remember { mutableStateOf(false) }
-//    val items = remember { mutableListOf<String>() }
-//    var focus by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = isFocus) {
+        if (isFocus) {
+            viewModel.getSearchHistory()
+        }
+    }
     Column {
         TextField(
             modifier = modifier
                 .fillMaxWidth(),
-            value = value,
-            onValueChange = onValueChange,
-//                text = it
-//                active = text.isNotEmpty()
-//            },
+            value = viewModel.text,
+            onValueChange = {
+                viewModel.onValueChange(it)
+            },
             placeholder = {
                 Text(text = stringResource(id = R.string.search_comment))
             },
@@ -70,10 +70,10 @@ fun MainSearchBar(
             },
             enabled = enabled,
             trailingIcon = {
-                if (isFocus && value.isNotEmpty()) {
+                if (isFocus && viewModel.text.isNotEmpty()) {
                     Icon(
                         modifier = Modifier.clickable {
-                            onCanceled()
+                            viewModel.onCanceled()
                         },
                         imageVector = SearchIcons.CANCEL.icon,
                         contentDescription = stringResource(id = SearchIcons.CANCEL.label)
@@ -83,24 +83,40 @@ fun MainSearchBar(
             colors = setSearchBarColors(),
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { onSearch() })
+            keyboardActions = KeyboardActions(onSearch = {
+                onSearch(viewModel.text)
+                viewModel.updateSearchHistory()
+            })
         )
         if (isFocus) {
-            searchHistory.forEach {
+            viewModel.searchHistoryList.value.forEach {
                 Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
-                        .padding(15.dp)
-                        .clickable {
-                            onValueChange(it)
-                        }
+                        .padding(15.dp),
                 ) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                viewModel.onValueChange(it)
+                                onSearch(viewModel.text)
+                            }
+                    ) {
+                        Icon(
+                            modifier = Modifier.padding(end = 10.dp),
+                            imageVector = SearchIcons.HISTORY.icon,
+                            contentDescription = stringResource(id = SearchIcons.HISTORY.label)
+                        )
+                        Text(text = it)
+                    }
                     Icon(
-                        modifier = Modifier.padding(end = 10.dp),
-                        imageVector = SearchIcons.HISTORY.icon,
-                        contentDescription = stringResource(id = SearchIcons.HISTORY.label)
+                        imageVector = SearchIcons.CLOSE.icon,
+                        contentDescription = stringResource(id = SearchIcons.CLOSE.label),
+                        modifier = Modifier.clickable {
+                            viewModel.deleteSearchHistory(it)
+                        }
                     )
-                    Text(text = it, modifier = Modifier.weight(1F))
-                    Icon(imageVector = SearchIcons.CLOSE.icon, contentDescription = stringResource(id = SearchIcons.CLOSE.label))
                 }
             }
         }
