@@ -1,8 +1,9 @@
 package com.easyhz.placeapp.domain.repository.feed
 
 import com.easyhz.placeapp.domain.model.feed.Feed
+import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
-import com.easyhz.placeapp.domain.model.feed.comment.post.PostComment
+import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import retrofit2.Response
 
