@@ -40,6 +40,7 @@ fun MapModal(
     isViewAll: Boolean,
     onViewAllClick: () -> Unit,
     onClose: () -> Unit,
+    onSaved: (Int) -> Unit,
 ) {
     Card(
         modifier = modifier.padding(30.dp),
@@ -52,7 +53,8 @@ fun MapModal(
             MapModalHeader(
                 placeName = item.placeName,
                 isViewAll = isViewAll,
-                onClose = onClose
+                onClose = onClose,
+                onSaved = { onSaved(item.placeId) }
             )
             Box(modifier = modifier) {
                 if (isViewAll) {
@@ -81,6 +83,7 @@ private fun MapModalHeader(
     placeName: String,
     isViewAll: Boolean,
     onClose: () -> Unit,
+    onSaved: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -96,7 +99,7 @@ private fun MapModalHeader(
                     icon = ContentCardIcons.BOOKMARK.icon,
                     contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
                     modifier = Modifier.size(30.dp),
-                    onClick = { }
+                    onClick = onSaved
                 )
             }
         }
@@ -132,6 +135,6 @@ fun WindowShade(alpha: Float = 0.5f) {
 @Composable
 private fun MapBottomSheetHeaderPreview() {
     PlaceAppTheme {
-        MapModalHeader("카카오 판교아지트", false) { }
+        MapModalHeader("카카오 판교아지트", false, { }) {  }
     }
 }

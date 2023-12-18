@@ -13,7 +13,7 @@ import androidx.paging.map
 import com.easyhz.placeapp.data.dataSource.FeedPagingSource
 import com.easyhz.placeapp.data.dataSource.FeedPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.Content
-import com.easyhz.placeapp.domain.model.feed.SavePostState
+import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +33,7 @@ class FeedViewModel
     val feedContentList: StateFlow<PagingData<Content>>
         get() = _feedContentList.asStateFlow()
 
-    var savePostState by mutableStateOf(SavePostState())
+    var savePostState by mutableStateOf(SaveState())
 
     /**
      * 게시물 가져 오기

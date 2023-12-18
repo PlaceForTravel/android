@@ -60,8 +60,9 @@ interface FeedService {
     /* 장소 저장 */
     @POST("/board/saveBoardPlace/{boardPlaceId}")
     suspend fun savePlace(
-        @Path("boardPlaceId") id: Int
-    )
+        @Path("boardPlaceId") id: Int,
+        @Body userInfo: UserInfo
+    ): Response<Void>
 
 
 

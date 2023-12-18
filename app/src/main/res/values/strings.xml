@@ -20,6 +20,7 @@
     <string name="content_place_icon">Place</string>
     <string name="content_user_icon">UserName</string>
     <string name="content_bookmark_icon">Bookmark</string>
+    <string name="content_bookmark_filled_icon">Bookmark Filled</string>
     <string name="content_map_icon">Map</string>
 
     <string name="search_icon">Search</string>

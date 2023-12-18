@@ -38,12 +38,25 @@ class FeedRepositoryImpl
         boardId: Int,
         userInfo: UserInfo,
         onComplete: (Boolean) -> Unit
+    )  {
+        saveAction(boardId, userInfo, feedService::savePost, onComplete)
+    }
+
+    override suspend fun savePlace(
+        boardId: Int,
+        userInfo: UserInfo,
+        onComplete: (Boolean) -> Unit
+    ) {
+        saveAction(boardId, userInfo, feedService::savePlace, onComplete)
+    }
+
+    private suspend fun saveAction(
+        boardId: Int,
+        userInfo: UserInfo,
+        saveFunction: suspend (Int, UserInfo) -> Response<Void>,
+        onComplete: (Boolean) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val response = feedService.savePost(id = boardId, userInfo = userInfo)
-        if (response.isSuccessful) {
-            onComplete(true)
-        } else {
-            onComplete(false)
-        }
+        val response = saveFunction(boardId, userInfo)
+        onComplete(response.isSuccessful)
     }
 }

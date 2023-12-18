@@ -25,4 +25,10 @@ interface FeedRepository {
         userInfo: UserInfo,
         onComplete: (Boolean) -> Unit
     )
+
+    suspend fun savePlace(
+        boardId: Int,
+        userInfo: UserInfo,
+        onComplete: (Boolean) -> Unit
+    )
 }

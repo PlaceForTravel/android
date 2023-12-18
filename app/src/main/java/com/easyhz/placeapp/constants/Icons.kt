@@ -3,6 +3,7 @@ package com.easyhz.placeapp.constants
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Close
@@ -25,6 +26,7 @@ enum class ContentCardIcons(
     PLACE(R.string.content_place_icon, Icons.Outlined.Place,),
     USER(R.string.content_user_icon, Icons.Outlined.PersonPinCircle),
     BOOKMARK(R.string.content_bookmark_icon, Icons.Outlined.BookmarkBorder),
+    BOOKMARK_FILLED(R.string.content_bookmark_icon, Icons.Outlined.Bookmark),
     MAP(R.string.content_map_icon, Icons.Outlined.Map),
     REFRESH(R.string.image_refresh, Icons.Filled.Refresh),
 

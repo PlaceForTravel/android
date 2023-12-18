@@ -13,7 +13,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.easyhz.placeapp.data.dataSource.CommentPagingSource
 import com.easyhz.placeapp.data.dataSource.CommentPagingSource.Companion.PAGE_SIZE
-import com.easyhz.placeapp.domain.model.feed.SavePostState
+import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.comment.write.CommentState
 import com.easyhz.placeapp.domain.model.feed.comment.write.updateContent
@@ -56,7 +56,7 @@ class BoardDetailViewModel
     val isLoading: State<Boolean>
         get() = _isLoading
 
-    var savePostState by mutableStateOf(SavePostState())
+    var savePostState by mutableStateOf(SaveState())
 
 
     fun fetchFeedDetail(id: Int) = viewModelScope.launch {

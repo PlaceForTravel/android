@@ -162,9 +162,8 @@ fun BoardDetail(
                             .width((screenWidth - 100).dp),
                         isViewAll = modalViewModel.isViewAll.value,
                         onViewAllClick = { modalViewModel.setIsViewAll(!modalViewModel.isViewAll.value) },
-                        onClose = {
-                            onModalClose(modalViewModel, focusManager)
-                        }
+                        onClose = { onModalClose(modalViewModel, focusManager) },
+                        onSaved = { modalViewModel.savePlace(it) }
                     )
                 }
             }
