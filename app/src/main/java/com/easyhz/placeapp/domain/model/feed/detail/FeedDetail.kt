@@ -6,12 +6,12 @@ data class FeedDetail(
     val boardId: Int,
     val cityName: String,
     val content: String,
-    val deletedDate: Any,
     val likeCount: Int,
-    val modifiedDate: Any,
     val nickname: String,
     @SerializedName("placeResponseDTOS")
     val placeImages: List<PlaceImagesItem>,
     val regDate: String,
+    val modifiedDate: String? = null,
+    val deletedDate: String? = null,
     val userId: String
 )

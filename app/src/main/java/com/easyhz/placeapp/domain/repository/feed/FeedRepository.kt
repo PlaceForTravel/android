@@ -14,9 +14,15 @@ interface FeedRepository {
 
     suspend fun fetchComments(id: Int, page: Int): Response<Comment>
 
-    suspend fun saveComment(
+    suspend fun writeComment(
         id: Int,
         comment: PostComment,
+        onComplete: (Boolean) -> Unit
+    )
+
+    suspend fun savePost(
+        boardId: Int,
+        userInfo: UserInfo,
         onComplete: (Boolean) -> Unit
     )
 }

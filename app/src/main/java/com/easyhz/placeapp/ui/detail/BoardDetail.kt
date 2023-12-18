@@ -113,6 +113,9 @@ fun BoardDetail(
                                 onMapClick = { placeImagesItem ->
                                     viewModel.setPlaceImagesItem(placeImagesItem)
                                     isShowModal = true
+                                },
+                                onSaveClick = {
+                                    viewModel.savePost(it)
                                 }
                             )
                         }

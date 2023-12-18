@@ -13,6 +13,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.easyhz.placeapp.data.dataSource.CommentPagingSource
 import com.easyhz.placeapp.data.dataSource.CommentPagingSource.Companion.PAGE_SIZE
+import com.easyhz.placeapp.domain.model.feed.SavePostState
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.comment.write.CommentState
 import com.easyhz.placeapp.domain.model.feed.comment.write.updateContent
@@ -21,7 +22,6 @@ import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.ui.component.map.LatLngType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -60,6 +60,9 @@ class BoardDetailViewModel
     val isLoading: State<Boolean>
         get() = _isLoading
 
+    var savePostState by mutableStateOf(SavePostState())
+
+
     fun fetchFeedDetail(id: Int) = viewModelScope.launch {
         setIsLoading(true)
         val response = feedRepository.fetchFeedDetail(id)
@@ -92,7 +95,7 @@ class BoardDetailViewModel
     fun saveComment(id: Int) = viewModelScope.launch {
         try {
             commentState = commentState.copy(isLoading = true)
-            feedRepository.saveComment(id, commentState.postComment) { isSuccessful ->
+            feedRepository.writeComment(id, commentState.postComment) { isSuccessful ->
                 commentState = if (isSuccessful) {
                     Log.d(this::class.java.simpleName, "Success")
                     setCommentText("")
@@ -126,6 +129,28 @@ class BoardDetailViewModel
     fun setCommentText(value: String) {
         commentState = commentState.updateContent(value)
     }
+
+    /**
+     * 게시물 저장
+     **/
+    fun savePost(boardId: Int) = viewModelScope.launch {
+        // TODO: 유저 아이디 추가 필요
+        try {
+            feedRepository.savePost(boardId, savePostState.userInfo) { isSuccessful ->
+                savePostState = savePostState.copy(isSuccessful = isSuccessful)
+                if (isSuccessful) resetFeedDetail()
+            }
+        } catch (e: Exception) {
+            savePostState = savePostState.copy(error = e.localizedMessage)
+        }
+    }
+
+    private fun resetFeedDetail() {
+        _feedDetail.value = _feedDetail.value?.let {
+            it.copy(likeCount = it.likeCount + 1)
+        }
+    }
+
 
     private fun getAllPlaceLatLng() {
         _allPlaces.addAll(feedDetail.value?.placeImages?.map { LatLngType(it.latitude, it.longitude) } ?: emptyList())

@@ -21,12 +21,25 @@ class FeedRepositoryImpl
 
     override suspend fun fetchComments(id: Int, page: Int): Response<Comment> = feedService.getComments(id = id, page = page)
 
-    override suspend fun saveComment(
+    override suspend fun writeComment(
         id: Int,
         comment: PostComment,
         onComplete: (Boolean) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val response = feedService.saveComments(id = id, comment =  comment)
+        val response = feedService.writeComments(id = id, comment =  comment)
+        if (response.isSuccessful) {
+            onComplete(true)
+        } else {
+            onComplete(false)
+        }
+    }
+
+    override suspend fun savePost(
+        boardId: Int,
+        userInfo: UserInfo,
+        onComplete: (Boolean) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        val response = feedService.savePost(id = boardId, userInfo = userInfo)
         if (response.isSuccessful) {
             onComplete(true)
         } else {

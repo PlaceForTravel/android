@@ -5,9 +5,10 @@ import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.Feed
 import com.easyhz.placeapp.domain.model.feed.Pageable
 import com.easyhz.placeapp.domain.model.feed.SortX
+import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
-import com.easyhz.placeapp.domain.model.feed.comment.post.PostComment
+import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
@@ -27,7 +28,7 @@ class FeedRepositoryTest {
         `when`(feedService.getFeed(1)).thenReturn(
             Response.success(
                 Feed(
-                    listOf(Content(1, "서울", "", listOf(), 0,"", "", "", "", "", "")),
+                    listOf(Content(1, "서울", listOf(), 0,"", "", "", "", "", "", "")),
                 false, false, false, 0, 0, Pageable(0, 0, 0, true, SortX(true, true, true), false), 5, SortX(true, true, true), 0, 0
                 )
             )
@@ -41,8 +42,8 @@ class FeedRepositoryTest {
     fun `fetch Feed Detail`() = runBlocking {
         `when`(feedService.getFeedDetail(1)).thenReturn(
             Response.success(
-                FeedDetail(1, "서울특별시 종로구", "여기 정말 좋아요", "", 0, "", "user1",
-                    listOf(PlaceImagesItem("", 0, "", 0.0, 0.0, 0, "")), "", "")
+                FeedDetail(1, "서울특별시 종로구", "여기 정말 좋아요", 0, "", listOf(), "",
+                     "", "", "user1")
             )
         )
 
@@ -75,11 +76,20 @@ class FeedRepositoryTest {
     }
 
     @Test
-    fun `Save Comment`() = runBlocking {
-        `when`(feedService.saveComments(1, PostComment())).thenReturn(
+    fun `Write Comment`() = runBlocking {
+        `when`(feedService.writeComments(1, PostComment())).thenReturn(
             Response.success(null)
         )
-        repository.saveComment(1, PostComment()) {
+        repository.writeComment(1, PostComment()) {
+            assert(it)
+        }
+    }
+    @Test
+    fun `Save Post`() = runBlocking {
+        `when`(feedService.savePost(1, UserInfo())).thenReturn(
+            Response.success(null)
+        )
+        repository.savePost(1, UserInfo()) {
             assert(it)
         }
     }

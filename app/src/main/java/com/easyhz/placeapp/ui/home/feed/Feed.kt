@@ -5,6 +5,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -38,27 +39,30 @@ fun Feed(
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchFeed()
     }
-    Column {
-        SubSearchBar(
-            onClick = onSearchBarClick
-        )
-        LazyColumn(
-            modifier = Modifier
-                .background(PlaceAppTheme.colorScheme.subBackground)
-        ) {
-            items(contents.itemCount) { index ->
-                contents[index]?.let { item ->
-                    ContentCard(
-                        item = item,
-                        imageSize = (screenWidth - 100).dp,
-                        cardWidth = screenWidth.dp,
-                        modifier = Modifier
-                            .width(screenWidth.dp)
-                            .padding(CONTENT_ALL.dp)
-                            .clip(roundShape)
-                            .background(PlaceAppTheme.colorScheme.mainBackground)
-                            .clickable { onItemClick(item.boardId) }
-                    )
+    Box {
+        Column {
+            SubSearchBar(
+                onClick = onSearchBarClick
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .background(PlaceAppTheme.colorScheme.subBackground)
+            ) {
+                items(contents.itemCount) { index ->
+                    contents[index]?.let { item ->
+                        ContentCard(
+                            item = item,
+                            imageSize = (screenWidth - 100).dp,
+                            cardWidth = screenWidth.dp,
+                            modifier = Modifier
+                                .width(screenWidth.dp)
+                                .padding(CONTENT_ALL.dp)
+                                .clip(roundShape)
+                                .background(PlaceAppTheme.colorScheme.mainBackground)
+                                .clickable { onItemClick(item.boardId) },
+                            onSaveClick = { viewModel.savePost(it) }
+                        )
+                    }
                 }
             }
         }

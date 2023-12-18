@@ -21,22 +21,22 @@ interface FeedService {
         @Query("page") page: Int
     ) : Response<Feed>
 
-    /* 글 상세 조회 (수정 필요) */
+    /* 글 상세 조회 */
     @GET("/board/detail/{boardId}")
     suspend fun getFeedDetail(
         @Path("boardId") id: Int
     ) : Response<FeedDetail>
 
-    /* 댓글 조회 (수정 필요) */
+    /* 댓글 조회 */
     @GET("/board/{boardId}/comment")
     suspend fun getComments(
         @Path("boardId") id: Int,
         @Query("page") page: Int
     ) : Response<Comment>
 
-    /* 댓글 등록 (수정 필요) */
+    /* 댓글 등록 */
     @POST("/board/{boardId}/comment/save")
-    suspend fun saveComments(
+    suspend fun writeComments(
         @Path("boardId") id: Int,
         @Body comment: PostComment
     ) : Response<Void>
@@ -50,11 +50,12 @@ interface FeedService {
         @Path("boardId") id: Int
     )
 
-    /* 글 저장 */
+    /* 글 저장 TODO: userId 와 토큰 필요 (로그인 구현 시 추가)*/
     @POST("/board/like/{boardId}")
     suspend fun savePost(
-        @Path("boardId") id: Int
-    )
+        @Path("boardId") id: Int,
+        @Body userInfo: UserInfo
+    ) : Response<Void>
 
     /* 장소 저장 */
     @POST("/board/saveBoardPlace/{boardPlaceId}")
