@@ -52,10 +52,6 @@ class BoardDetailViewModel
     val allPlaces: MutableList<LatLngType>
         get() = _allPlaces
 
-    private val _isViewAll = mutableStateOf(false)
-    val isViewAll: State<Boolean>
-        get() = _isViewAll
-
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean>
         get() = _isLoading
@@ -120,10 +116,6 @@ class BoardDetailViewModel
     }
     fun setPlaceImagesItem(item: PlaceImagesItem) {
         _placeImagesItem.value = item
-    }
-
-    fun setIsViewAll(value: Boolean) {
-        _isViewAll.value = value
     }
 
     fun setCommentText(value: String) {

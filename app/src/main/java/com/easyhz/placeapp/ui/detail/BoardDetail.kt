@@ -21,13 +21,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
@@ -55,17 +52,12 @@ import com.easyhz.placeapp.ui.theme.roundTopShape
 @Composable
 fun BoardDetail(
     viewModel: BoardDetailViewModel = hiltViewModel(),
+    modalViewModel: MapModalViewModel = hiltViewModel(),
     id: Int
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
-
-    var isShowModal by remember { mutableStateOf(false) }
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val focusManager = LocalFocusManager.current
-
-    val window = (LocalContext.current as Activity).window
-    val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
-    val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
 
     val comments = viewModel.comments.collectAsLazyPagingItems()
     
@@ -86,9 +78,7 @@ fun BoardDetail(
         ) {
             Box(
                 modifier = Modifier.clickable {
-                    isShowModal = false
-                    viewModel.setIsViewAll(false)
-                    focusManager.clearFocus()
+                    onModalClose(modalViewModel, focusManager)
                 }
             ) {
                 Column(
@@ -112,7 +102,7 @@ fun BoardDetail(
                                     .background(PlaceAppTheme.colorScheme.mainBackground),
                                 onMapClick = { placeImagesItem ->
                                     viewModel.setPlaceImagesItem(placeImagesItem)
-                                    isShowModal = true
+                                    modalViewModel.isShowModal = true
                                 },
                                 onSaveClick = {
                                     viewModel.savePost(it)
@@ -156,12 +146,12 @@ fun BoardDetail(
                             .fillMaxWidth(),
                         value = viewModel.commentState.postComment.content,
                         onValueChange = { viewModel.setCommentText(it) },
-                        enabled = !isShowModal,
+                        enabled = !modalViewModel.isShowModal,
                         onSendClick = { viewModel.saveComment(id) }
                     )
                 }
             }
-            if (isShowModal) {
+            if (modalViewModel.isShowModal) {
                 WindowShade()
                 viewModel.placeImagesItem.value?.let { placeImageItem ->
                     MapModal(
@@ -170,8 +160,11 @@ fun BoardDetail(
                         modifier = Modifier
                             .height((screenHeight * 0.7).dp)
                             .width((screenWidth - 100).dp),
-                        isViewAll = viewModel.isViewAll.value,
-                        onViewAllClick = { viewModel.setIsViewAll(!viewModel.isViewAll.value) }
+                        isViewAll = modalViewModel.isViewAll.value,
+                        onViewAllClick = { modalViewModel.setIsViewAll(!modalViewModel.isViewAll.value) },
+                        onClose = {
+                            onModalClose(modalViewModel, focusManager)
+                        }
                     )
                 }
             }
@@ -181,10 +174,15 @@ fun BoardDetail(
             }
         }
     } ?: Text(text = "오류") // TODO:: 없을 때 잡기
+
+    val window = (LocalContext.current as Activity).window
+    val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
+    val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
     val isLightMode = !isSystemInDarkTheme()
+
     SideEffect {
         getStatusBarColors(
-            isShowBottomSheet = isShowModal,
+            isShowBottomSheet = modalViewModel.isShowModal,
             isLightMode = isLightMode,
             window = window,
             statusTopBar = statusTopBar,
@@ -192,6 +190,13 @@ fun BoardDetail(
         )
     }
 }
+
+fun onModalClose(viewModel: MapModalViewModel, focusManager: FocusManager) {
+    viewModel.isShowModal = false
+    viewModel.setIsViewAll(false)
+    focusManager.clearFocus()
+}
+
 
 fun getStatusBarColors(
     isShowBottomSheet: Boolean = false,
