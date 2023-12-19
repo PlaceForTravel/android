@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.domain.model.feed.comment.post
+package com.easyhz.placeapp.domain.model.feed.comment.write
 
 data class CommentState(
     val postComment: PostComment = PostComment(),

@@ -38,19 +38,19 @@ object TimeFormatter {
 
         date = format.parse(regDate) ?: current
         diff = current.time - date.time
-        return "${
-            when {
-                seconds < 60 -> "방금"
-                minutes < 60 -> "$minutes 분"
-                hours < 24 -> "$hours 시간"
-                days <= 14 -> "$days 일"
-                else -> SimpleDateFormat(FORMAT).format(date)
-            }
-        } 전"
+        return when {
+            seconds < 60 -> "방금 전"
+            minutes < 60 -> "${minutes}분 전"
+            hours < 24 -> "${hours}시간 전"
+            days <= 30 -> "${days}일 전"
+            else -> SimpleDateFormat(FORMAT).format(date).getDate()
+        }
     }
 
     private fun calDiff(unit: TimeUnit): Int {
         return unit.convert(diff, TimeUnit.MILLISECONDS).toInt()
     }
+
+    private fun String.getDate() = this.split(" ")[0]
 
 }

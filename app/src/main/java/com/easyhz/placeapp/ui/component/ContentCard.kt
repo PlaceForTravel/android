@@ -58,6 +58,7 @@ fun ContentCard(
     imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
     contentDescription: String = "IMG",
     isProfile: Boolean = false,
+    onSaveClick: (Int) -> Unit = { }
 ) {
     val imagesCount = item.imgUrl.size
     val pagerState = rememberPagerState { imagesCount }
@@ -81,7 +82,12 @@ fun ContentCard(
                 )
             }
             if (!isProfile) {
-                ContentInfo(name = item.nickname, regDate = item.regDate, likeCount = item.likeCount)
+                ContentInfo(
+                    name = item.nickname,
+                    regDate = item.regDate,
+                    likeCount = item.likeCount,
+                    onSaveClick = { onSaveClick(item.boardId) }
+                )
             }
             SpaceDivider(10)
         }
@@ -96,7 +102,8 @@ fun DetailContentCard(
     cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
     imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
     contentDescription: String = "IMG",
-    onMapClick: (PlaceImagesItem) -> Unit = { }
+    onMapClick: (PlaceImagesItem) -> Unit = { },
+    onSaveClick: (Int) -> Unit
 ) {
     val imagesCount = item.placeImages.size
     val pagerState = rememberPagerState { imagesCount }
@@ -126,7 +133,12 @@ fun DetailContentCard(
                         .align(Alignment.CenterHorizontally)
                 )
             }
-            ContentInfo(name = item.nickname, regDate = item.regDate, likeCount = item.likeCount)
+            ContentInfo(
+                name = item.nickname,
+                regDate = item.regDate,
+                likeCount = item.likeCount,
+                onSaveClick = { onSaveClick(item.boardId) }
+            )
             SpaceDivider(10)
             Text(
                 item.content,
@@ -190,6 +202,7 @@ private fun ContentInfo(
     regDate: String,
     likeCount: Int,
     cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
+    onSaveClick: () -> Unit
 ) {
     Row(
         modifier = Modifier.width(cardWidth),
@@ -209,7 +222,7 @@ private fun ContentInfo(
         icon = ContentCardIcons.BOOKMARK.icon,
         text = likeCount.toString(),
         contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
-        onClick = { },
+        onClick = onSaveClick,
         modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp)
     )
 }
@@ -284,6 +297,7 @@ private fun CardPreview() {
             imageSize = screenWidthDp.dp,
             cardWidth = screenWidthDp.dp,
             modifier = Modifier.width(screenWidthDp.dp),
+            onSaveClick = { }
         )
     }
 }
@@ -312,6 +326,7 @@ private fun DetailCardPreview() {
             imageSize = screenWidthDp.dp,
             cardWidth = screenWidthDp.dp,
             modifier = Modifier.width(screenWidthDp.dp),
+            onSaveClick = { }
         )
     }
 }

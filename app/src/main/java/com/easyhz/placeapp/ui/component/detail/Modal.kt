@@ -1,6 +1,7 @@
 package com.easyhz.placeapp.ui.component.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +38,9 @@ fun MapModal(
     item: PlaceImagesItem,
     places: List<LatLngType>,
     isViewAll: Boolean,
-    onViewAllClick: () -> Unit
+    onViewAllClick: () -> Unit,
+    onClose: () -> Unit,
+    onSaved: (Int) -> Unit,
 ) {
     Card(
         modifier = modifier.padding(30.dp),
@@ -47,8 +50,12 @@ fun MapModal(
                 .background(color = PlaceAppTheme.colorScheme.mainBackground)
                 .clip(roundShape)
         ) {
-
-            MapModalHeader(placeName = if (isViewAll) { stringResource(id = R.string.view_all_place) } else { item.placeName })
+            MapModalHeader(
+                placeName = item.placeName,
+                isViewAll = isViewAll,
+                onClose = onClose,
+                onSaved = { onSaved(item.placeId) }
+            )
             Box(modifier = modifier) {
                 if (isViewAll) {
                     NaverMap(modifier = modifier, places = places)
@@ -64,11 +71,7 @@ fun MapModal(
                     colors = ButtonDefaults.buttonColors(containerColor = PlaceAppTheme.colorScheme.secondary, contentColor = PlaceAppTheme.colorScheme.subBackground),
                     shape = RoundedCornerShape(5.dp)
                 ) {
-                    if (isViewAll) {
-                        Text(stringResource(id = R.string.view_one_place))
-                    } else {
-                        Text(stringResource(id = R.string.view_all_place))
-                    }
+                    Text(stringResource(id = if (isViewAll) R.string.view_one_place else R.string.view_all_place))
                 }
             }
         }
@@ -77,7 +80,10 @@ fun MapModal(
 }
 @Composable
 private fun MapModalHeader(
-    placeName: String
+    placeName: String,
+    isViewAll: Boolean,
+    onClose: () -> Unit,
+    onSaved: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -88,24 +94,31 @@ private fun MapModalHeader(
         Box(
             modifier = Modifier.weight(1f)
         ) {
-            SimpleIconButton(
-                icon = ContentCardIcons.BOOKMARK.icon,
-                contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
-                modifier = Modifier.size(30.dp),
-                onClick = { }
-            )
+            if (!isViewAll) {
+                SimpleIconButton(
+                    icon = ContentCardIcons.BOOKMARK.icon,
+                    contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
+                    modifier = Modifier.size(30.dp),
+                    onClick = onSaved
+                )
+            }
         }
         Box(
             modifier = Modifier.weight(2f),
             contentAlignment = Alignment.Center
         ) {
-            Text(placeName)
+            Text(if (isViewAll) { stringResource(id = R.string.view_all_place) } else { placeName })
         }
         Box(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.CenterEnd
         ) {
-            Text("닫기")
+            Text(
+                text = "닫기",
+                modifier = Modifier.clickable {
+                    onClose()
+                }
+            )
         }
     }
 }
@@ -122,6 +135,6 @@ fun WindowShade(alpha: Float = 0.5f) {
 @Composable
 private fun MapBottomSheetHeaderPreview() {
     PlaceAppTheme {
-        MapModalHeader("카카오 판교아지트")
+        MapModalHeader("카카오 판교아지트", false, { }) {  }
     }
 }
