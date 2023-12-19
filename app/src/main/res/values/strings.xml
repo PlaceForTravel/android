@@ -55,5 +55,9 @@
     <string name="user_close">닫기</string>
     <string name="user_do_not_show_again">다시 보지 않기</string>
 
+    <string name="login_header">로그인</string>
+    <string name="login_naver">네이버로 시작하기</string>
+    <string name="login_naver_logo">Naver</string>
+    <string name="logo_fold_map">fold map</string>
 
 </resources>

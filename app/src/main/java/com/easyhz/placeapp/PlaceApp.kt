@@ -143,6 +143,8 @@ private fun NavGraphBuilder.navGraph(
         route = MainDestinations.USER_ROUTE,
         startDestination = LOGIN
     ) {
-        addUserGraph()
+        addUserGraph(
+            onNavigateToBack = onNavigateToBack
+        )
     }
 }

@@ -74,7 +74,10 @@ fun Feed(
     if (viewModel.isFirstRun && viewModel.isShowDialog) {
         LoginDialog(
             onDismissRequest = { viewModel.setIsShowDialog(false) },
-            onLoginClick = { onNavigateToUser() },
+            onLoginClick = {
+                onNavigateToUser()
+                viewModel.setIsShowDialog(false)
+            },
             onDoNotShowAgainClick = { viewModel.setIsShowDialog(false) }
         )
     }

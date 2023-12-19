@@ -28,8 +28,8 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "NAVER_MAP_SDK_KEY", "" + localProperties["NAVER_MAP_SDK_KEY"] + "")
-        buildConfigField("String", "NAVER_MAP_API_CLIENT_ID", "" + localProperties["NAVER_MAP_API_CLIENT_ID"] + "")
-        buildConfigField("String", "NAVER_MAP_API_CLIENT_SECRET", "" + localProperties["NAVER_MAP_API_CLIENT_SECRET"] + "")
+        buildConfigField("String", "NAVER_API_CLIENT_ID", "" + localProperties["NAVER_MAP_API_CLIENT_ID"] + "")
+        buildConfigField("String", "NAVER_API_CLIENT_SECRET", "" + localProperties["NAVER_MAP_API_CLIENT_SECRET"] + "")
     }
 
     buildTypes {
@@ -96,6 +96,9 @@ dependencies {
     // Naver Maps SDK
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Naver Id Login SDK
+    implementation("com.navercorp.nid:oauth:5.9.0")
 
 
     val pagingVersion = "3.1.1"

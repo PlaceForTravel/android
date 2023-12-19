@@ -78,3 +78,5 @@ val FunctionalDarkGrey = Color(0xff2e2e2e)
 val FunctionalBlack = Color(0xff1c1b1e)
 
 const val AlphaNearOpaque = 0.95f
+
+val NaverGreen = Color(0xff03C75A)
