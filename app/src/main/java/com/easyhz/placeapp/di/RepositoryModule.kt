@@ -8,6 +8,8 @@ import com.easyhz.placeapp.domain.repository.place.PlaceRepository
 import com.easyhz.placeapp.domain.repository.place.PlaceRepositoryImpl
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepositoryImpl
+import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
+import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,7 +40,13 @@ abstract class RepositoryModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindDataStoreRepository(
+    abstract fun bindSearchDataStoreRepository(
         dataStoreRepositoryImpl: SearchDataStoreRepositoryImpl,
     ): SearchDataStoreRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindUserDataStoreRepository(
+        dataStoreRepositoryImpl: UserDataStoreRepositoryImpl,
+    ): UserDataStoreRepository
 }

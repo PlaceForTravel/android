@@ -15,6 +15,7 @@ import com.easyhz.placeapp.data.dataSource.FeedPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
+import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,14 +27,19 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel
 @Inject constructor(
-    private val feedRepository: FeedRepository
+    private val feedRepository: FeedRepository,
+    private val dataStoreRepository: UserDataStoreRepository
 ): ViewModel() {
 
     private val _feedContentList = MutableStateFlow<PagingData<Content>>(PagingData.empty())
     val feedContentList: StateFlow<PagingData<Content>>
         get() = _feedContentList.asStateFlow()
 
+    var isFirstRun by mutableStateOf(true)
+    var isShowDialog by mutableStateOf(true)
+
     var savePostState by mutableStateOf(SaveState())
+
 
     /**
      * 게시물 가져 오기
@@ -70,6 +76,16 @@ class FeedViewModel
             savePostState = savePostState.copy(error = e.localizedMessage)
         } finally {
         }
+    }
+
+    fun getIsFirstRun() = viewModelScope.launch {
+        dataStoreRepository.getIsFirstRun().collectLatest {
+            isFirstRun = it
+        }
+    }
+
+    fun setIsShowDialog(value: Boolean) {
+        isShowDialog = value
     }
 
     private fun resetPagingData(boardId: Int) {
