@@ -53,9 +53,8 @@ class SearchDataStoreRepositoryImpl
         }
     }
 
-    override suspend fun mapSearchPreferences(preferences: Preferences): SearchPreferences =
+    private fun mapSearchPreferences(preferences: Preferences): SearchPreferences =
         (preferences[KEYWORD] ?: "{}").fromJson()
-
 
     private suspend fun FlowCollector<Preferences>.handleError(e: Throwable) {
         if (e is IOException) {
@@ -65,6 +64,7 @@ class SearchDataStoreRepositoryImpl
             throw e
         }
     }
+
     private inline fun <reified T> String?.fromJson(): T =
         this?.let { gson.fromJson(it, T::class.java) } ?: T::class.java.getDeclaredConstructor().newInstance()
 
