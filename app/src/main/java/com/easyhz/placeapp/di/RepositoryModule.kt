@@ -1,7 +1,7 @@
 package com.easyhz.placeapp.di
 
-import com.easyhz.placeapp.domain.repository.SearchDataStoreRepository
-import com.easyhz.placeapp.domain.repository.SearchDataStoreRepositoryImpl
+import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepository
+import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepositoryImpl
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
 import com.easyhz.placeapp.domain.repository.place.PlaceRepository

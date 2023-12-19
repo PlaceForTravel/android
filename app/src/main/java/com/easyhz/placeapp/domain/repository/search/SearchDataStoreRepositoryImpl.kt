@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.domain.repository
+package com.easyhz.placeapp.domain.repository.search
 
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.easyhz.placeapp.di.CommonModule.ProvideGson
 import com.easyhz.placeapp.domain.model.search.SearchPreferences
-import com.easyhz.placeapp.domain.repository.SearchDataStoreRepositoryImpl.PreferencesKeys.KEYWORD
+import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepositoryImpl.PreferencesKeys.KEYWORD
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector

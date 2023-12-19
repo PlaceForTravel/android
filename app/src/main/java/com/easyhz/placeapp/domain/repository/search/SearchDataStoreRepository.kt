@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.domain.repository
+package com.easyhz.placeapp.domain.repository.search
 
 import androidx.datastore.preferences.core.Preferences
 import com.easyhz.placeapp.domain.model.search.SearchPreferences
