@@ -32,12 +32,14 @@ import com.easyhz.placeapp.util.borderTop
  */
 fun NavGraphBuilder.addHomeGraph(
     onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
-    onNavigateToSearch: (NavBackStackEntry) -> Unit
+    onNavigateToSearch: (NavBackStackEntry) -> Unit,
+    onNavigateToUser: (NavBackStackEntry) -> Unit
 ) {
     composable(route = HomeSections.FEED.route) {
         Feed(
             onItemClick = { id -> onNavigateToBoardDetail(id, it)},
-            onSearchBarClick = { onNavigateToSearch(it) }
+            onSearchBarClick = { onNavigateToSearch(it) },
+            onNavigateToUser = { onNavigateToUser(it) }
         )
     }
     composable(route = HomeSections.BOOKMARK.route) {
