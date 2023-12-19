@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.easyhz.placeapp.domain.repository.DataStoreRepository
+import com.easyhz.placeapp.domain.repository.SearchDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainSearchBarViewModel
 @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository
+    private val dataStoreRepository: SearchDataStoreRepository
 ):ViewModel() {
     var text by mutableStateOf("")
 

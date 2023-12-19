@@ -4,7 +4,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.easyhz.placeapp.domain.model.search.SearchPreferences
 import kotlinx.coroutines.flow.Flow
 
-interface DataStoreRepository {
+interface SearchDataStoreRepository {
 
     suspend fun getSearchPreferences() : Flow<SearchPreferences>
 

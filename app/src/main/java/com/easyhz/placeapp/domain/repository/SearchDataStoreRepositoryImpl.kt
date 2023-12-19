@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.easyhz.placeapp.di.CommonModule.ProvideGson
 import com.easyhz.placeapp.domain.model.search.SearchPreferences
-import com.easyhz.placeapp.domain.repository.DataStoreRepositoryImpl.PreferencesKeys.KEYWORD
+import com.easyhz.placeapp.domain.repository.SearchDataStoreRepositoryImpl.PreferencesKeys.KEYWORD
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -17,11 +17,11 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-class DataStoreRepositoryImpl
+class SearchDataStoreRepositoryImpl
 @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     @ProvideGson private val gson: Gson
-): DataStoreRepository {
+): SearchDataStoreRepository {
 
     private object PreferencesKeys {
         val KEYWORD = stringPreferencesKey("keyword")
