@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.domain.repository
+package com.easyhz.placeapp.domain.repository.search
 
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.easyhz.placeapp.di.CommonModule.ProvideGson
 import com.easyhz.placeapp.domain.model.search.SearchPreferences
-import com.easyhz.placeapp.domain.repository.DataStoreRepositoryImpl.PreferencesKeys.KEYWORD
+import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepositoryImpl.PreferencesKeys.KEYWORD
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -17,11 +17,11 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-class DataStoreRepositoryImpl
+class SearchDataStoreRepositoryImpl
 @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     @ProvideGson private val gson: Gson
-): DataStoreRepository {
+): SearchDataStoreRepository {
 
     private object PreferencesKeys {
         val KEYWORD = stringPreferencesKey("keyword")
@@ -53,9 +53,8 @@ class DataStoreRepositoryImpl
         }
     }
 
-    override suspend fun mapSearchPreferences(preferences: Preferences): SearchPreferences =
+    private fun mapSearchPreferences(preferences: Preferences): SearchPreferences =
         (preferences[KEYWORD] ?: "{}").fromJson()
-
 
     private suspend fun FlowCollector<Preferences>.handleError(e: Throwable) {
         if (e is IOException) {
@@ -65,6 +64,7 @@ class DataStoreRepositoryImpl
             throw e
         }
     }
+
     private inline fun <reified T> String?.fromJson(): T =
         this?.let { gson.fromJson(it, T::class.java) } ?: T::class.java.getDeclaredConstructor().newInstance()
 

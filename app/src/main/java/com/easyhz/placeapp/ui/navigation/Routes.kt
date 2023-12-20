@@ -12,3 +12,7 @@ enum class NewPostOrder(
     NEW_POST(route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.NEW_POST}"),
     COMPLETE(route = HomeSections.FEED.route)
 }
+
+object UserRoutes {
+    const val LOGIN = "login"
+}

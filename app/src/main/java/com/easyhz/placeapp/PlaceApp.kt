@@ -24,8 +24,10 @@ import com.easyhz.placeapp.ui.navigation.HomeSections
 import com.easyhz.placeapp.ui.navigation.MainDestinations
 import com.easyhz.placeapp.ui.navigation.MainFloatingActionButton
 import com.easyhz.placeapp.ui.navigation.PostRoutes.GALLERY
+import com.easyhz.placeapp.ui.navigation.UserRoutes.LOGIN
 import com.easyhz.placeapp.ui.navigation.addHomeGraph
 import com.easyhz.placeapp.ui.navigation.addNewPostGraph
+import com.easyhz.placeapp.ui.navigation.addUserGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.checkGalleryPermission
@@ -71,7 +73,6 @@ fun PlaceApp() {
                     )
                 }
             },
-
         ) { paddingValue ->
             NavHost(
                 navController = mainNavController.navController,
@@ -83,7 +84,8 @@ fun PlaceApp() {
                     onNavigateToBack = mainNavController::navigateToBack,
                     onNavigateToNext = mainNavController::navigateToNext,
                     onNavBackStack = mainNavController::getNewPostNavBackStack,
-                    onNavigateToSearch = mainNavController::navigateToSearch
+                    onNavigateToSearch = mainNavController::navigateToSearch,
+                    onNavigateToUser = mainNavController::navigateToUser
                 )
             }
         }
@@ -98,7 +100,8 @@ private fun NavGraphBuilder.navGraph(
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
     onNavBackStack: () -> NavBackStackEntry,
-    onNavigateToSearch: (NavBackStackEntry) -> Unit
+    onNavigateToSearch: (NavBackStackEntry) -> Unit,
+    onNavigateToUser: (NavBackStackEntry) -> Unit
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
@@ -106,7 +109,8 @@ private fun NavGraphBuilder.navGraph(
     ) {
         addHomeGraph(
             onNavigateToBoardDetail = onNavigateToBoardDetail,
-            onNavigateToSearch = onNavigateToSearch
+            onNavigateToSearch = onNavigateToSearch,
+            onNavigateToUser = onNavigateToUser
         )
     }
     composable(
@@ -132,6 +136,14 @@ private fun NavGraphBuilder.navGraph(
         route = MainDestinations.SEARCH_ROUTE,
     ) {
         Search(
+            onNavigateToBack = onNavigateToBack
+        )
+    }
+    navigation(
+        route = MainDestinations.USER_ROUTE,
+        startDestination = LOGIN
+    ) {
+        addUserGraph(
             onNavigateToBack = onNavigateToBack
         )
     }

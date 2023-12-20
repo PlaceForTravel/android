@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.ui.component.ContentCard
+import com.easyhz.placeapp.ui.component.dialog.LoginDialog
 import com.easyhz.placeapp.ui.component.search.SubSearchBar
 import com.easyhz.placeapp.ui.detail.getStatusBarColors
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
@@ -33,12 +34,15 @@ fun Feed(
     viewModel: FeedViewModel = hiltViewModel(),
     onItemClick: (Int) -> Unit,
     onSearchBarClick: () -> Unit,
+    onNavigateToUser: () -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val contents = viewModel.feedContentList.collectAsLazyPagingItems()
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchFeed()
+        viewModel.getIsFirstRun()
     }
+
     Box {
         Column {
             SubSearchBar(
@@ -67,6 +71,16 @@ fun Feed(
             }
         }
     }
+    if (viewModel.isFirstRun && viewModel.isShowDialog) {
+        LoginDialog(
+            onDismissRequest = { viewModel.setIsShowDialog(false) },
+            onLoginClick = {
+                onNavigateToUser()
+                viewModel.setIsShowDialog(false)
+            },
+            onDoNotShowAgainClick = { viewModel.setIsShowDialog(false) }
+        )
+    }
 
     val window = (LocalContext.current as Activity).window
     val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
@@ -93,6 +107,8 @@ private fun FeedPreview() {
         Feed(
             onItemClick = { },
             onSearchBarClick = { }
-        )
+        ) {
+
+        }
     }
 }

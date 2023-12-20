@@ -9,6 +9,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.easyhz.placeapp.ui.navigation.PostRoutes.GALLERY
+import com.easyhz.placeapp.ui.navigation.UserRoutes.LOGIN
 
 /**
  *  Destinations .
@@ -19,6 +20,7 @@ object MainDestinations {
     const val BOARD_ID = "boardId" // Detail
     const val NEW_POST_ROUTE = "post"
     const val SEARCH_ROUTE = "search"
+    const val USER_ROUTE = "user" // user
 }
 
 /**
@@ -51,6 +53,10 @@ class MainNavController(
                 restoreState = true
             }
         }
+    }
+
+    fun navigateToUser(from: NavBackStackEntry) {
+        if (from.isResumed()) navController.navigate("${MainDestinations.USER_ROUTE}/$LOGIN")
     }
 
     fun navigateToBoardDetail(boardId: Int, from: NavBackStackEntry) {

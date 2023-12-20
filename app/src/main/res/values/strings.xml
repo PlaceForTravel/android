@@ -50,5 +50,14 @@
 
     <string name="search_comment">검색어를 입력해 주세요.</string>
 
+    <string name="user_login_suggestion">로그인 하고 더 많은 정보를 가져 보세요!</string>
+    <string name="user_login">로그인</string>
+    <string name="user_close">닫기</string>
+    <string name="user_do_not_show_again">다시 보지 않기</string>
+
+    <string name="login_header">로그인</string>
+    <string name="login_naver">네이버로 시작하기</string>
+    <string name="login_naver_logo">Naver</string>
+    <string name="logo_fold_map">fold map</string>
 
 </resources>
