@@ -14,7 +14,7 @@ class CommentPagingSource(
     override suspend fun fetchData(page: Int): List<CommentContent>? {
         val data = feedRepository.fetchComments(page = page, id = id)
         if (data.isSuccessful) {
-            return data.body()?.content ?: listOf()
+            return data.body()?.content ?: emptyList()
         }
         return null
     }

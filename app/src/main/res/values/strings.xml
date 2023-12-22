@@ -60,4 +60,8 @@
     <string name="login_naver_logo">Naver</string>
     <string name="logo_fold_map">fold map</string>
 
+    <string name="network_error_message">네트워크 오류가 발생했습니다.</string>
+    <string name="retry_error_message">잠시 후 다시 시도해 주세요.</string>
+    <string name="retry">다시 시도</string>
+
 </resources>

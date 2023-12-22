@@ -4,7 +4,7 @@ data class Content(
     val boardId: Int,
     val cityName: String,
     val imgUrl: List<String>,
-    val likeCount: Int,
+    var likeCount: Int,
     val nickname: String,
     val regDate: String,
     val modifiedDate: String?,

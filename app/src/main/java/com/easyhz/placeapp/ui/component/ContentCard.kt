@@ -1,5 +1,6 @@
 package com.easyhz.placeapp.ui.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -238,6 +238,7 @@ private fun PlaceContentInfo(name: String) {
     )
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 private fun ContentImage(
     modifier: Modifier = Modifier,
@@ -246,7 +247,7 @@ private fun ContentImage(
     contentDescription: String = "IMG",
 ) {
     val imageRequest = getImageRequestDefault(data = imagePath, context = LocalContext.current)
-    var image by remember { mutableStateOf(imageRequest) }
+    var image by mutableStateOf(imageRequest)
     val painter = rememberAsyncImagePainter(model = image)
 
     Box(

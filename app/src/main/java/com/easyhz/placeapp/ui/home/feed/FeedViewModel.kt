@@ -1,5 +1,6 @@
 package com.easyhz.placeapp.ui.home.feed
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,19 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
+import androidx.paging.compose.LazyPagingItems
 import com.easyhz.placeapp.data.dataSource.FeedPagingSource
 import com.easyhz.placeapp.data.dataSource.FeedPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.SaveState
+import com.easyhz.placeapp.domain.model.feed.ScreenState
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,51 +29,69 @@ class FeedViewModel
     private val feedRepository: FeedRepository,
     private val dataStoreRepository: UserDataStoreRepository
 ): ViewModel() {
-
-    private val _feedContentList = MutableStateFlow<PagingData<Content>>(PagingData.empty())
-    val feedContentList: StateFlow<PagingData<Content>>
-        get() = _feedContentList.asStateFlow()
-
     var isFirstRun by mutableStateOf(true)
     var isShowDialog by mutableStateOf(true)
 
     var savePostState by mutableStateOf(SaveState())
+    var screenState by mutableStateOf(ScreenState())
 
-
-    /**
-     * 게시물 가져 오기
-     **/
-    fun fetchFeed() = viewModelScope.launch {
-        Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                enablePlaceholders = true,
-            ),
-            pagingSourceFactory = {
-                FeedPagingSource(
-                    feedRepository = feedRepository
-                )
-            }
-        ).flow.cachedIn(viewModelScope).collectLatest {
-            _feedContentList.value = it
+    var pager = Pager(
+        config = PagingConfig(
+            pageSize = PAGE_SIZE,
+            enablePlaceholders = false,
+        ),
+        pagingSourceFactory = {
+            FeedPagingSource(
+                feedRepository = feedRepository
+            )
         }
+    ).flow.cachedIn(viewModelScope)
+
+    init {
+        try {
+            getIsFirstRun()
+        } catch (e: Exception) {
+            screenState = screenState.copy(error = e.localizedMessage)
+            Log.d(this::class.java.simpleName, e.message.toString())
+        }
+    }
+
+
+    fun refreshFeed(contents: LazyPagingItems<Content>) = viewModelScope.launch {
+        screenState = screenState.copy(isRefreshing = true)
+        delay(500)
+        contents.refresh()
+        screenState = screenState.copy(isRefreshing = false)
+    }
+
+    fun retryFeed(contents: LazyPagingItems<Content>) = viewModelScope.launch {
+        screenState = screenState.copy(isLoading = true)
+        delay(500)
+        contents.retry()
+        screenState = screenState.copy(isLoading = false)
     }
 
     /**
      * 게시물 저장
      **/
-    fun savePost(boardId: Int) = viewModelScope.launch {
+    fun savePost(boardId: Int, contents: LazyPagingItems<Content>) = viewModelScope.launch {
         // TODO: 유저 아이디 추가 필요
         try {
+            screenState = screenState.copy(isLoading = true)
             feedRepository.savePost(boardId, savePostState.userInfo) { isSuccessful ->
                 savePostState = savePostState.copy(isSuccessful = isSuccessful)
                 if (isSuccessful) {
-                    resetPagingData(boardId)
+                    contents.itemSnapshotList.forEachIndexed { index, content ->
+                        if (content?.boardId == boardId) {
+                            contents[index]?.likeCount?.plus(1)
+                        }
+                    }
                 }
             }
         } catch (e: Exception) {
             savePostState = savePostState.copy(error = e.localizedMessage)
         } finally {
+            screenState = screenState.copy(isLoading = false)
         }
     }
 
@@ -86,15 +103,5 @@ class FeedViewModel
 
     fun setIsShowDialog(value: Boolean) {
         isShowDialog = value
-    }
-
-    private fun resetPagingData(boardId: Int) {
-        _feedContentList.value = _feedContentList.value.map { content ->
-            if (content.boardId == boardId) {
-                content.copy(likeCount = content.likeCount + 1)
-            } else {
-                content
-            }
-        }
     }
 }
