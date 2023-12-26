@@ -77,15 +77,13 @@ class FeedViewModel
     fun savePost(boardId: Int, contents: LazyPagingItems<Content>) = viewModelScope.launch {
         // TODO: 유저 아이디 추가 필요
         try {
-            screenState = screenState.copy(isLoading = true)
             feedRepository.savePost(boardId, savePostState.userInfo) { isSuccessful ->
+                screenState = screenState.copy(isLoading = true)
                 savePostState = savePostState.copy(isSuccessful = isSuccessful)
                 if (isSuccessful) {
-                    contents.itemSnapshotList.forEachIndexed { index, content ->
-                        if (content?.boardId == boardId) {
-                            contents[index]?.likeCount?.plus(1)
-                        }
-                    }
+                    contents.itemSnapshotList
+                        .filter { it?.boardId == boardId }
+                        .forEach { it?.likeCount = it?.likeCount?.plus(1) ?: 0 }
                 }
             }
         } catch (e: Exception) {
