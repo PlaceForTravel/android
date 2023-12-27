@@ -1,7 +1,6 @@
 package com.easyhz.placeapp.ui.post
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,11 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -60,11 +55,10 @@ fun NewPost(
     val focusManager = LocalFocusManager.current
 
     val scope = rememberCoroutineScope()
-    var isUnselected by remember { mutableStateOf(false) }
     val pagerState = rememberPagerState { viewModel.selectedImageList.size }
+    val postState = viewModel.postState
     val isShowModal = searchModalViewModel.isShowModal.value
     val searchValue = searchModalViewModel.searchValue.value
-    val searchActive = searchModalViewModel.searchActive.value
 
     Box(
         modifier = Modifier
@@ -85,15 +79,12 @@ fun NewPost(
                 next = stringResource(id = R.string.post_complete_header),
                 onBackClick = { onNavigateToBack() },
                 onNextClick = {
-                    viewModel.onNextClick {
-                        onNavigateToNext()
-                    }
-                    if (viewModel.unselectedImagePlaceIndices.isNotEmpty()) {
-                        viewModel.setPlaceBorder(placeBorderDefault, placeBorderError)
+                    viewModel.onNextClick(
+                        placeBorderError = placeBorderError,
+                        onNavigateToNext = onNavigateToNext
+                    ) { index ->
                         scope.launch {
-                            isUnselected = true
-                            pagerState.animateScrollToPage(viewModel.unselectedImagePlaceIndices.first())
-                            isUnselected = false
+                            pagerState.animateScrollToPage(index)
                         }
                     }
                 }
@@ -101,9 +92,8 @@ fun NewPost(
             LazyColumn {
                 item {
                     ImagesContent(
-                        contents = viewModel.selectedImagePlaceList,
+                        contents = postState.post.places,
                         pagerState = pagerState,
-                        isUnselected = isUnselected,
                         imageSize = screenWidth.dp,
                         modifier = Modifier.padding(10.dp),
                         onPlaceClick = { searchModalViewModel.setIsShowModal(true) }
@@ -120,7 +110,7 @@ fun NewPost(
                                 color = PlaceAppTheme.colorScheme.secondaryBorder,
                                 shape = roundShape
                             ),
-                        value = viewModel.textContent.value,
+                        value = postState.post.content,
                         onValueChange = { viewModel.setTextContent(it)},
                         enabled = !isShowModal
                     )
@@ -145,13 +135,13 @@ fun NewPost(
             },
             onActiveChange = { searchModalViewModel.setSearchActive(it) },
             placeList = viewModel.placeList.value?.placeItems,
-            isEqualCity = viewModel.isEqualCity.value,
-            tempCityName = viewModel.tempCityName.value,
+            isEqualCity = postState.isEqualCity,
+            cityName = postState.post.cityName,
             onItemClick = { item ->
                 if (viewModel.hasEqualCity(item, pagerState.currentPage)) {
-                    viewModel.setPlaceList(pagerState.currentPage, item, placeBorderDefault)
+                    viewModel.setPlaces(pagerState.currentPage, item, placeBorderDefault)
                     searchModalViewModel.setIsShowModal(false)
-                    viewModel.setTempCityName(item)
+                    viewModel.setCityName(item)
                     viewModel.setIsEqualCity(true)
                 } else {
                     viewModel.setIsEqualCity(false)

@@ -43,7 +43,6 @@ fun ImagesContent(
     modifier: Modifier = Modifier,
     imageSize: Dp,
     contents : List<Place>,
-    isUnselected: Boolean,
     pagerState: PagerState,
     onPlaceClick: () -> Unit
 ) {
@@ -51,7 +50,7 @@ fun ImagesContent(
         Column(
             modifier = Modifier.padding(horizontal = 10.dp)
         ) {
-            val imageRequest = getImageRequestDefault(contents[index].imageFile, LocalContext.current)
+            val imageRequest = getImageRequestDefault(contents[index].imageFile, LocalContext.current, 100)
             ImageLoader(
                 image = imageRequest,
                 contentDescription = contents[index].imageName,

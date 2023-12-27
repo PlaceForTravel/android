@@ -37,6 +37,7 @@
     <string name="post_add_text">내용을 작성해 주세요.</string>
     <string name="post_add_comment">댓글을 작성해 보세요.</string>
     <string name="place_search">장소 검색</string>
+    <string name="selected_city">선택한 도시</string>
 
 
     <string name="no_search_data">검색 결과가 없습니다.</string>

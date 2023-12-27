@@ -113,7 +113,7 @@ fun DetailContentCard(
         Column(
             horizontalAlignment = Alignment.Start,
         ) {
-            PlaceContentInfo(item.cityName)
+            PlaceContentInfo(item.cityName, true)
             Row(
                 modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
             ) {
@@ -228,14 +228,31 @@ private fun ContentInfo(
 }
 
 @Composable
-private fun PlaceContentInfo(name: String) {
-    IconText(
-        icon = ContentCardIcons.PLACE.icon,
-        text = name,
-        contentDescription = stringResource(id = ContentCardIcons.PLACE.label),
-        onClick = { },
-        modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp)
-    )
+private fun PlaceContentInfo(
+    name: String,
+    isDetail: Boolean = false
+) {
+    Row(
+        modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconText(
+            icon = ContentCardIcons.PLACE.icon,
+            text = name,
+            contentDescription = stringResource(id = ContentCardIcons.PLACE.label),
+            onClick = { },
+            modifier = Modifier.weight(1F)
+        )
+        if (isDetail) {
+            SimpleIconButton(
+                modifier = Modifier.size(24.dp),
+                icon = ContentCardIcons.MORE.icon,
+                contentDescription = stringResource(id = ContentCardIcons.MORE.label)
+            ) {
+
+            }
+        }
+    }
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -306,23 +323,20 @@ private fun CardPreview() {
 @Composable
 private fun DetailCardPreview() {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
-    val mock = Content(
+    val mock = FeedDetail(
         boardId = 1,
-        imgUrl = listOf("https://picsum.photos/id/307/200/300"),
-        nickname = "유저 1",
-        regDate = "2023.10.29",
         cityName = "대한민국, 제주특별자치도",
-        likeCount = 5,
-        text = "제가 이번 추석 연후에 연차까지 내서 빈대? 인정 나도 알아 뉴스는 안봄 하지만 근데 우리 강동구는 괜찮은데 지하철이 개무서움\n" +
-                "자리에 앉기무서운데 그래도 앉아\n" +
-                "현생이 힘드니까",
-        places = "제주 흑돼지",
-        deletedDate = "",
-        modifiedDate = "",
-        userId = "유저 1"
+        content = "안녕",
+        likeCount = 1,
+        nickname = "user1",
+        placeImages = listOf(PlaceImagesItem(address = "", boardPlaceId = 1, imgUrl = "", latitude = 1.0, longitude = 1.0, placeId = 1, placeName = "흑돼지")),
+        regDate = "",
+        modifiedDate = null,
+        deletedDate = null,
+        userId = "user1"
     )
     PlaceAppTheme {
-        ContentCard(
+        DetailContentCard(
             item = mock,
             imageSize = screenWidthDp.dp,
             cardWidth = screenWidthDp.dp,

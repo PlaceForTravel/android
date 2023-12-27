@@ -8,5 +8,5 @@ data class Place(
     var address: String?,
     var imageFile: String,
     val imageName: String,
-    var placeBorderColor: Color? = null,
+    var placeBorderColor: Color,
 )
