@@ -118,9 +118,12 @@ fun BoardDetail(
                                     .width(screenWidth.dp)
                                     .padding(horizontal = CONTENT_ALL.dp)
                                     .clip(
-                                        if (isTop) roundTopShape
-                                        else if (isBottom) roundBottomShape
-                                        else RectangleShape
+                                        when {
+                                            comments.itemCount == 1 -> roundShape
+                                            isTop -> roundTopShape
+                                            isBottom -> roundBottomShape
+                                            else -> RectangleShape
+                                        }
                                     )
                                     .background(PlaceAppTheme.colorScheme.mainBackground),
                             ) {
