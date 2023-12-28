@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,12 +30,15 @@ import com.easyhz.placeapp.ui.navigation.addHomeGraph
 import com.easyhz.placeapp.ui.navigation.addNewPostGraph
 import com.easyhz.placeapp.ui.navigation.addUserGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
+import com.easyhz.placeapp.ui.state.ApplicationState
+import com.easyhz.placeapp.ui.state.rememberApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.checkGalleryPermission
 
 @Composable
 fun PlaceApp() {
     PlaceAppTheme {
+        val applicationState = rememberApplicationState()
         val mainNavController = rememberMainNavController()
         mainNavController.navController.currentBackStackEntryAsState().value?.destination
         val isHome = mainNavController.currentRoute?.startsWith(MainDestinations.HOME_ROUTE) == true
@@ -73,6 +77,7 @@ fun PlaceApp() {
                     )
                 }
             },
+            snackbarHost = { SnackbarHost(applicationState.snackBarState) }
         ) { paddingValue ->
             NavHost(
                 navController = mainNavController.navController,
@@ -80,6 +85,7 @@ fun PlaceApp() {
                 modifier = Modifier.padding(paddingValue)
             ) {
                 navGraph(
+                    applicationState = applicationState,
                     onNavigateToBoardDetail = mainNavController::navigateToBoardDetail,
                     onNavigateToBack = mainNavController::navigateToBack,
                     onNavigateToNext = mainNavController::navigateToNext,
@@ -96,6 +102,7 @@ fun PlaceApp() {
  * Navigation 관리
  */
 private fun NavGraphBuilder.navGraph(
+    applicationState: ApplicationState,
     onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
@@ -127,6 +134,7 @@ private fun NavGraphBuilder.navGraph(
         startDestination = GALLERY
     ) {
         addNewPostGraph(
+            applicationState = applicationState,
             onNavigateToBack = onNavigateToBack,
             onNavigateToNext = onNavigateToNext,
             onNavBackStack = onNavBackStack

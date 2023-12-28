@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -25,12 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.R
+import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.component.post.ImagesContent
 import com.easyhz.placeapp.ui.component.post.MapSearchModal
 import com.easyhz.placeapp.ui.component.post.PostHeader
 import com.easyhz.placeapp.ui.component.post.TextContent
 import com.easyhz.placeapp.ui.detail.getStatusBarColors
+import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.borderBottom
@@ -41,6 +45,7 @@ import kotlinx.coroutines.launch
 fun NewPost(
     viewModel: NewPostViewModel = hiltViewModel(),
     searchModalViewModel: SearchModalViewModel = hiltViewModel(),
+    applicationState: ApplicationState,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
 ) {
@@ -53,6 +58,7 @@ fun NewPost(
     val isLightMode = !isSystemInDarkTheme()
     val modalHeight = 760.dp
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState { viewModel.selectedImageList.size }
@@ -60,6 +66,14 @@ fun NewPost(
     val isShowModal = searchModalViewModel.isShowModal.value
     val searchValue = searchModalViewModel.searchValue.value
 
+    LaunchedEffect(key1 = postState) {
+        if (postState.onSuccess) {
+            onNavigateToNext()
+        } else if (postState.error != null) {
+            applicationState.showSnackBar(context.getString(R.string.retry_error_message))
+            viewModel.initError()
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -81,7 +95,6 @@ fun NewPost(
                 onNextClick = {
                     viewModel.onNextClick(
                         placeBorderError = placeBorderError,
-                        onNavigateToNext = onNavigateToNext
                     ) { index ->
                         scope.launch {
                             pagerState.animateScrollToPage(index)
@@ -116,10 +129,13 @@ fun NewPost(
                     )
                 }
             }
+        }
 
+        if (postState.isLoading) {
+            WindowShade()
+            CircularLoading(scope = this)
         }
     }
-
 
     if (isShowModal) {
         WindowShade()
@@ -166,10 +182,14 @@ fun NewPost(
 @Preview
 @Composable
 private fun NewPostPreview() {
+    val scope = rememberCoroutineScope()
     PlaceAppTheme {
         NewPost(
             onNavigateToBack = { },
-            onNavigateToNext = { }
+            onNavigateToNext = { },
+            applicationState = ApplicationState(
+                SnackbarHostState(), scope
+            )
         )
     }
 }

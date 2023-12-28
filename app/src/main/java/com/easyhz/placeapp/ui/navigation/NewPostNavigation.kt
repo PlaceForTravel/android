@@ -7,8 +7,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.easyhz.placeapp.ui.post.GalleryScreen
 import com.easyhz.placeapp.ui.post.NewPost
+import com.easyhz.placeapp.ui.state.ApplicationState
 
 fun NavGraphBuilder.addNewPostGraph(
+    applicationState: ApplicationState,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
     onNavBackStack: () -> NavBackStackEntry,
@@ -27,6 +29,7 @@ fun NavGraphBuilder.addNewPostGraph(
         val backEntry = remember(backStackEntry) { onNavBackStack() }
         NewPost(
             viewModel = hiltViewModel(backEntry),
+            applicationState = applicationState,
             onNavigateToBack = onNavigateToBack,
             onNavigateToNext = onNavigateToNext,
         )

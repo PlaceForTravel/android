@@ -22,6 +22,7 @@
     <string name="content_bookmark_icon">Bookmark</string>
     <string name="content_bookmark_filled_icon">Bookmark Filled</string>
     <string name="content_map_icon">Map</string>
+    <string name="content_more_icon">More</string>
 
     <string name="search_icon">Search</string>
     <string name="search_cancel_icon">Cancel</string>

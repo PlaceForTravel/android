@@ -5,6 +5,7 @@ data class PostState(
     val unSelected: List<Int> = emptyList(),
     val isEqualCity: Boolean = false,
     val onSuccess: Boolean = false,
+    val isLoading: Boolean = false,
     val error: String? = null
 )
 

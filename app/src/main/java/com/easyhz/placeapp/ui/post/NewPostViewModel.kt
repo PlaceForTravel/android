@@ -23,6 +23,7 @@ import com.easyhz.placeapp.data.dataSource.GalleryPagingSource
 import com.easyhz.placeapp.data.dataSource.GalleryPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.post.PostState
 import com.easyhz.placeapp.domain.model.post.update
+import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 import com.easyhz.placeapp.util.toAddress
 import com.easyhz.placeapp.util.toLatLng
@@ -40,6 +41,7 @@ class NewPostViewModel
 @Inject constructor(
     private val imageRepository: ImageRepository,
     private val placeRepository: PlaceRepository,
+    private val feedRepository: FeedRepository
 ) : ViewModel() {
 
     private val _imageList = MutableStateFlow<PagingData<Gallery>>(PagingData.empty())
@@ -79,12 +81,35 @@ class NewPostViewModel
     }
 
     fun getPlaces(query: String, display: Int, start: Int, sort: String) = viewModelScope.launch {
-        placeRepository.getPlaces(query, display, start, sort).let { response ->
-            if(response.isSuccessful) {
-                _placeList.value = response.body()
-            } else {
-                Log.e(":: ${this::class.java.simpleName}", "getPlaces Error : ${response.code()}")
+        try {
+            placeRepository.getPlaces(query, display, start, sort).let { response ->
+                if(response.isSuccessful) {
+                    _placeList.value = response.body()
+                } else {
+                    Log.e(":: ${this::class.java.simpleName}", "getPlaces Error : ${response.code()}")
+                }
             }
+        } catch (e: Exception) {
+            postState = postState.copy(error = e.localizedMessage)
+            Log.d(this::class.java.simpleName, "getPlaces error : $e")
+        }
+    }
+
+    fun writePost() = viewModelScope.launch {
+        try {
+            postState = postState.copy(isLoading = true)
+            feedRepository.writePost(postState.post, selectedImageList) { isSuccessful ->
+                postState = if (isSuccessful) {
+                    postState.copy(onSuccess = true)
+                } else {
+                    postState.copy(onSuccess = false)
+                }
+            }
+        } catch (e: Exception) {
+            postState = postState.copy(error = e.localizedMessage)
+            Log.d(this::class.java.simpleName, "writePost error : $e")
+        } finally {
+            postState = postState.copy(isLoading = false)
         }
     }
 
@@ -104,7 +129,7 @@ class NewPostViewModel
 
     fun initPlaces(placeBorderDefault: Color) {
         postState = postState.update(
-            places = selectedImageList.map { item ->
+            places = selectedImageList.mapIndexed { index, item ->
                 Place(
                     placeName = null,
                     latitude = null,
@@ -112,6 +137,7 @@ class NewPostViewModel
                     address = null,
                     imageFile = item.path,
                     imageName = item.name,
+                    imgIndex = index,
                     placeBorderColor = placeBorderDefault
                 )
             }
@@ -120,6 +146,10 @@ class NewPostViewModel
 
     fun initCityName() {
         postState = postState.update(cityName = "")
+    }
+
+    fun initError() {
+        postState = postState.copy(error = null)
     }
 
     fun setPlaceList(value: PlaceResponse?) {
@@ -156,12 +186,9 @@ class NewPostViewModel
 
     fun onNextClick(
         placeBorderError: Color,
-        onNavigateToNext: () -> Unit,
         animateScrollToPage: (Int) -> Unit,
     ) {
-        if (hasAllPlaces()) {
-            onNavigateToNext()
-        }
+        if (hasAllPlaces()) writePost()
         else setUnselect(animateScrollToPage, placeBorderError)
     }
 

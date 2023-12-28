@@ -5,6 +5,8 @@ import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.gallery.Gallery
+import com.easyhz.placeapp.domain.model.post.Post
 import retrofit2.Response
 
 interface FeedRepository {
@@ -13,6 +15,12 @@ interface FeedRepository {
     suspend fun fetchFeedDetail(id: Int): Response<FeedDetail>
 
     suspend fun fetchComments(id: Int, page: Int): Response<Comment>
+
+    suspend fun writePost(
+        post: Post,
+        images: List<Gallery>,
+        onComplete: (Boolean) -> Unit
+    )
 
     suspend fun writeComment(
         id: Int,
