@@ -56,7 +56,7 @@ interface FeedService {
     @DELETE("/board/delete/{boardId}")
     suspend fun deletePost(
         @Path("boardId") id: Int
-    )
+    ) : Response<Void>
 
     /* 글 저장 TODO: userId 와 토큰 필요 (로그인 구현 시 추가)*/
     @POST("/board/like/{boardId}")

@@ -103,7 +103,8 @@ fun DetailContentCard(
     imageSize: Dp =  (LocalConfiguration.current.screenWidthDp - 100).dp,
     contentDescription: String = "IMG",
     onMapClick: (PlaceImagesItem) -> Unit = { },
-    onSaveClick: (Int) -> Unit
+    onSaveClick: (Int) -> Unit,
+    onMoreClick: () -> Unit
 ) {
     val imagesCount = item.placeImages.size
     val pagerState = rememberPagerState { imagesCount }
@@ -113,7 +114,7 @@ fun DetailContentCard(
         Column(
             horizontalAlignment = Alignment.Start,
         ) {
-            PlaceContentInfo(item.cityName, true)
+            PlaceContentInfo(item.cityName, true) { onMoreClick() }
             Row(
                 modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp)
             ) {
@@ -230,7 +231,8 @@ private fun ContentInfo(
 @Composable
 private fun PlaceContentInfo(
     name: String,
-    isDetail: Boolean = false
+    isDetail: Boolean = false,
+    onMoreClick: () -> Unit = { }
 ) {
     Row(
         modifier = Modifier.padding(horizontal = ICON_TEXT_HORIZONTAL.dp, vertical = ICON_TEXT_VERTICAL.dp),
@@ -249,7 +251,7 @@ private fun PlaceContentInfo(
                 icon = ContentCardIcons.MORE.icon,
                 contentDescription = stringResource(id = ContentCardIcons.MORE.label)
             ) {
-
+                onMoreClick()
             }
         }
     }
@@ -342,7 +344,9 @@ private fun DetailCardPreview() {
             cardWidth = screenWidthDp.dp,
             modifier = Modifier.width(screenWidthDp.dp),
             onSaveClick = { }
-        )
+        ) {
+
+        }
     }
 }
 //

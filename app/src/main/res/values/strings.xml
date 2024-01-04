@@ -34,6 +34,7 @@
     <string name="post_complete_header">게시</string>
     <string name="post_next_header">다음</string>
 
+    <string name="post_add">글쓰기</string>
     <string name="post_add_place">장소를 추가해 주세요.</string>
     <string name="post_add_text">내용을 작성해 주세요.</string>
     <string name="post_add_comment">댓글을 작성해 보세요.</string>
@@ -65,5 +66,8 @@
     <string name="network_error_message">네트워크 오류가 발생했습니다.</string>
     <string name="retry_error_message">잠시 후 다시 시도해 주세요.</string>
     <string name="retry">다시 시도</string>
+
+    <string name="action_delete">삭제</string>
+    <string name="action_modify">수정</string>
 
 </resources>

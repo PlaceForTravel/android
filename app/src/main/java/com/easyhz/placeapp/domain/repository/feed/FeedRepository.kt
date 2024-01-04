@@ -22,6 +22,11 @@ interface FeedRepository {
         onComplete: (Boolean) -> Unit
     )
 
+    suspend fun deletePost(
+        id: Int,
+        onComplete: (Boolean) -> Unit
+    )
+
     suspend fun writeComment(
         id: Int,
         comment: PostComment,

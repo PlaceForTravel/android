@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -42,6 +44,7 @@ import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.comment.CommentCard
 import com.easyhz.placeapp.ui.component.comment.CommentTextField
+import com.easyhz.placeapp.ui.component.detail.DetailBottomSheet
 import com.easyhz.placeapp.ui.component.detail.MapModal
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
@@ -49,18 +52,21 @@ import com.easyhz.placeapp.ui.theme.roundBottomShape
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.ui.theme.roundTopShape
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoardDetail(
     viewModel: BoardDetailViewModel = hiltViewModel(),
     modalViewModel: MapModalViewModel = hiltViewModel(),
-    id: Int
+    id: Int,
+    onNavigateToHome: () -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val focusManager = LocalFocusManager.current
 
     val comments = viewModel.comments.collectAsLazyPagingItems()
-    
+    val sheetState = rememberModalBottomSheetState()
+
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchFeedDetail(id)
         viewModel.fetchComments(id)
@@ -70,6 +76,12 @@ fun BoardDetail(
         viewModel.fetchComments(id)
         viewModel.resetCommentState()
         focusManager.clearFocus()
+    }
+    LaunchedEffect(key1 = viewModel.deleteState.isSuccessful) {
+        if(viewModel.deleteState.isSuccessful) {
+            sheetState.hide()
+            onNavigateToHome()
+        }
     }
 
     viewModel.feedDetail.value?.let { feedDetail ->
@@ -106,7 +118,8 @@ fun BoardDetail(
                                 },
                                 onSaveClick = {
                                     viewModel.savePost(it)
-                                }
+                                },
+                                onMoreClick = { viewModel.setIsSheetOpen(true) }
                             )
                         }
                         items(comments.itemCount) { index ->
@@ -170,6 +183,16 @@ fun BoardDetail(
                     )
                 }
             }
+
+            if(viewModel.isSheetOpen) {
+                DetailBottomSheet(
+                    id = id,
+                    sheetState = sheetState,
+                    onDismissRequest = {
+                        viewModel.setIsSheetOpen(false)
+                    }
+                )
+            }
             if (viewModel.isLoading.value || viewModel.commentState.isLoading) {
                 WindowShade()
                 CircularLoading(this)
@@ -223,6 +246,6 @@ private fun FeedPreview() {
     PlaceAppTheme {
         BoardDetail(
             id = 1
-        )
+        ) { }
     }
 }

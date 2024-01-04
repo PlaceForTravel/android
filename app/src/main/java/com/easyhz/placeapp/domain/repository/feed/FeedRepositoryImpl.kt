@@ -47,6 +47,18 @@ class FeedRepositoryImpl
         }
     }
 
+    override suspend fun deletePost(
+        id: Int,
+        onComplete: (Boolean) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        val response = feedService.deletePost(id)
+        if (response.isSuccessful) {
+            onComplete(true)
+        } else {
+            onComplete(false)
+        }
+    }
+
     override suspend fun writeComment(
         id: Int,
         comment: PostComment,

@@ -17,6 +17,7 @@ import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.comment.write.CommentState
 import com.easyhz.placeapp.domain.model.feed.comment.write.updateContent
+import com.easyhz.placeapp.domain.model.feed.detail.DeleteState
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
@@ -57,6 +58,9 @@ class BoardDetailViewModel
         get() = _isLoading
 
     var savePostState by mutableStateOf(SaveState())
+
+    var deleteState by mutableStateOf(DeleteState())
+    var isSheetOpen by mutableStateOf(false)
 
 
     fun fetchFeedDetail(id: Int) = viewModelScope.launch {
@@ -134,6 +138,23 @@ class BoardDetailViewModel
             }
         } catch (e: Exception) {
             savePostState = savePostState.copy(error = e.localizedMessage)
+        }
+    }
+
+    fun setIsSheetOpen(value: Boolean) = viewModelScope.launch {
+        isSheetOpen = value
+    }
+
+    fun deleteDetail(id: Int) = viewModelScope.launch {
+        try {
+            feedRepository.deletePost(id) { isSuccessful ->
+                deleteState = deleteState.copy(isSuccessful = isSuccessful)
+                if (isSuccessful) {
+                    setIsSheetOpen(false)
+                }
+            }
+        } catch (e: Exception) {
+            deleteState = deleteState.copy(error = e.localizedMessage)
         }
     }
 

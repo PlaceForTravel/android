@@ -91,7 +91,8 @@ fun PlaceApp() {
                     onNavigateToNext = mainNavController::navigateToNext,
                     onNavBackStack = mainNavController::getNewPostNavBackStack,
                     onNavigateToSearch = mainNavController::navigateToSearch,
-                    onNavigateToUser = mainNavController::navigateToUser
+                    onNavigateToUser = mainNavController::navigateToUser,
+                    onNavigateToHome = mainNavController::navigateToHome
                 )
             }
         }
@@ -108,7 +109,8 @@ private fun NavGraphBuilder.navGraph(
     onNavigateToNext: () -> Unit,
     onNavBackStack: () -> NavBackStackEntry,
     onNavigateToSearch: (NavBackStackEntry) -> Unit,
-    onNavigateToUser: (NavBackStackEntry) -> Unit
+    onNavigateToUser: (NavBackStackEntry) -> Unit,
+    onNavigateToHome: (NavBackStackEntry) -> Unit
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
@@ -127,7 +129,7 @@ private fun NavGraphBuilder.navGraph(
         val arguments = requireNotNull(backStackEntry.arguments)
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)
 
-        BoardDetail(id = boardId)
+        BoardDetail(id = boardId, onNavigateToHome = { onNavigateToHome(backStackEntry) })
     }
     navigation(
         route = MainDestinations.NEW_POST_ROUTE,
