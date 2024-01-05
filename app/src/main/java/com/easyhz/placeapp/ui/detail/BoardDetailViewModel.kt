@@ -17,10 +17,11 @@ import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.comment.write.CommentState
 import com.easyhz.placeapp.domain.model.feed.comment.write.updateContent
-import com.easyhz.placeapp.domain.model.feed.detail.DeleteState
+import com.easyhz.placeapp.domain.model.feed.detail.DetailState
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
+import com.easyhz.placeapp.ui.component.detail.DetailActions
 import com.easyhz.placeapp.ui.component.map.LatLngType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,7 +60,7 @@ class BoardDetailViewModel
 
     var savePostState by mutableStateOf(SaveState())
 
-    var deleteState by mutableStateOf(DeleteState())
+    var detailState by mutableStateOf(DetailState())
     var isSheetOpen by mutableStateOf(false)
 
 
@@ -147,15 +148,24 @@ class BoardDetailViewModel
 
     fun deleteDetail(id: Int) = viewModelScope.launch {
         try {
+            detailState = detailState.copy(type = DetailActions.DELETE)
             feedRepository.deletePost(id) { isSuccessful ->
-                deleteState = deleteState.copy(isSuccessful = isSuccessful)
+                detailState = detailState.copy(isSuccessful = isSuccessful)
                 if (isSuccessful) {
                     setIsSheetOpen(false)
                 }
             }
         } catch (e: Exception) {
-            deleteState = deleteState.copy(error = e.localizedMessage)
+            detailState = detailState.copy(error = e.localizedMessage)
         }
+    }
+
+    fun modifyDetail() {
+        detailState = detailState.copy(type = DetailActions.MODIFY)
+    }
+
+    fun initDetailState() {
+        detailState = DetailState()
     }
 
     private fun resetFeedDetail() {

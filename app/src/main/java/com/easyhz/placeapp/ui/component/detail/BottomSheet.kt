@@ -41,7 +41,7 @@ enum class DetailActions(
 ) {
     MODIFY(R.string.action_modify, Icons.Outlined.ModeEdit) {
         override fun onClick(viewModel: BoardDetailViewModel, id: Int) {
-            //TODO : MODIFY
+            viewModel.modifyDetail()
         }
     },
     DELETE(R.string.action_delete, Icons.Outlined.Delete) {

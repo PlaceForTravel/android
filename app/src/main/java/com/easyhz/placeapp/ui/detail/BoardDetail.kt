@@ -39,11 +39,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.component.DetailContentCard
 import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.comment.CommentCard
 import com.easyhz.placeapp.ui.component.comment.CommentTextField
+import com.easyhz.placeapp.ui.component.detail.DetailActions
 import com.easyhz.placeapp.ui.component.detail.DetailBottomSheet
 import com.easyhz.placeapp.ui.component.detail.MapModal
 import com.easyhz.placeapp.ui.component.detail.WindowShade
@@ -58,7 +60,8 @@ fun BoardDetail(
     viewModel: BoardDetailViewModel = hiltViewModel(),
     modalViewModel: MapModalViewModel = hiltViewModel(),
     id: Int,
-    onNavigateToHome: () -> Unit
+    onNavigateToHome: () -> Unit,
+    onNavigateToModify: (FeedDetail) -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val screenHeight = LocalConfiguration.current.screenHeightDp
@@ -70,6 +73,7 @@ fun BoardDetail(
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchFeedDetail(id)
         viewModel.fetchComments(id)
+        viewModel.initDetailState()
     }
 
     LaunchedEffect(key1 = viewModel.commentState.isSuccessful) {
@@ -77,10 +81,21 @@ fun BoardDetail(
         viewModel.resetCommentState()
         focusManager.clearFocus()
     }
-    LaunchedEffect(key1 = viewModel.deleteState.isSuccessful) {
-        if(viewModel.deleteState.isSuccessful) {
-            sheetState.hide()
-            onNavigateToHome()
+    LaunchedEffect(key1 = viewModel.detailState) {
+        when(viewModel.detailState.type) {
+            DetailActions.DELETE -> {
+                if(viewModel.detailState.isSuccessful) {
+                    sheetState.hide()
+                    onNavigateToHome()
+                }
+            }
+            DetailActions.MODIFY -> {
+                sheetState.hide()
+                viewModel.feedDetail.value?.let { onNavigateToModify(it) }
+            }
+            else -> {
+
+            }
         }
     }
 
@@ -245,7 +260,8 @@ fun getStatusBarColors(
 private fun FeedPreview() {
     PlaceAppTheme {
         BoardDetail(
-            id = 1
+            id = 1,
+            onNavigateToHome = { }
         ) { }
     }
 }

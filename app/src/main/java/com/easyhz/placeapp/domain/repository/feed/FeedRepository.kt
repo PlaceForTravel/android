@@ -6,6 +6,7 @@ import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.gallery.Gallery
+import com.easyhz.placeapp.domain.model.post.ModifyPost
 import com.easyhz.placeapp.domain.model.post.Post
 import retrofit2.Response
 
@@ -24,6 +25,12 @@ interface FeedRepository {
 
     suspend fun deletePost(
         id: Int,
+        onComplete: (Boolean) -> Unit
+    )
+
+    suspend fun modifyPost(
+        id: Int,
+        content: ModifyPost,
         onComplete: (Boolean) -> Unit
     )
 

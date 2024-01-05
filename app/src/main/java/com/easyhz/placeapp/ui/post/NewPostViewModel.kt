@@ -21,6 +21,9 @@ import com.easyhz.placeapp.domain.repository.place.PlaceRepository
 import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.data.dataSource.GalleryPagingSource
 import com.easyhz.placeapp.data.dataSource.GalleryPagingSource.Companion.PAGE_SIZE
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.feed.detail.toPlace
+import com.easyhz.placeapp.domain.model.post.ModifyPost
 import com.easyhz.placeapp.domain.model.post.PostState
 import com.easyhz.placeapp.domain.model.post.update
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
@@ -113,6 +116,21 @@ class NewPostViewModel
         }
     }
 
+    fun modifyPost(id: Int) = viewModelScope.launch {
+        val item = ModifyPost(content = postState.post.content, userId = postState.post.userId, nickname = postState.post.nickname)
+        try {
+            postState = postState.copy(isLoading = true)
+            feedRepository.modifyPost(id, item) { isSuccessful ->
+                postState = postState.copy(onSuccess = isSuccessful)
+            }
+        } catch (e: Exception) {
+            postState = postState.copy(error = e.localizedMessage)
+            Log.d(this::class.java.simpleName, "modifyPost error : $e")
+        } finally {
+            postState = postState.copy(isLoading = false)
+        }
+    }
+
     fun setTextContent(value: String) {
         postState = postState.update(content = value)
     }
@@ -191,6 +209,21 @@ class NewPostViewModel
         if (hasAllPlaces()) writePost()
         else setUnselect(animateScrollToPage, placeBorderError)
     }
+
+    fun setPostState(feedDetail: FeedDetail, placeBorderDefault: Color) {
+        postState = postState.update(
+            content = feedDetail.content,
+            cityName = feedDetail.cityName,
+            userId = feedDetail.userId,
+            nickname = feedDetail.nickname,
+            places = set(feedDetail, placeBorderDefault)
+        ).copy(isEqualCity = true)
+    }
+
+    private fun set(feedDetail: FeedDetail, placeBorderDefault: Color) =
+        feedDetail.placeImages.mapIndexed { index, placeImagesItem ->
+            placeImagesItem.toPlace(index, placeBorderDefault)
+        }
 
     private fun setPlaceBorder(placeBorderError:Color) {
         postState.unSelected.forEach { index ->

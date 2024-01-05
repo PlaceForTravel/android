@@ -25,7 +25,9 @@ class ApplicationState(
 
     fun showSnackBar(message: String) {
         scope.launch {
-            snackBarHostState.showSnackbar(message)
+            if (snackBarState.currentSnackbarData == null) {
+                snackBarHostState.showSnackbar(message)
+            }
         }
     }
 }

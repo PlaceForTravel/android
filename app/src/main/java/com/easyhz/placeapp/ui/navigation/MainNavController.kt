@@ -8,7 +8,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.navigation.PostRoutes.GALLERY
+import com.easyhz.placeapp.ui.navigation.PostRoutes.MODIFY
 import com.easyhz.placeapp.ui.navigation.UserRoutes.LOGIN
 
 /**
@@ -63,6 +65,11 @@ class MainNavController(
         if (from.isResumed()) navController.navigate("${MainDestinations.HOME_ROUTE}/feed")
     }
 
+    fun navigateToModify(feedDetail: FeedDetail, from: NavBackStackEntry) {
+        navController.currentBackStackEntry?.savedStateHandle?.set(key = "feedDetail", value = feedDetail)
+        if (from.isResumed()) navController.navigate("${MainDestinations.NEW_POST_ROUTE}/$MODIFY")
+    }
+
     fun navigateToBoardDetail(boardId: Int, from: NavBackStackEntry) {
         // 중복 이벤트 발생할 수도 있기 때문에 체크
         if(from.isResumed()) navController.navigate("${MainDestinations.BOARD_DETAIL_ROUTE}/$boardId")
@@ -91,9 +98,15 @@ class MainNavController(
 
     fun getNewPostNavBackStack(): NavBackStackEntry = navController.getBackStackEntry(getBeforeNewPostOrder())
 
+    fun getFeedDetail(): FeedDetail? = getBackStackBundle("feedDetail", FeedDetail::class.java)
+
+    private fun <T> getBackStackBundle(name: String, m: Class<T>): T? {
+        val value = navController.previousBackStackEntry?.savedStateHandle?.get<T>(name)
+        return if(m.isInstance(value)) value else null
+    }
+
     private fun getNextNewPostOrder(): String {
         return getNextOrBeforeNewPostOrder(true)
-
     }
 
     private fun getBeforeNewPostOrder(): String {
@@ -107,8 +120,10 @@ class MainNavController(
      */
     private fun getNextOrBeforeNewPostOrder(isNext: Boolean): String {
         val orders = NewPostOrder.values()
-        val currentIndex = orders.indexOfFirst { it.route == currentRoute }
 
+        if (currentRoute.equals("${MainDestinations.NEW_POST_ROUTE}/$MODIFY")) return orders.last().route
+
+        val currentIndex = orders.indexOfFirst { it.route == currentRoute }
         val targetIndex = if (isNext) currentIndex + 1 else currentIndex - 1
         /* `coerceIn` - 값이 범위 안에 있으면 해당 값을, 값이 범위 안에 없으면 경계 값을 리턴 */
         val validIndex = targetIndex.coerceIn(orders.indices)

@@ -8,6 +8,7 @@ import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.gallery.Gallery
+import com.easyhz.placeapp.domain.model.post.ModifyPost
 import com.easyhz.placeapp.domain.model.post.Post
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +53,19 @@ class FeedRepositoryImpl
         onComplete: (Boolean) -> Unit
     ) = withContext(Dispatchers.IO) {
         val response = feedService.deletePost(id)
+        if (response.isSuccessful) {
+            onComplete(true)
+        } else {
+            onComplete(false)
+        }
+    }
+
+    override suspend fun modifyPost(
+        id: Int,
+        content: ModifyPost,
+        onComplete: (Boolean) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        val response = feedService.modifyPost(id, content)
         if (response.isSuccessful) {
             onComplete(true)
         } else {

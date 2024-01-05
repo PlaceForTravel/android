@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.R
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.component.post.ImagesContent
@@ -48,6 +49,7 @@ fun NewPost(
     applicationState: ApplicationState,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
+    feedDetail: FeedDetail? = null
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val window = (LocalContext.current as Activity).window
@@ -61,10 +63,18 @@ fun NewPost(
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState { viewModel.selectedImageList.size }
+    val pagerState = rememberPagerState { viewModel.postState.post.places.size }
     val postState = viewModel.postState
     val isShowModal = searchModalViewModel.isShowModal.value
     val searchValue = searchModalViewModel.searchValue.value
+    var title = R.string.post_new_post_header
+    var isModify = feedDetail != null
+    LaunchedEffect(key1 = Unit) {
+        if (feedDetail != null ) {
+            title = R.string.post_modify_post_header
+            viewModel.setPostState(feedDetail, placeBorderDefault)
+        }
+    }
 
     LaunchedEffect(key1 = postState) {
         if (postState.onSuccess) {
@@ -89,15 +99,16 @@ fun NewPost(
                     .fillMaxWidth()
                     .height(50.dp)
                     .borderBottom(color = PlaceAppTheme.colorScheme.primaryBorder, width = 1.dp),
-                title = stringResource(id = R.string.post_new_post_header),
+                title = stringResource(id = title),
                 next = stringResource(id = R.string.post_complete_header),
                 onBackClick = { onNavigateToBack() },
                 onNextClick = {
-                    viewModel.onNextClick(
-                        placeBorderError = placeBorderError,
-                    ) { index ->
-                        scope.launch {
-                            pagerState.animateScrollToPage(index)
+                    when {
+                        isModify -> feedDetail?.boardId?.let { viewModel.modifyPost(it) }
+                        else -> viewModel.onNextClick(placeBorderError = placeBorderError) { index ->
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
                         }
                     }
                 }
@@ -109,7 +120,13 @@ fun NewPost(
                         pagerState = pagerState,
                         imageSize = screenWidth.dp,
                         modifier = Modifier.padding(10.dp),
-                        onPlaceClick = { searchModalViewModel.setIsShowModal(true) }
+                        onPlaceClick = {
+                            if (isModify) {
+                                applicationState.showSnackBar(context.getString(R.string.post_modify_post_content))
+                            } else {
+                                searchModalViewModel.setIsShowModal(true)
+                            }
+                        }
                     )
                 }
                 item {

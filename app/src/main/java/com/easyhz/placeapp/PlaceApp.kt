@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.detail.BoardDetail
 import com.easyhz.placeapp.ui.home.search.Search
 import com.easyhz.placeapp.ui.navigation.BottomBar
@@ -89,10 +90,12 @@ fun PlaceApp() {
                     onNavigateToBoardDetail = mainNavController::navigateToBoardDetail,
                     onNavigateToBack = mainNavController::navigateToBack,
                     onNavigateToNext = mainNavController::navigateToNext,
-                    onNavBackStack = mainNavController::getNewPostNavBackStack,
+                    getNavBackStack = mainNavController::getNewPostNavBackStack,
                     onNavigateToSearch = mainNavController::navigateToSearch,
                     onNavigateToUser = mainNavController::navigateToUser,
-                    onNavigateToHome = mainNavController::navigateToHome
+                    onNavigateToHome = mainNavController::navigateToHome,
+                    onNavigateToModify = mainNavController::navigateToModify,
+                    getFeedDetail = mainNavController::getFeedDetail
                 )
             }
         }
@@ -107,10 +110,12 @@ private fun NavGraphBuilder.navGraph(
     onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
-    onNavBackStack: () -> NavBackStackEntry,
+    getNavBackStack: () -> NavBackStackEntry,
     onNavigateToSearch: (NavBackStackEntry) -> Unit,
     onNavigateToUser: (NavBackStackEntry) -> Unit,
-    onNavigateToHome: (NavBackStackEntry) -> Unit
+    onNavigateToHome: (NavBackStackEntry) -> Unit,
+    onNavigateToModify: (FeedDetail, NavBackStackEntry) -> Unit,
+    getFeedDetail: () -> FeedDetail?
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
@@ -129,7 +134,11 @@ private fun NavGraphBuilder.navGraph(
         val arguments = requireNotNull(backStackEntry.arguments)
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)
 
-        BoardDetail(id = boardId, onNavigateToHome = { onNavigateToHome(backStackEntry) })
+        BoardDetail(
+            id = boardId,
+            onNavigateToHome = { onNavigateToHome(backStackEntry) },
+            onNavigateToModify = { feedDetail ->  onNavigateToModify(feedDetail, backStackEntry) }
+        )
     }
     navigation(
         route = MainDestinations.NEW_POST_ROUTE,
@@ -139,7 +148,8 @@ private fun NavGraphBuilder.navGraph(
             applicationState = applicationState,
             onNavigateToBack = onNavigateToBack,
             onNavigateToNext = onNavigateToNext,
-            onNavBackStack = onNavBackStack
+            getNavBackStack = getNavBackStack,
+            getFeedDetail = getFeedDetail
         )
     }
     composable(

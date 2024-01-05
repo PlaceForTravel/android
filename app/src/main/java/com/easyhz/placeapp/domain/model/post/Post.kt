@@ -7,3 +7,10 @@ data class Post(
     val nickname: String = "user1",
     val places: List<Place> = listOf(),
 )
+
+
+data class ModifyPost(
+    val content: String = "",
+    val userId: String = "user1",
+    val nickname: String = "user1"
+)
