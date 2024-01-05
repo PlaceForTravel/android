@@ -10,8 +10,8 @@ import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
-import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
+import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import org.junit.Test
@@ -21,7 +21,7 @@ import org.mockito.Mockito.`when`
 class FeedRepositoryTest {
 
     private var feedService: FeedService = mock(FeedService::class.java)
-    private var repository = FeedRepositoryImpl(feedService)
+    private var repository = FeedRepositoryImpl(feedService, Gson())
 
     @Test
     fun `fetch Feed Contents`() = runBlocking {
