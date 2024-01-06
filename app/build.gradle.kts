@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 val localProperties = Properties()
@@ -28,8 +29,8 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "NAVER_MAP_SDK_KEY", "" + localProperties["NAVER_MAP_SDK_KEY"] + "")
-        buildConfigField("String", "NAVER_MAP_API_CLIENT_ID", "" + localProperties["NAVER_MAP_API_CLIENT_ID"] + "")
-        buildConfigField("String", "NAVER_MAP_API_CLIENT_SECRET", "" + localProperties["NAVER_MAP_API_CLIENT_SECRET"] + "")
+        buildConfigField("String", "NAVER_API_CLIENT_ID", "" + localProperties["NAVER_MAP_API_CLIENT_ID"] + "")
+        buildConfigField("String", "NAVER_API_CLIENT_SECRET", "" + localProperties["NAVER_MAP_API_CLIENT_SECRET"] + "")
     }
 
     buildTypes {
@@ -73,10 +74,12 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("eu.bambooapps:compose-material3-pullrefresh:1.0.0")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
     testImplementation("junit:junit:4.13.2")
-//    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("com.google.dagger:hilt-android-testing:2.44")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
@@ -95,6 +98,9 @@ dependencies {
     // Naver Maps SDK
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Naver Id Login SDK
+    implementation("com.navercorp.nid:oauth:5.9.0")
 
 
     val pagingVersion = "3.1.1"
@@ -117,5 +123,6 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     testImplementation("org.mockito:mockito-core:3.11.0")
 
-
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }

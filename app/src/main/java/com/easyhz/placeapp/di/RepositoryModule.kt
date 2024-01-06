@@ -1,9 +1,15 @@
 package com.easyhz.placeapp.di
 
-import com.easyhz.placeapp.domain.repository.MapRepository
-import com.easyhz.placeapp.domain.repository.MapRepositoryImpl
+import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepository
+import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepositoryImpl
+import com.easyhz.placeapp.domain.repository.feed.FeedRepository
+import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
+import com.easyhz.placeapp.domain.repository.place.PlaceRepository
+import com.easyhz.placeapp.domain.repository.place.PlaceRepositoryImpl
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepositoryImpl
+import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
+import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,7 +28,25 @@ abstract class RepositoryModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindMapRepository(
-        mapRepositoryImpl: MapRepositoryImpl,
-    ): MapRepository
+    abstract fun bindPlaceRepository(
+        placeRepositoryImpl: PlaceRepositoryImpl,
+    ): PlaceRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindFeedRepository(
+        feedRepositoryImpl: FeedRepositoryImpl,
+    ): FeedRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindSearchDataStoreRepository(
+        dataStoreRepositoryImpl: SearchDataStoreRepositoryImpl,
+    ): SearchDataStoreRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindUserDataStoreRepository(
+        dataStoreRepositoryImpl: UserDataStoreRepositoryImpl,
+    ): UserDataStoreRepository
 }

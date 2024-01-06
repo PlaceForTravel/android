@@ -4,6 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
@@ -20,6 +21,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.easyhz.placeapp.R
+import com.easyhz.placeapp.ui.home.bookmark.Bookmark
 import com.easyhz.placeapp.ui.home.feed.Feed
 import com.easyhz.placeapp.ui.home.profile.Profile
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
@@ -29,10 +31,19 @@ import com.easyhz.placeapp.util.borderTop
  * BottomNavigation Items
  */
 fun NavGraphBuilder.addHomeGraph(
-    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit
+    onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
+    onNavigateToSearch: (NavBackStackEntry) -> Unit,
+    onNavigateToUser: (NavBackStackEntry) -> Unit
 ) {
     composable(route = HomeSections.FEED.route) {
-        Feed(onItemClick = { id -> onNavigateToBoardDetail(id, it)})
+        Feed(
+            onItemClick = { id -> onNavigateToBoardDetail(id, it)},
+            onSearchBarClick = { onNavigateToSearch(it) },
+            onNavigateToUser = { onNavigateToUser(it) }
+        )
+    }
+    composable(route = HomeSections.BOOKMARK.route) {
+        Bookmark()
     }
     composable(route = HomeSections.PROFILE.route) {
         Profile()
@@ -45,6 +56,7 @@ enum class HomeSections(
     val route: String
 ) {
     FEED(R.string.home_feed, Icons.Outlined.Home, "${MainDestinations.HOME_ROUTE}/feed"),
+    BOOKMARK(R.string.home_bookmark, Icons.Outlined.BookmarkBorder, "${MainDestinations.HOME_ROUTE}/bookmark"),
     PROFILE(R.string.home_profile, Icons.Outlined.Person, "${MainDestinations.HOME_ROUTE}/profile")
 }
 

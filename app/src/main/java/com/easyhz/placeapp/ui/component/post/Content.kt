@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowForwardIos
 import androidx.compose.material.icons.outlined.FmdBad
@@ -27,12 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.easyhz.placeapp.R
-import com.easyhz.placeapp.gallery.Gallery
+import com.easyhz.placeapp.domain.model.post.Place
 import com.easyhz.placeapp.ui.component.IconText
 import com.easyhz.placeapp.ui.component.ImageLoader
 import com.easyhz.placeapp.ui.component.ImageSlider
 import com.easyhz.placeapp.ui.component.SimpleIconButton
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.util.getImageRequestDefault
 
 
@@ -40,33 +40,33 @@ import com.easyhz.placeapp.util.getImageRequestDefault
 @Composable
 fun ImagesContent(
     modifier: Modifier = Modifier,
-    images: List<Gallery>,
     imageSize: Dp,
-    places: List<String>,
+    contents : List<Place>,
     pagerState: PagerState,
     onPlaceClick: () -> Unit
 ) {
-    ImageSlider(pagerState = pagerState, itemsCount = images.size, modifier = modifier) { index ->
+    ImageSlider(pagerState = pagerState, itemsCount = contents.size, modifier = modifier) { index ->
         Column(
             modifier = Modifier.padding(horizontal = 10.dp)
         ) {
-            val imageRequest = getImageRequestDefault(images[index].uri, LocalContext.current)
+            val imageRequest = getImageRequestDefault(contents[index].imageFile, LocalContext.current, 100)
             ImageLoader(
                 image = imageRequest,
-                contentDescription = images[index].name,
+                contentDescription = contents[index].imageName,
                 modifier = Modifier
                     .size(imageSize)
-                    .clip(RoundedCornerShape(15.dp))
+                    .clip(roundShape)
             )
             PlaceContent(
                 modifier = Modifier
                     .padding(vertical = 10.dp)
+                    .clip(roundShape)
                     .border(
                         width = 1.dp,
-                        color = PlaceAppTheme.colorScheme.secondaryBorder,
-                        shape = RoundedCornerShape(15.dp)
+                        color = contents[index].placeBorderColor,
+                        shape = roundShape
                     ),
-                place = places[index],
+                place = contents[index].placeName ?: stringResource(id = R.string.post_add_place),
                 onClick = onPlaceClick
             )
         }
@@ -166,7 +166,7 @@ private fun TextContentPreview() {
         TextContent(
             modifier = Modifier
                 .height(300.dp)
-                .border(1.dp, color = Color.Black, shape = RoundedCornerShape(15.dp)),
+                .border(1.dp, color = Color.Black, shape = roundShape),
             value = "", onValueChange = { }, enabled = false
         )
     }

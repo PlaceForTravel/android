@@ -3,6 +3,7 @@
 
     <string name="home_feed">Home</string>
     <string name="home_add">Add</string>
+    <string name="home_bookmark">Bookmark</string>
     <string name="home_profile">Profile</string>
 
 
@@ -19,19 +20,56 @@
     <string name="content_place_icon">Place</string>
     <string name="content_user_icon">UserName</string>
     <string name="content_bookmark_icon">Bookmark</string>
+    <string name="content_bookmark_filled_icon">Bookmark Filled</string>
     <string name="content_map_icon">Map</string>
+    <string name="content_more_icon">More</string>
+
+    <string name="search_icon">Search</string>
+    <string name="search_cancel_icon">Cancel</string>
+    <string name="search_history_icon">History</string>
+    <string name="search_close_icon">Close</string>
 
     <string name="post_gallery_header">사진 선택</string>
     <string name="post_new_post_header">새 게시물</string>
+    <string name="post_modify_post_header">수정</string>
     <string name="post_complete_header">게시</string>
     <string name="post_next_header">다음</string>
 
+    <string name="post_add">글쓰기</string>
     <string name="post_add_place">장소를 추가해 주세요.</string>
     <string name="post_add_text">내용을 작성해 주세요.</string>
+    <string name="post_add_comment">댓글을 작성해 보세요.</string>
     <string name="place_search">장소 검색</string>
+    <string name="selected_city">선택한 도시</string>
+    <string name="post_modify_post_content">내용만 수정할 수 있습니다.</string>
 
 
     <string name="no_search_data">검색 결과가 없습니다.</string>
 
+    <string name="setting_error">Setting Error</string>
+    <string name="notice_please_select_same_city">같은 도시를 선택해 주세요.</string>
+
+    <string name="place_icon">📍</string>
+    <string name="view_all_place">모두 보기</string>
+    <string name="view_one_place">하나씩 보기</string>
+
+    <string name="search_comment">검색어를 입력해 주세요.</string>
+
+    <string name="user_login_suggestion">로그인 하고 더 많은 정보를 가져 보세요!</string>
+    <string name="user_login">로그인</string>
+    <string name="user_close">닫기</string>
+    <string name="user_do_not_show_again">다시 보지 않기</string>
+
+    <string name="login_header">로그인</string>
+    <string name="login_naver">네이버로 시작하기</string>
+    <string name="login_naver_logo">Naver</string>
+    <string name="logo_fold_map">fold map</string>
+
+    <string name="network_error_message">네트워크 오류가 발생했습니다.</string>
+    <string name="retry_error_message">잠시 후 다시 시도해 주세요.</string>
+    <string name="retry">다시 시도</string>
+
+    <string name="action_delete">삭제</string>
+    <string name="action_modify">수정</string>
 
 </resources>

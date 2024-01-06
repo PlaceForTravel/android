@@ -60,6 +60,7 @@ val Rose2 = Color(0xfffdbbcf)
 val Rose1 = Color(0xfffed6e2)
 val Rose0 = Color(0xfffff2f6)
 
+val Neutral9 = Color(0x59AAAAAA)
 val Neutral8 = Color(0xff121212)
 val Neutral7 = Color(0xde000000)
 val Neutral6 = Color(0xFF19181B)
@@ -78,3 +79,5 @@ val FunctionalDarkGrey = Color(0xff2e2e2e)
 val FunctionalBlack = Color(0xff1c1b1e)
 
 const val AlphaNearOpaque = 0.95f
+
+val NaverGreen = Color(0xff03C75A)

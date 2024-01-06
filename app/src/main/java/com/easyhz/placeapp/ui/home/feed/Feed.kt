@@ -1,97 +1,156 @@
 package com.easyhz.placeapp.ui.home.feed
 
+import android.app.Activity
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
+import com.easyhz.placeapp.domain.model.feed.Content
+import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.ContentCard
+import com.easyhz.placeapp.ui.component.NetworkError
+import com.easyhz.placeapp.ui.component.detail.WindowShade
+import com.easyhz.placeapp.ui.component.dialog.LoginDialog
+import com.easyhz.placeapp.ui.component.search.SubSearchBar
+import com.easyhz.placeapp.ui.detail.getStatusBarColors
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.ui.theme.roundShape
+import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
+import eu.bambooapps.material3.pullrefresh.PullRefreshIndicatorDefaults
+import eu.bambooapps.material3.pullrefresh.PullRefreshState
+import eu.bambooapps.material3.pullrefresh.pullRefresh
+import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 
-data class FeedType(
-    val id: Int,
-    val imagePath: List<String>,
-    val userName: String,
-    val regDate: String,
-    val placeName: String,
-    val bookmarkCount: Int,
-    val content: String? = null,
-    val detailPlace: String? = null
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Feed(
+    viewModel: FeedViewModel = hiltViewModel(),
     onItemClick: (Int) -> Unit,
+    onSearchBarClick: () -> Unit,
+    onNavigateToUser: () -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
-    val dummy = listOf(
-        FeedType(
-            id = 1,
-            imagePath = listOf("https://picsum.photos/id/307/200/300", "https://picsum.photos/id/337/200/300"),
-            userName = "유저 1",
-            regDate = "2023.10.29",
-            placeName = "대한민국, 제주특별자치도",
-            bookmarkCount = 5,
-        ),FeedType(
-            id = 2,
-            imagePath = listOf("https://picsum.photos/id/352/200/300"),
-            userName =  "유저 2",
-            regDate = "2023.11.01",
-            placeName = "대한민국 서울특별시",
-            bookmarkCount = 0,
-        ),FeedType(
-            id = 3,
-            imagePath = listOf("https://picsum.photos/id/234/200/300"),
-            userName = "유저 3",
-            regDate = "2023.11.01",
-            placeName = "대한민국 여수시",
-            bookmarkCount = 1342
-        ),FeedType(
-            id = 4,
-            imagePath = listOf("https://picsum.photos/id/236/200/300"),
-            userName= "유저 4",
-            regDate = "2023.11.01",
-            placeName = "대한민국 부산광역시",
-            bookmarkCount = 434
-        ),FeedType(
-            id = 5,
-            imagePath = listOf("https://picsum.photos/id/231/200/300"),
-            userName =  "유저 5",
-            regDate = "2023.11.01",
-            placeName = "대한민국 대전광역시",
-            bookmarkCount = 12
+    val contents = viewModel.pager.collectAsLazyPagingItems()
+    
+    val refreshState = rememberPullRefreshState(refreshing = viewModel.screenState.isRefreshing, onRefresh = {
+        viewModel.refreshFeed(contents)
+    })
+
+    Box {
+        Column {
+            SubSearchBar(
+                onClick = onSearchBarClick
+            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                when(contents.loadState.refresh) {
+                    is LoadState.Error -> {
+                        NetworkError(scope = this) {
+                            viewModel.retryFeed(contents)
+                        }
+                    }
+                    else -> {
+                        FeedContent(
+                            contents = contents,
+                            refreshState = refreshState,
+                            screenWidth = screenWidth,
+                            onItemClick = onItemClick,
+                        ) { id -> viewModel.savePost(id, contents) }
+                    }
+                }
+                PullRefreshIndicator(
+                    refreshing = viewModel.screenState.isRefreshing,
+                    state = refreshState,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    colors = PullRefreshIndicatorDefaults.colors(contentColor = PlaceAppTheme.colorScheme.primary),
+                )
+            }
+        }
+        if (viewModel.screenState.isLoading) {
+            WindowShade()
+            CircularLoading(scope = this)
+        }
+    }
+    if (viewModel.isFirstRun && viewModel.isShowDialog) {
+        LoginDialog(
+            onDismissRequest = { viewModel.setIsShowDialog(false) },
+            onLoginClick = {
+                onNavigateToUser()
+                viewModel.setIsShowDialog(false)
+            },
+            onDoNotShowAgainClick = { viewModel.setIsShowDialog(false) }
         )
-    )
+    }
+
+    val window = (LocalContext.current as Activity).window
+    val statusTopBar = PlaceAppTheme.colorScheme.statusTopBar
+    val statusBottomBar = PlaceAppTheme.colorScheme.statusBottomBar
+    val isLightMode = !isSystemInDarkTheme()
+
+    SideEffect {
+        getStatusBarColors(
+            isLightMode = isLightMode,
+            window = window,
+            statusTopBar = statusTopBar,
+            statusBottomBar = statusBottomBar
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FeedContent(
+    contents:  LazyPagingItems<Content>,
+    refreshState: PullRefreshState,
+    screenWidth: Int,
+    onItemClick: (Int) -> Unit,
+    onSaveClick: (Int) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier
             .background(PlaceAppTheme.colorScheme.subBackground)
+            .pullRefresh(refreshState)
     ) {
-        itemsIndexed(dummy) {index, item ->
-            ContentCard(
-                item = item,
-                imageSize = (screenWidth - 100).dp,
-                cardWidth = screenWidth.dp,
-                modifier = Modifier
-                    .width(screenWidth.dp)
-                    .padding(CONTENT_ALL.dp)
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(PlaceAppTheme.colorScheme.mainBackground)
-                    .clickable { onItemClick(item.id) },
-            )
+        items(contents.itemCount, key = { item -> item }) { index ->
+            contents[index]?.let { item ->
+                ContentCard(
+                    item = item,
+                    imageSize = (screenWidth - 100).dp,
+                    cardWidth = screenWidth.dp,
+                    modifier = Modifier
+                        .width(screenWidth.dp)
+                        .padding(CONTENT_ALL.dp)
+                        .clip(roundShape)
+                        .background(PlaceAppTheme.colorScheme.mainBackground)
+                        .clickable { onItemClick(item.boardId) },
+                    onSaveClick = { onSaveClick(it) }
+                )
+            }
         }
     }
-
 }
-
 
 
 @Preview("default")
@@ -100,7 +159,10 @@ fun Feed(
 private fun FeedPreview() {
     PlaceAppTheme {
         Feed(
-            onItemClick = { }
-        )
+            onItemClick = { },
+            onSearchBarClick = { }
+        ) {
+
+        }
     }
 }

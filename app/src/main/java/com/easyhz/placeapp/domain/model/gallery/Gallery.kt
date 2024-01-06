@@ -1,4 +1,4 @@
-package com.easyhz.placeapp.gallery
+package com.easyhz.placeapp.domain.model.gallery
 
 import android.content.ContentUris
 import android.database.Cursor

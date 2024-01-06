@@ -48,7 +48,6 @@ fun ImageLoader(
         contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
         filterQuality = FilterQuality.None,
-        placeholder = painterResource(id = R.drawable.ic_launcher_background),
         modifier = modifier
     )
 }

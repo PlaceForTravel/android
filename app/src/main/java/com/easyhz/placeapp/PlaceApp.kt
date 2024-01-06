@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,21 +18,28 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.detail.BoardDetail
+import com.easyhz.placeapp.ui.home.search.Search
 import com.easyhz.placeapp.ui.navigation.BottomBar
 import com.easyhz.placeapp.ui.navigation.HomeSections
 import com.easyhz.placeapp.ui.navigation.MainDestinations
 import com.easyhz.placeapp.ui.navigation.MainFloatingActionButton
 import com.easyhz.placeapp.ui.navigation.PostRoutes.GALLERY
+import com.easyhz.placeapp.ui.navigation.UserRoutes.LOGIN
 import com.easyhz.placeapp.ui.navigation.addHomeGraph
 import com.easyhz.placeapp.ui.navigation.addNewPostGraph
+import com.easyhz.placeapp.ui.navigation.addUserGraph
 import com.easyhz.placeapp.ui.navigation.rememberMainNavController
+import com.easyhz.placeapp.ui.state.ApplicationState
+import com.easyhz.placeapp.ui.state.rememberApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.checkGalleryPermission
 
 @Composable
 fun PlaceApp() {
     PlaceAppTheme {
+        val applicationState = rememberApplicationState()
         val mainNavController = rememberMainNavController()
         mainNavController.navController.currentBackStackEntryAsState().value?.destination
         val isHome = mainNavController.currentRoute?.startsWith(MainDestinations.HOME_ROUTE) == true
@@ -70,7 +78,7 @@ fun PlaceApp() {
                     )
                 }
             },
-
+            snackbarHost = { SnackbarHost(applicationState.snackBarState) }
         ) { paddingValue ->
             NavHost(
                 navController = mainNavController.navController,
@@ -78,10 +86,16 @@ fun PlaceApp() {
                 modifier = Modifier.padding(paddingValue)
             ) {
                 navGraph(
+                    applicationState = applicationState,
                     onNavigateToBoardDetail = mainNavController::navigateToBoardDetail,
                     onNavigateToBack = mainNavController::navigateToBack,
                     onNavigateToNext = mainNavController::navigateToNext,
-                    onNavBackStack = mainNavController::getNewPostNavBackStack
+                    getNavBackStack = mainNavController::getNewPostNavBackStack,
+                    onNavigateToSearch = mainNavController::navigateToSearch,
+                    onNavigateToUser = mainNavController::navigateToUser,
+                    onNavigateToHome = mainNavController::navigateToHome,
+                    onNavigateToModify = mainNavController::navigateToModify,
+                    getFeedDetail = mainNavController::getFeedDetail
                 )
             }
         }
@@ -92,17 +106,25 @@ fun PlaceApp() {
  * Navigation 관리
  */
 private fun NavGraphBuilder.navGraph(
+    applicationState: ApplicationState,
     onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
-    onNavBackStack: () -> NavBackStackEntry,
+    getNavBackStack: () -> NavBackStackEntry,
+    onNavigateToSearch: (NavBackStackEntry) -> Unit,
+    onNavigateToUser: (NavBackStackEntry) -> Unit,
+    onNavigateToHome: (NavBackStackEntry) -> Unit,
+    onNavigateToModify: (FeedDetail, NavBackStackEntry) -> Unit,
+    getFeedDetail: () -> FeedDetail?
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
         addHomeGraph(
-            onNavigateToBoardDetail = onNavigateToBoardDetail
+            onNavigateToBoardDetail = onNavigateToBoardDetail,
+            onNavigateToSearch = onNavigateToSearch,
+            onNavigateToUser = onNavigateToUser
         )
     }
     composable(
@@ -112,16 +134,37 @@ private fun NavGraphBuilder.navGraph(
         val arguments = requireNotNull(backStackEntry.arguments)
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)
 
-        BoardDetail(id = boardId)
+        BoardDetail(
+            id = boardId,
+            onNavigateToHome = { onNavigateToHome(backStackEntry) },
+            onNavigateToModify = { feedDetail ->  onNavigateToModify(feedDetail, backStackEntry) }
+        )
     }
     navigation(
         route = MainDestinations.NEW_POST_ROUTE,
         startDestination = GALLERY
     ) {
         addNewPostGraph(
+            applicationState = applicationState,
             onNavigateToBack = onNavigateToBack,
             onNavigateToNext = onNavigateToNext,
-            onNavBackStack = onNavBackStack
+            getNavBackStack = getNavBackStack,
+            getFeedDetail = getFeedDetail
+        )
+    }
+    composable(
+        route = MainDestinations.SEARCH_ROUTE,
+    ) {
+        Search(
+            onNavigateToBack = onNavigateToBack
+        )
+    }
+    navigation(
+        route = MainDestinations.USER_ROUTE,
+        startDestination = LOGIN
+    ) {
+        addUserGraph(
+            onNavigateToBack = onNavigateToBack
         )
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.easyhz.placeapp.R
 import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
@@ -33,7 +34,7 @@ fun MainFloatingActionButton(
             .height(40.dp)
     ) {
         Icon(imageVector = ContentCardIcons.ADD.icon, contentDescription = stringResource(id = ContentCardIcons.ADD.label))
-        Text("글쓰기", modifier = Modifier.padding(start = 10.dp))
+        Text(stringResource(id = R.string.post_add), modifier = Modifier.padding(start = 10.dp))
     }
 }
 

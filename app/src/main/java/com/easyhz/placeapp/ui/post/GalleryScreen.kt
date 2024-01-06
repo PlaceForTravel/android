@@ -1,6 +1,5 @@
 package com.easyhz.placeapp.ui.post
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.R
-import com.easyhz.placeapp.gallery.Gallery
+import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.ui.component.ImageLoader
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.detail.WindowShade
@@ -51,6 +50,8 @@ fun GalleryScreen(
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val pagingImageList = viewModel.imageList.collectAsLazyPagingItems()
+    val placeBorderDefault = PlaceAppTheme.colorScheme.secondaryBorder
+
 
     LaunchedEffect(Unit) {
         viewModel.getGalleryImages()
@@ -68,10 +69,12 @@ fun GalleryScreen(
             title = stringResource(id = R.string.post_gallery_header),
             onBackClick = { onNavigateToBack() },
             onNextClick = {
-                if(viewModel.selectedImageList.size == 0) Log.d("GalleryScreen", "한 장 이상 선택")// 사진 한 장 이상 선택 스낵바
-                else {
+                /* 사진 선택 필수 */
+                if(viewModel.selectedImageList.size != 0) {
                     onNavigateToNext()
-                    viewModel.initPlaceList()
+                    viewModel.initPlaces(placeBorderDefault)
+                    viewModel.initCityName()
+                    viewModel.setPlaceList(null)
                 }
             }
         )
@@ -87,7 +90,7 @@ fun GalleryScreen(
             }
         } else {
             val find = viewModel.currentImage.value ?: pagingImageList[0]
-            val imageRequest = getImageRequestDefault(data = find?.uri, context = LocalContext.current)
+            val imageRequest = getImageRequestDefault(data = find?.uri, context = LocalContext.current, 100)
 
             ImageLoader(image = imageRequest, contentDescription = find?.name ?: "currentImage", modifier = Modifier.size(screenWidth.dp))
             SpaceDivider(padding = 10)
@@ -127,7 +130,7 @@ fun GalleryItem(
 ) {
     val index = selectedImages.indexOf(image)
     val isSelected = index != -1
-    val imageRequest = getImageRequestDefault(data = image.uri, LocalContext.current)
+    val imageRequest = getImageRequestDefault(data = image.uri, LocalContext.current, 100)
     Box(
         modifier = modifier.clickable {
             onSelect()

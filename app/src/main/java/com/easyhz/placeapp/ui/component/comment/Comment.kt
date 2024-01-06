@@ -19,39 +19,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.easyhz.placeapp.constants.ContentCardIcons
-import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_HORIZONTAL
-import com.easyhz.placeapp.constants.PaddingConstants.ICON_TEXT_VERTICAL
+import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.ui.component.SpaceDivider
-import com.easyhz.placeapp.ui.detail.CommentType
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
+import com.easyhz.placeapp.util.toTimeFormat
 
-
-@Composable
-fun Comments(
-    modifier: Modifier = Modifier,
-    items: Array<CommentType>
-) {
-    Box(
-        modifier = modifier,
-    ) {
-        Column {
-            items.forEach { item ->
-                CommentCard(
-                    item = item,
-                    modifier = Modifier.padding(
-                        horizontal = ICON_TEXT_HORIZONTAL.dp,
-                        vertical = ICON_TEXT_VERTICAL.dp
-                    )
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun CommentCard(
     modifier: Modifier = Modifier,
-    item: CommentType
+    item: CommentContent
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
@@ -65,21 +42,21 @@ fun CommentCard(
             modifier = Modifier.padding(start = 5.dp)
         ) {
             UserDateRow(
-                userName = item.userName,
-                regDate = item.regDate,
+                userName = item.nickname,
+                regDate = item.regDate.toTimeFormat(),
                 padding = 5
             )
             Text(item.content)
         }
     }
-
 }
 
 @Composable
 private fun UserDateRow(
     userName: String,
     regDate:String,
-    padding: Int) {
+    padding: Int
+) {
     Row(
         modifier = Modifier.padding(bottom = padding.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -105,45 +82,15 @@ private fun UserDateRow(
 @Preview("CommentCard Preview")
 @Composable
 private fun CommentCardPreview() {
-    val mock = CommentType(
-            id = 1,
-            userName = "유저1",
+    val mock = CommentContent(
+            commentId = 1,
+            userId = "user1",
+            nickname = "유저1",
             content = "잠온다 ㄹㅇ 개 자고 싶다 그냥 먹고 자고 놀고 하고 싶다.",
             regDate = "2023.11.08"
         )
 
     PlaceAppTheme {
         CommentCard(item = mock)
-    }
-}
-@Preview("Comments Preview")
-@Composable
-private fun CommentsPreview() {
-    val mock = arrayOf(
-        CommentType(
-            id = 1,
-            userName = "유저1",
-            content = "잠온다 ㄹㅇ 개 자고 싶다 그냥 먹고 자고 놀고 하고 싶다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 2,
-            userName = "유저2",
-            content = "잠온다 ㄹㅇ 개 자고 싶다 그냥 먹고 자고 놀고 하고 싶다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 3,
-            userName = "유저3",
-            content = "잠온다 ㄹㅇ 개 자고 싶다 그냥 먹고 자고 놀고 하고 싶다.",
-            regDate = "2023.11.08"
-        ),CommentType(
-            id = 4,
-            userName = "유저4",
-            content = "잠온다 ㄹㅇ 개 자고 싶다 그냥 먹고 자고 놀고 하고 싶다.",
-            regDate = "2023.11.08"
-        ),
-    )
-
-    PlaceAppTheme {
-        Comments(items = mock)
     }
 }

@@ -5,13 +5,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.post.GalleryScreen
 import com.easyhz.placeapp.ui.post.NewPost
+import com.easyhz.placeapp.ui.state.ApplicationState
 
 fun NavGraphBuilder.addNewPostGraph(
+    applicationState: ApplicationState,
     onNavigateToBack: () -> Unit,
     onNavigateToNext: () -> Unit,
-    onNavBackStack: () -> NavBackStackEntry,
+    getNavBackStack: () -> NavBackStackEntry,
+    getFeedDetail: () -> FeedDetail?
 ) {
     composable(
         route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.GALLERY}"
@@ -24,11 +28,23 @@ fun NavGraphBuilder.addNewPostGraph(
     composable(
         route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.NEW_POST}"
     ) { backStackEntry ->
-        val backEntry = remember(backStackEntry) { onNavBackStack() }
+        val backEntry = remember(backStackEntry) { getNavBackStack() }
         NewPost(
             viewModel = hiltViewModel(backEntry),
+            applicationState = applicationState,
             onNavigateToBack = onNavigateToBack,
             onNavigateToNext = onNavigateToNext,
+        )
+    }
+    composable(
+        route = "${MainDestinations.NEW_POST_ROUTE}/${PostRoutes.MODIFY}"
+    ) {
+        val argument = getFeedDetail()
+        NewPost(
+            applicationState = applicationState,
+            onNavigateToBack = onNavigateToBack,
+            onNavigateToNext = onNavigateToNext,
+            feedDetail = argument
         )
     }
 }
