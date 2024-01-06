@@ -13,10 +13,10 @@ import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 class FeedPagingSource(
     private val feedRepository: FeedRepository,
 ):BasePagingSource<Content>() {
-    override suspend fun fetchData(page: Int): List<Content>? {
+    override suspend fun fetchData(page: Int): List<Content>?  {
         val data = feedRepository.fetchFeedContents(page = page)
         if (data.isSuccessful) {
-            return data.body()?.content ?: listOf()
+            return data.body()?.content ?: emptyList()
         }
         return null
     }

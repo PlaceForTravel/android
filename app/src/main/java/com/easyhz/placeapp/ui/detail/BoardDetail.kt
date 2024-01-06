@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -37,11 +39,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
+import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.component.DetailContentCard
 import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.comment.CommentCard
 import com.easyhz.placeapp.ui.component.comment.CommentTextField
+import com.easyhz.placeapp.ui.component.detail.DetailActions
+import com.easyhz.placeapp.ui.component.detail.DetailBottomSheet
 import com.easyhz.placeapp.ui.component.detail.MapModal
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
@@ -49,27 +54,49 @@ import com.easyhz.placeapp.ui.theme.roundBottomShape
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.ui.theme.roundTopShape
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoardDetail(
     viewModel: BoardDetailViewModel = hiltViewModel(),
     modalViewModel: MapModalViewModel = hiltViewModel(),
-    id: Int
+    id: Int,
+    onNavigateToHome: () -> Unit,
+    onNavigateToModify: (FeedDetail) -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val focusManager = LocalFocusManager.current
 
     val comments = viewModel.comments.collectAsLazyPagingItems()
-    
+    val sheetState = rememberModalBottomSheetState()
+
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchFeedDetail(id)
         viewModel.fetchComments(id)
+        viewModel.initDetailState()
     }
 
     LaunchedEffect(key1 = viewModel.commentState.isSuccessful) {
         viewModel.fetchComments(id)
         viewModel.resetCommentState()
         focusManager.clearFocus()
+    }
+    LaunchedEffect(key1 = viewModel.detailState) {
+        when(viewModel.detailState.type) {
+            DetailActions.DELETE -> {
+                if(viewModel.detailState.isSuccessful) {
+                    sheetState.hide()
+                    onNavigateToHome()
+                }
+            }
+            DetailActions.MODIFY -> {
+                sheetState.hide()
+                viewModel.feedDetail.value?.let { onNavigateToModify(it) }
+            }
+            else -> {
+
+            }
+        }
     }
 
     viewModel.feedDetail.value?.let { feedDetail ->
@@ -106,7 +133,8 @@ fun BoardDetail(
                                 },
                                 onSaveClick = {
                                     viewModel.savePost(it)
-                                }
+                                },
+                                onMoreClick = { viewModel.setIsSheetOpen(true) }
                             )
                         }
                         items(comments.itemCount) { index ->
@@ -118,9 +146,12 @@ fun BoardDetail(
                                     .width(screenWidth.dp)
                                     .padding(horizontal = CONTENT_ALL.dp)
                                     .clip(
-                                        if (isTop) roundTopShape
-                                        else if (isBottom) roundBottomShape
-                                        else RectangleShape
+                                        when {
+                                            comments.itemCount == 1 -> roundShape
+                                            isTop -> roundTopShape
+                                            isBottom -> roundBottomShape
+                                            else -> RectangleShape
+                                        }
                                     )
                                     .background(PlaceAppTheme.colorScheme.mainBackground),
                             ) {
@@ -166,6 +197,16 @@ fun BoardDetail(
                         onSaved = { modalViewModel.savePlace(it) }
                     )
                 }
+            }
+
+            if(viewModel.isSheetOpen) {
+                DetailBottomSheet(
+                    id = id,
+                    sheetState = sheetState,
+                    onDismissRequest = {
+                        viewModel.setIsSheetOpen(false)
+                    }
+                )
             }
             if (viewModel.isLoading.value || viewModel.commentState.isLoading) {
                 WindowShade()
@@ -219,7 +260,8 @@ fun getStatusBarColors(
 private fun FeedPreview() {
     PlaceAppTheme {
         BoardDetail(
-            id = 1
-        )
+            id = 1,
+            onNavigateToHome = { }
+        ) { }
     }
 }

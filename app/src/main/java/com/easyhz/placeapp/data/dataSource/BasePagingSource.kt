@@ -25,14 +25,12 @@ abstract class BasePagingSource<T : Any>: PagingSource<Int, T>() {
             val next = if (isEnd) null else position + 1
             LoadResult.Page(data, prev, next)
         } else {
-            LoadResult.Invalid()
+            LoadResult.Error(NullPointerException())
         }
-
     } catch (exception: Exception) {
-        Log.d(javaClass.simpleName, "LoadResult Error $exception")
+        Log.d(javaClass.simpleName, "LoadResult Error:: $exception")
         LoadResult.Error(exception)
     }
-
     companion object {
         const val START_PAGE_INDEX = 1
     }

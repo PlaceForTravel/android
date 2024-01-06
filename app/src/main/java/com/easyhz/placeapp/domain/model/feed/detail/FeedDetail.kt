@@ -1,7 +1,10 @@
 package com.easyhz.placeapp.domain.model.feed.detail
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class FeedDetail(
     val boardId: Int,
     val cityName: String,
@@ -14,4 +17,4 @@ data class FeedDetail(
     val modifiedDate: String? = null,
     val deletedDate: String? = null,
     val userId: String
-)
+) : Parcelable

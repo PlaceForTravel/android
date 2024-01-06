@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowForwardIos
 import androidx.compose.material.icons.outlined.FmdBad
@@ -43,7 +42,6 @@ fun ImagesContent(
     modifier: Modifier = Modifier,
     imageSize: Dp,
     contents : List<Place>,
-    isUnselected: Boolean,
     pagerState: PagerState,
     onPlaceClick: () -> Unit
 ) {
@@ -51,7 +49,7 @@ fun ImagesContent(
         Column(
             modifier = Modifier.padding(horizontal = 10.dp)
         ) {
-            val imageRequest = getImageRequestDefault(contents[index].imageFile, LocalContext.current)
+            val imageRequest = getImageRequestDefault(contents[index].imageFile, LocalContext.current, 100)
             ImageLoader(
                 image = imageRequest,
                 contentDescription = contents[index].imageName,
@@ -62,9 +60,10 @@ fun ImagesContent(
             PlaceContent(
                 modifier = Modifier
                     .padding(vertical = 10.dp)
+                    .clip(roundShape)
                     .border(
                         width = 1.dp,
-                        color = contents[index].placeBorderColor ?: PlaceAppTheme.colorScheme.secondaryBorder,
+                        color = contents[index].placeBorderColor,
                         shape = roundShape
                     ),
                 place = contents[index].placeName ?: stringResource(id = R.string.post_add_place),

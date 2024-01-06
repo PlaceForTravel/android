@@ -41,7 +41,7 @@ fun PlaceAppTheme(
 //        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
 //            val context = LocalContext.current
 //            if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }정
+//        }
 
         isDarkTheme -> DarkColorScheme
         else -> LightColorScheme
@@ -112,6 +112,7 @@ open class PlaceAppColors (
     val unselectedIcon: Color,
     val mainBackground: Color,
     val subBackground: Color,
+    val itemBackground: Color,
     val statusTopBar: Color,
     val statusBottomBar: Color,
     val mainText: Color,
@@ -129,6 +130,7 @@ object AppLightColors: PlaceAppColors(
     unselectedIcon = Neutral5,
     mainBackground = Neutral1,
     subBackground = Neutral4,
+    itemBackground = Neutral9,
     statusTopBar = Neutral4,
     statusBottomBar = Neutral1,
     mainText = Neutral8,
@@ -146,6 +148,7 @@ object AppDarkColors : PlaceAppColors(
     unselectedIcon = Neutral3,
     mainBackground = Neutral6,
     subBackground = Neutral8,
+    itemBackground = Neutral5,
     statusTopBar = Neutral8,
     statusBottomBar = Neutral6,
     mainText = Neutral1,
@@ -163,6 +166,7 @@ fun appLightColorScheme(
     unselectedIcon: Color = AppLightColors.unselectedIcon,
     mainBackground: Color = AppLightColors.mainBackground,
     subBackground: Color = AppLightColors.subBackground,
+    itemBackground: Color = AppLightColors.itemBackground,
     statusTopBar: Color = AppLightColors.statusTopBar,
     statusBottomBar: Color = AppLightColors.statusBottomBar,
     mainText: Color = AppLightColors.mainText,
@@ -179,6 +183,7 @@ fun appLightColorScheme(
         unselectedIcon,
         mainBackground,
         subBackground,
+        itemBackground,
         statusTopBar,
         statusBottomBar,
         mainText,
@@ -196,6 +201,7 @@ fun appDarkColorScheme(
     unselectedIcon: Color = AppDarkColors.unselectedIcon,
     mainBackground: Color = AppDarkColors.mainBackground,
     subBackground: Color = AppDarkColors.subBackground,
+    itemBackground: Color = AppDarkColors.itemBackground,
     statusTopBar: Color = AppDarkColors.statusTopBar,
     statusBottomBar: Color =  AppDarkColors.statusBottomBar,
     mainText: Color = AppDarkColors.mainText,
@@ -212,6 +218,7 @@ fun appDarkColorScheme(
         unselectedIcon,
         mainBackground,
         subBackground,
+        itemBackground,
         statusTopBar,
         statusBottomBar,
         mainText,

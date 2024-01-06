@@ -50,6 +50,8 @@ fun GalleryScreen(
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val pagingImageList = viewModel.imageList.collectAsLazyPagingItems()
+    val placeBorderDefault = PlaceAppTheme.colorScheme.secondaryBorder
+
 
     LaunchedEffect(Unit) {
         viewModel.getGalleryImages()
@@ -70,7 +72,9 @@ fun GalleryScreen(
                 /* 사진 선택 필수 */
                 if(viewModel.selectedImageList.size != 0) {
                     onNavigateToNext()
-                    viewModel.initPlaceList()
+                    viewModel.initPlaces(placeBorderDefault)
+                    viewModel.initCityName()
+                    viewModel.setPlaceList(null)
                 }
             }
         )
@@ -86,7 +90,7 @@ fun GalleryScreen(
             }
         } else {
             val find = viewModel.currentImage.value ?: pagingImageList[0]
-            val imageRequest = getImageRequestDefault(data = find?.uri, context = LocalContext.current)
+            val imageRequest = getImageRequestDefault(data = find?.uri, context = LocalContext.current, 100)
 
             ImageLoader(image = imageRequest, contentDescription = find?.name ?: "currentImage", modifier = Modifier.size(screenWidth.dp))
             SpaceDivider(padding = 10)
@@ -126,7 +130,7 @@ fun GalleryItem(
 ) {
     val index = selectedImages.indexOf(image)
     val isSelected = index != -1
-    val imageRequest = getImageRequestDefault(data = image.uri, LocalContext.current)
+    val imageRequest = getImageRequestDefault(data = image.uri, LocalContext.current, 100)
     Box(
         modifier = modifier.clickable {
             onSelect()

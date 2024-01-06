@@ -1,7 +1,12 @@
 package com.easyhz.placeapp.domain.model.feed.detail
 
+import android.os.Parcelable
+import androidx.compose.ui.graphics.Color
+import com.easyhz.placeapp.domain.model.post.Place
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class PlaceImagesItem(
     val address: String,
     @SerializedName("boardPlaceid")
@@ -11,4 +16,16 @@ data class PlaceImagesItem(
     val longitude: Double,
     val placeId: Int,
     val placeName: String
+) : Parcelable
+
+
+fun PlaceImagesItem.toPlace(imgIndex: Int, placeBorderColor: Color): Place = Place(
+    placeName = placeName,
+    latitude = latitude,
+    longitude = longitude,
+    address = address,
+    imageFile = imgUrl,
+    imageName = imgUrl,
+    imgIndex = imgIndex,
+    placeBorderColor = placeBorderColor
 )

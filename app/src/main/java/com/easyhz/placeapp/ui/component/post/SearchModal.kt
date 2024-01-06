@@ -35,7 +35,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -59,6 +58,7 @@ import com.easyhz.placeapp.util.toBasicCategory
 import com.easyhz.placeapp.util.withoutHTML
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapSearchModal(
     modifier: Modifier = Modifier,
@@ -68,10 +68,11 @@ fun MapSearchModal(
     onActiveChange: (Boolean) -> Unit,
     placeList: List<PlaceItem>?,
     isEqualCity: Boolean = false,
-    tempCityName: String = "",
+    cityName: String = "",
     onItemClick: (PlaceItem) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
+    val tooltipState = remember { PlainTooltipState() }
 
     LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
@@ -128,12 +129,13 @@ fun MapSearchModal(
                     keyboardActions = KeyboardActions(onSearch = { onSearch() })
                 )
             }
+            CityNameContent(cityName, isEqualCity, tooltipState)
             if (placeList.isNullOrEmpty()) {
                 NoData()
             } else {
                 PlaceListContainer(
                     placeList = placeList,
-                    tempCityName = tempCityName,
+                    tooltipState = tooltipState,
                     isEqualCity = isEqualCity,
                     onItemClick = onItemClick,
                 )
@@ -157,39 +159,12 @@ private fun NoData(){
 @Composable
 private fun PlaceListContainer(
     placeList: List<PlaceItem>,
-    tempCityName: String,
+    tooltipState: PlainTooltipState,
     isEqualCity: Boolean,
     onItemClick: (PlaceItem) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val tooltipState = remember { PlainTooltipState() }
     Column {
-        if(tempCityName.isNotEmpty()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(bottom = 10.dp)
-            ){
-                Text(text = "설정한 도시: $tempCityName", fontWeight = FontWeight.Bold)
-                if (!isEqualCity) {
-                    PlainTooltipBox(
-                        tooltip = { Text(text = stringResource(id = R.string.notice_please_select_same_city)) },
-                        tooltipState = tooltipState
-                    ) {
-                        Icon(
-                            imageVector = ContentCardIcons.ERROR.icon,
-                            contentDescription = stringResource(id = ContentCardIcons.ERROR.label),
-                            tint = PlaceAppTheme.colorScheme.error,
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .size(20.dp)
-                                .tooltipAnchor()
-                        )
-                    }
-                }
-            }
-        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -275,6 +250,41 @@ private fun ContentText(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CityNameContent(
+    cityName: String,
+    isEqualCity: Boolean,
+    tooltipState: PlainTooltipState
+) {
+    if(cityName.isNotEmpty()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 10.dp)
+        ){
+            Text(text = "${stringResource(id = R.string.selected_city)}: $cityName", fontWeight = FontWeight.Bold)
+            if (!isEqualCity) {
+                PlainTooltipBox(
+                    tooltip = { Text(text = stringResource(id = R.string.notice_please_select_same_city)) },
+                    tooltipState = tooltipState
+                ) {
+                    Icon(
+                        imageVector = ContentCardIcons.ERROR.icon,
+                        contentDescription = stringResource(id = ContentCardIcons.ERROR.label),
+                        tint = PlaceAppTheme.colorScheme.error,
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                            .size(20.dp)
+                            .tooltipAnchor()
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun PlaceItemPreview() {
@@ -326,7 +336,7 @@ private fun MapSearchModalPreview() {
             onActiveChange = { },
 //            onCancel = { },
             isEqualCity = false,
-            tempCityName = "경기도 수원시",
+            cityName = "경기도 수원시",
             placeList = listOf(
                 PlaceItem(
                 title = "맛집" ,
