@@ -1,5 +1,7 @@
 package com.easyhz.placeapp.di
 
+import com.easyhz.placeapp.domain.repository.bookmark.BookmarkRepository
+import com.easyhz.placeapp.domain.repository.bookmark.BookmarkRepositoryImpl
 import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepository
 import com.easyhz.placeapp.domain.repository.search.SearchDataStoreRepositoryImpl
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
@@ -37,6 +39,12 @@ abstract class RepositoryModule {
     abstract fun bindFeedRepository(
         feedRepositoryImpl: FeedRepositoryImpl,
     ): FeedRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindBookmarkRepository(
+        bookmarkRepositoryImpl: BookmarkRepositoryImpl
+    ): BookmarkRepository
 
     @Binds
     @ViewModelScoped

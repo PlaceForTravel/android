@@ -43,7 +43,7 @@ fun NavGraphBuilder.addHomeGraph(
         )
     }
     composable(route = HomeSections.BOOKMARK.route) {
-        Bookmark()
+        Bookmark(onItemClick = { id -> onNavigateToBoardDetail(id, it) })
     }
     composable(route = HomeSections.PROFILE.route) {
         Profile()

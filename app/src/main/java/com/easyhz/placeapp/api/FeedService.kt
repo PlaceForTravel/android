@@ -55,11 +55,13 @@ interface FeedService {
         @Part files: List<MultipartBody.Part>
     ) : Response<Void>
 
+    /* 글 삭제 */
     @DELETE("/board/delete/{boardId}")
     suspend fun deletePost(
         @Path("boardId") id: Int
     ) : Response<Void>
 
+    /* 글 수정 */
     @PUT("/board/edit/{boardId}")
     suspend fun modifyPost(
         @Path("boardId") id: Int,
@@ -79,7 +81,5 @@ interface FeedService {
         @Path("boardPlaceId") id: Int,
         @Body userInfo: UserInfo
     ): Response<Void>
-
-
 
 }

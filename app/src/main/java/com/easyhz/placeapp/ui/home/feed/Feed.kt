@@ -121,7 +121,7 @@ fun Feed(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun FeedContent(
+fun FeedContent(
     contents:  LazyPagingItems<Content>,
     refreshState: PullRefreshState,
     screenWidth: Int,
