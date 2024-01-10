@@ -6,6 +6,7 @@ import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.post.ModifyPost
+import com.easyhz.placeapp.domain.model.user.User
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.GET
@@ -24,7 +25,8 @@ interface FeedService {
     /* 전체 글 조회 */
     @GET("/board/list")
     suspend fun getFeed(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Body user: User,
     ) : Response<Feed>
 
     /* 글 상세 조회 */

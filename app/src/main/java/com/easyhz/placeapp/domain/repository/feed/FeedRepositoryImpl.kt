@@ -10,6 +10,7 @@ import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.domain.model.post.ModifyPost
 import com.easyhz.placeapp.domain.model.post.Post
+import com.easyhz.placeapp.domain.model.user.User
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,7 +28,7 @@ class FeedRepositoryImpl
     private val feedService: FeedService,
     @ProvideGson private val gson: Gson
 ):FeedRepository {
-    override suspend fun fetchFeedContents(page: Int): Response<Feed> = feedService.getFeed(page)
+    override suspend fun fetchFeedContents(page: Int, user: User): Response<Feed> = feedService.getFeed(page, user)
 
     override suspend fun fetchFeedDetail(id: Int): Response<FeedDetail> = feedService.getFeedDetail(id = id)
 

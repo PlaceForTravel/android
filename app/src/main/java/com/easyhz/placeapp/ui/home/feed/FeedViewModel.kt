@@ -15,6 +15,7 @@ import com.easyhz.placeapp.data.dataSource.FeedPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.ScreenState
+import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +43,8 @@ class FeedViewModel
         ),
         pagingSourceFactory = {
             FeedPagingSource(
-                feedRepository = feedRepository
+                feedRepository = feedRepository,
+                user = User()
             )
         }
     ).flow.cachedIn(viewModelScope)
