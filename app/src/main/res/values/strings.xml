@@ -43,6 +43,9 @@
     <string name="selected_city">선택한 도시</string>
     <string name="post_modify_post_content">내용만 수정할 수 있습니다.</string>
 
+    <string name="bookmark_header">저장됨</string>
+    <string name="bookmark_tabs_post">포스트</string>
+    <string name="bookmark_tabs_place">장소</string>
 
     <string name="no_search_data">검색 결과가 없습니다.</string>
 

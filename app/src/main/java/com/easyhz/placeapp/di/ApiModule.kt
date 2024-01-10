@@ -1,5 +1,6 @@
 package com.easyhz.placeapp.di
 
+import com.easyhz.placeapp.api.BookmarkService
 import com.easyhz.placeapp.api.FeedService
 import com.easyhz.placeapp.helper.Constants.MAIN_API_BASE_URL
 import com.google.gson.Gson
@@ -27,6 +28,12 @@ object ApiModule {
     fun provideFeedService(
         @ApiRetrofit retrofit: Retrofit
     ) : FeedService = retrofit.create(FeedService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideBookmarkService(
+        @ApiRetrofit retrofit: Retrofit
+    ) : BookmarkService = retrofit.create(BookmarkService::class.java)
 
     @Provides
     @Singleton

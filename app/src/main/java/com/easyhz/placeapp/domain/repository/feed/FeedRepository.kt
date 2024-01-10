@@ -8,10 +8,11 @@ import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.domain.model.post.ModifyPost
 import com.easyhz.placeapp.domain.model.post.Post
+import com.easyhz.placeapp.domain.model.user.User
 import retrofit2.Response
 
 interface FeedRepository {
-    suspend fun fetchFeedContents(page: Int): Response<Feed>
+    suspend fun fetchFeedContents(page: Int, user: User): Response<Feed>
 
     suspend fun fetchFeedDetail(id: Int): Response<FeedDetail>
 
