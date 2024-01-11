@@ -164,7 +164,8 @@ private fun NavGraphBuilder.navGraph(
         startDestination = LOGIN
     ) {
         addUserGraph(
-            onNavigateToBack = onNavigateToBack
+            onNavigateToBack = onNavigateToBack,
+            onNavigateToHome = onNavigateToHome,
         )
     }
 }

@@ -1,15 +1,17 @@
 package com.easyhz.placeapp.ui.navigation
 
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.easyhz.placeapp.ui.user.Login
 
 fun NavGraphBuilder.addUserGraph(
-    onNavigateToBack: () -> Unit
+    onNavigateToBack: () -> Unit,
+    onNavigateToHome: (NavBackStackEntry) -> Unit,
 ) {
     composable(
         route = "${MainDestinations.USER_ROUTE}/${UserRoutes.LOGIN}"
     ) {
-        Login(onNavigateToBack = onNavigateToBack)
+        Login(onNavigateToBack = onNavigateToBack, onNavigateToHome = { onNavigateToHome(it) })
     }
 }

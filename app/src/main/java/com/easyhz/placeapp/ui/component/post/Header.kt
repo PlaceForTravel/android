@@ -87,6 +87,43 @@ fun BookmarkHeader(
     }
 }
 
+@Composable
+fun LoginHeader(
+    modifier: Modifier = Modifier,
+    title: Int,
+    onBackClick: () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            SimpleIconButton(
+                modifier = Modifier
+                    .size(30.dp)
+                    .padding(start = 5.dp),
+                icon = Icons.Outlined.ArrowBackIos,
+                onClick = onBackClick
+            )
+        }
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = stringResource(id = title), fontWeight = FontWeight.ExtraBold)
+        }
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun PostHeaderPreview() {

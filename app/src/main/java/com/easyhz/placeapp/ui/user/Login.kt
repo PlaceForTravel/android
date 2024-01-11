@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -34,8 +32,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.BuildConfig
 import com.easyhz.placeapp.R
-import com.easyhz.placeapp.ui.component.SimpleIconButton
+import com.easyhz.placeapp.domain.model.user.LoginSteps
 import com.easyhz.placeapp.ui.component.SpaceDivider
+import com.easyhz.placeapp.ui.component.post.LoginHeader
+import com.easyhz.placeapp.ui.component.user.UserNameContents
 import com.easyhz.placeapp.ui.theme.NaverGreen
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.borderBottom
@@ -44,10 +44,11 @@ import com.navercorp.nid.NaverIdLoginSDK
 @Composable
 fun Login(
     viewModel: LoginViewModel = hiltViewModel(),
-    onNavigateToBack: () -> Unit
+    onNavigateToBack: () -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
-    NaverIdLoginSDK.initialize(context, BuildConfig.NAVER_API_CLIENT_ID, BuildConfig.NAVER_API_CLIENT_ID,"Login") //TODO: clientName 변경 필요
+    NaverIdLoginSDK.initialize(context, BuildConfig.NAVER_API_CLIENT_ID, BuildConfig.NAVER_API_CLIENT_SECRET,"Login") //TODO: clientName 변경 필요
 
     Box(
         modifier = Modifier
@@ -60,49 +61,19 @@ fun Login(
                     .fillMaxWidth()
                     .height(50.dp)
                     .borderBottom(color = PlaceAppTheme.colorScheme.primaryBorder, width = 1.dp),
+                title = R.string.login_header
             ) {
-                onNavigateToBack()
+                viewModel.manageNavigateToBack(onNavigateToBack)
             }
-            LoginContents(context, viewModel)
+            when(viewModel.userState.step) {
+                LoginSteps.LOGIN -> LoginContents(context, viewModel)
+                LoginSteps.USERNAME -> UserNameContents()
+                LoginSteps.SUCCESS -> { onNavigateToHome() }
+            }
         }
     }
 }
 
-@Composable
-private fun LoginHeader(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            SimpleIconButton(
-                modifier = Modifier
-                    .size(30.dp)
-                    .padding(start = 5.dp),
-                icon = Icons.Outlined.ArrowBackIos,
-                onClick = onBackClick
-            )
-        }
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = stringResource(id = R.string.login_header), fontWeight = FontWeight.ExtraBold)
-        }
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-
-        }
-    }
-}
 
 @Composable
 private fun LoginContents(
@@ -138,7 +109,7 @@ enum class SocialLoginType(
 ) {
     NAVER(R.drawable.naver, R.string.login_naver, R.string.login_naver_logo, NaverGreen) {
         override fun onClick(context: Context, viewModel: LoginViewModel) {
-            NaverIdLoginSDK.authenticate(context, viewModel.oauthLoginCallback)
+            NaverIdLoginSDK.authenticate(context, viewModel.oAuthLoginCallback)
         }
     };
 
