@@ -28,9 +28,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "NAVER_MAP_SDK_KEY", "" + localProperties["NAVER_MAP_SDK_KEY"] + "")
-        buildConfigField("String", "NAVER_API_CLIENT_ID", "" + localProperties["NAVER_MAP_API_CLIENT_ID"] + "")
-        buildConfigField("String", "NAVER_API_CLIENT_SECRET", "" + localProperties["NAVER_MAP_API_CLIENT_SECRET"] + "")
+        buildConfigField("String", "NAVER_MAP_SDK_KEY", localProperties["NAVER_MAP_SDK_KEY"].toString())
+        buildConfigField("String", "NAVER_API_CLIENT_ID", localProperties["NAVER_API_CLIENT_ID"].toString())
+        buildConfigField("String", "NAVER_API_CLIENT_SECRET", localProperties["NAVER_API_CLIENT_SECRET"].toString())
+        buildConfigField("String", "KAKAO_SDK_APP_KEY", localProperties["KAKAO_SDK_APP_KEY"].toString())
     }
 
     buildTypes {
@@ -101,6 +102,10 @@ dependencies {
 
     // Naver Id Login SDK
     implementation("com.navercorp.nid:oauth:5.9.0")
+
+    // Kakao Login SDK
+    implementation("com.kakao.sdk:v2-user:2.10.0")
+
 
 
     val pagingVersion = "3.1.1"

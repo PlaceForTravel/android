@@ -36,9 +36,14 @@ import com.easyhz.placeapp.domain.model.user.LoginSteps
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.post.LoginHeader
 import com.easyhz.placeapp.ui.component.user.UserNameContents
+import com.easyhz.placeapp.ui.theme.KakaoLabel
+import com.easyhz.placeapp.ui.theme.KakaoLogo
+import com.easyhz.placeapp.ui.theme.KakaoYellow
 import com.easyhz.placeapp.ui.theme.NaverGreen
+import com.easyhz.placeapp.ui.theme.NaverLabel
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.borderBottom
+import com.kakao.sdk.common.KakaoSdk
 import com.navercorp.nid.NaverIdLoginSDK
 
 @Composable
@@ -49,6 +54,7 @@ fun Login(
 ) {
     val context = LocalContext.current
     NaverIdLoginSDK.initialize(context, BuildConfig.NAVER_API_CLIENT_ID, BuildConfig.NAVER_API_CLIENT_SECRET,"Login") //TODO: clientName 변경 필요
+    KakaoSdk.init(context, BuildConfig.KAKAO_SDK_APP_KEY)
 
     Box(
         modifier = Modifier
@@ -98,6 +104,13 @@ private fun LoginContents(
             viewModel = viewModel,
             context = context
         )
+        SpaceDivider(padding = 10)
+        SocialLoginButton(
+            modifier = Modifier.width(400.dp),
+            social = SocialLoginType.KAKAO,
+            viewModel = viewModel,
+            context = context
+        )
     }
 }
 
@@ -105,11 +118,18 @@ enum class SocialLoginType(
     @DrawableRes val logo: Int,
     @StringRes val text: Int,
     @StringRes val description: Int,
-    val color: Color
+    val containerColor: Color,
+    val contentColor: Color,
+    val logoColor: Color,
 ) {
-    NAVER(R.drawable.naver, R.string.login_naver, R.string.login_naver_logo, NaverGreen) {
+    NAVER(R.drawable.naver, R.string.login_naver, R.string.login_naver_logo, NaverGreen, NaverLabel, NaverLabel) {
         override fun onClick(context: Context, viewModel: LoginViewModel) {
-            NaverIdLoginSDK.authenticate(context, viewModel.oAuthLoginCallback)
+            NaverIdLoginSDK.authenticate(context, viewModel.naverLoginCallback)
+        }
+    },
+    KAKAO(R.drawable.kakao, R.string.login_kakao, R.string.login_kakao_logo, KakaoYellow, KakaoLabel, KakaoLogo) {
+        override fun onClick(context: Context, viewModel: LoginViewModel) {
+            viewModel.tryLoginWithKakao(context)
         }
     };
 
@@ -126,7 +146,7 @@ private fun SocialLoginButton(
     Button(
         modifier = modifier.height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = social.color
+            containerColor = social.containerColor
         ),
         shape = RoundedCornerShape(5.dp),
         onClick = { social.onClick(context, viewModel) }
@@ -136,13 +156,15 @@ private fun SocialLoginButton(
         ) {
             Icon(
                 painter = painterResource(id = social.logo),
-                contentDescription = stringResource(id = social.description)
+                contentDescription = stringResource(id = social.description),
+                tint = social.logoColor
             )
             SpaceDivider(padding = 5)
             Text(
                 text = stringResource(id = social.text),
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = social.contentColor
             )
         }
     }
