@@ -20,6 +20,7 @@ import com.easyhz.placeapp.domain.model.feed.comment.write.updateContent
 import com.easyhz.placeapp.domain.model.feed.detail.DetailState
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
+import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.ui.component.detail.DetailActions
 import com.easyhz.placeapp.ui.component.map.LatLngType
@@ -66,7 +67,7 @@ class BoardDetailViewModel
 
     fun fetchFeedDetail(id: Int) = viewModelScope.launch {
         setIsLoading(true)
-        val response = feedRepository.fetchFeedDetail(id)
+        val response = feedRepository.fetchFeedDetail(id, userId = User().userId)
         if(response.isSuccessful) {
             _feedDetail.value = response.body()
             getAllPlaceLatLng()

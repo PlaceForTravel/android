@@ -12,6 +12,8 @@ import com.easyhz.placeapp.domain.repository.gallery.ImageRepository
 import com.easyhz.placeapp.domain.repository.gallery.ImageRepositoryImpl
 import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
 import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepositoryImpl
+import com.easyhz.placeapp.domain.repository.user.UserRepository
+import com.easyhz.placeapp.domain.repository.user.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -57,4 +59,10 @@ abstract class RepositoryModule {
     abstract fun bindUserDataStoreRepository(
         dataStoreRepositoryImpl: UserDataStoreRepositoryImpl,
     ): UserDataStoreRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 }

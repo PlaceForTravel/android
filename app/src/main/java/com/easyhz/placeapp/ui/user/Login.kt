@@ -74,7 +74,9 @@ fun Login(
             when(viewModel.userState.step) {
                 LoginSteps.LOGIN -> LoginContents(context, viewModel)
                 LoginSteps.USERNAME -> UserNameContents()
-                LoginSteps.SUCCESS -> { onNavigateToHome() }
+                LoginSteps.SUCCESS -> {
+                    onNavigateToHome()
+                }
             }
         }
     }
@@ -157,9 +159,10 @@ private fun SocialLoginButton(
             Icon(
                 painter = painterResource(id = social.logo),
                 contentDescription = stringResource(id = social.description),
-                tint = social.logoColor
+                tint = social.logoColor,
+                modifier = Modifier.size(32.dp)
             )
-            SpaceDivider(padding = 5)
+            SpaceDivider(padding = 10)
             Text(
                 text = stringResource(id = social.text),
                 fontWeight = FontWeight.ExtraBold,

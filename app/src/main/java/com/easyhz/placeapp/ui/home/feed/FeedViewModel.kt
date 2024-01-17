@@ -44,7 +44,7 @@ class FeedViewModel
         pagingSourceFactory = {
             FeedPagingSource(
                 feedRepository = feedRepository,
-                user = User()
+                userId = User().userId
             )
         }
     ).flow.cachedIn(viewModelScope)

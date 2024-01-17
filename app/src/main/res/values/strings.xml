@@ -73,6 +73,14 @@
     <string name="login_username_sub_title">여정을 시작할 닉네임을 입력하세요!</string>
     <string name="login_username_placeholder">닉네임을 입력하세요.</string>
     <string name="login_join_success_request">시작하기</string>
+    <string name="login_nickname_invalid">Invalid Nickname</string>
+    <string name="login_nickname_invalid_text">
+        \n - 닉네임은 3자 이상, 8자 이하여야 합니다.
+        \n - 문자를 최소 1개 이상 포함해야 합니다.
+        \n - 특수 문자 및 공백을 사용할 수 없습니다.
+        \n - 중복을 허용하지 않습니다.
+    </string>
+    <string name="login_nickname_valid">Valid Nickname</string>
 
     <string name="network_error_message">네트워크 오류가 발생했습니다.</string>
     <string name="retry_error_message">잠시 후 다시 시도해 주세요.</string>

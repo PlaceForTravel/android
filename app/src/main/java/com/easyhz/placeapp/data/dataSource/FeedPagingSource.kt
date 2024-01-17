@@ -1,7 +1,6 @@
 package com.easyhz.placeapp.data.dataSource
 
 import com.easyhz.placeapp.domain.model.feed.Content
-import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 
 /**
@@ -13,10 +12,10 @@ import com.easyhz.placeapp.domain.repository.feed.FeedRepository
  */
 class FeedPagingSource(
     private val feedRepository: FeedRepository,
-    private val user: User
+    private val userId: String
 ):BasePagingSource<Content>() {
     override suspend fun fetchData(page: Int): List<Content>?  {
-        val data = feedRepository.fetchFeedContents(page = page, user = user)
+        val data = feedRepository.fetchFeedContents(page = page, userId = userId)
         if (data.isSuccessful) {
             return data.body()?.content ?: emptyList()
         }

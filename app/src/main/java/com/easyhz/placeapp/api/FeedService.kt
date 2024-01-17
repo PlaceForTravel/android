@@ -26,13 +26,14 @@ interface FeedService {
     @GET("/board/list")
     suspend fun getFeed(
         @Query("page") page: Int,
-        @Body user: User,
+        @Query("userId") userId: String,
     ) : Response<Feed>
 
     /* 글 상세 조회 */
     @GET("/board/detail/{boardId}")
     suspend fun getFeedDetail(
-        @Path("boardId") id: Int
+        @Path("boardId") id: Int,
+        @Query("userId") userId: String
     ) : Response<FeedDetail>
 
     /* 댓글 조회 */

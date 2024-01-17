@@ -25,7 +25,7 @@ class FeedRepositoryTest {
 
     @Test
     fun `fetch Feed Contents`() = runBlocking {
-        `when`(feedService.getFeed(1)).thenReturn(
+        `when`(feedService.getFeed(1, "user1")).thenReturn(
             Response.success(
                 Feed(
                     listOf(Content(1, "서울", listOf(), 0,"", "", "", "", "", "", "")),
@@ -34,20 +34,20 @@ class FeedRepositoryTest {
             )
         )
 
-        val result = repository.fetchFeedContents(1)
+        val result = repository.fetchFeedContents(1, "user1")
         assert(result.isSuccessful)
     }
 
     @Test
     fun `fetch Feed Detail`() = runBlocking {
-        `when`(feedService.getFeedDetail(1)).thenReturn(
+        `when`(feedService.getFeedDetail(1, "user1")).thenReturn(
             Response.success(
                 FeedDetail(1, "서울특별시 종로구", "여기 정말 좋아요", 0, "", listOf(), "",
                      "", "", "user1")
             )
         )
 
-        val result = repository.fetchFeedDetail(1)
+        val result = repository.fetchFeedDetail(1, "user1")
         assert(result.isSuccessful)
     }
 

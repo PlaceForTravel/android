@@ -165,7 +165,7 @@ fun IconText(
     tint: Color = LocalContentColor.current,
     text: String,
     contentDescription: String,
-    onClick: () -> Unit,
+    onClick: () -> Unit = { },
     textStyle: TextStyle = TextStyle.Default.copy(
         fontSize = 15.sp,
         fontWeight = FontWeight.Bold,

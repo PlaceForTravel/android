@@ -9,8 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.PersonPinCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -23,14 +27,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.component.SpaceDivider
+import com.easyhz.placeapp.ui.component.SpinningProgressBar
 import com.easyhz.placeapp.ui.component.search.setSearchBarColors
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
+import com.easyhz.placeapp.ui.user.LoginViewModel
 
 @Composable
-fun UserNameContents() {
+fun UserNameContents(
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -63,10 +72,32 @@ fun UserNameContents() {
                         color = PlaceAppTheme.colorScheme.secondaryBorder,
                         shape = roundShape
                     ),
-                value = "여정이203", onValueChange = { },
+                value = viewModel.userState.user.nickname,
+                onValueChange = { viewModel.setNickname(it) },
                 singleLine = true,
                 placeholder = {
                     Text(text = stringResource(id = R.string.login_username_placeholder))
+                },
+                trailingIcon = {
+                    when {
+                        viewModel.userState.isLoading -> {
+                            SpinningProgressBar(canvasSize = 24)
+                        }
+                        viewModel.userState.isValid -> {
+                            Icon(
+                                imageVector = Icons.Outlined.Check,
+                                contentDescription = stringResource(id = R.string.login_nickname_valid),
+                                tint = PlaceAppTheme.colorScheme.secondary
+                            )
+                        }
+                        else -> {
+                            Icon(
+                                imageVector = Icons.Outlined.PersonPinCircle,
+                                contentDescription = stringResource(id = R.string.login_nickname_invalid),
+                                tint = PlaceAppTheme.colorScheme.error
+                            )
+                        }
+                    }
                 },
                 colors = setSearchBarColors(),
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Go),
@@ -74,11 +105,15 @@ fun UserNameContents() {
 
                 })
             )
+            if (!viewModel.userState.isValid && !viewModel.userState.isLoading) {
+                Text(text = stringResource(id = R.string.login_nickname_invalid_text))
+            }
             SpaceDivider(padding = 10)
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.onSuccess() },
                 modifier = Modifier.fillMaxWidth(),
                 shape = roundShape,
+                enabled = viewModel.userState.isValid,
                 colors = ButtonDefaults.buttonColors(containerColor = PlaceAppTheme.colorScheme.secondary, contentColor = PlaceAppTheme.colorScheme.subBackground)
             ) {
                 Text(text = stringResource(id = R.string.login_join_success_request), fontSize = 17.sp)

@@ -10,6 +10,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -37,7 +38,9 @@ import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.checkGalleryPermission
 
 @Composable
-fun PlaceApp() {
+fun PlaceApp(
+    viewModel: PlaceAppViewModel = hiltViewModel()
+) {
     PlaceAppTheme {
         val applicationState = rememberApplicationState()
         val mainNavController = rememberMainNavController()
