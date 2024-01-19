@@ -23,5 +23,7 @@ class UserRepositoryImpl
         }
     }
 
+    override suspend fun validateUserId(userId: String): Response<Boolean> = userService.validateUserId(userId)
+
     override suspend fun validateNickname(nickname: String): Response<Boolean> = userService.validateNickname(nickname)
 }

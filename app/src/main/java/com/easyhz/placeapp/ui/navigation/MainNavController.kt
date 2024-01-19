@@ -61,8 +61,14 @@ class MainNavController(
         if (from.isResumed()) navController.navigate("${MainDestinations.USER_ROUTE}/$LOGIN")
     }
 
-    fun navigateToHome(from: NavBackStackEntry) {
-        if (from.isResumed()) navController.navigate("${MainDestinations.HOME_ROUTE}/feed")
+    fun navigateToHome(from: NavBackStackEntry, needPopStack: Boolean = false) {
+        if (from.isResumed()) navController.navigate("${MainDestinations.HOME_ROUTE}/feed") {
+            if (needPopStack) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
     }
 
     fun navigateToModify(feedDetail: FeedDetail, from: NavBackStackEntry) {

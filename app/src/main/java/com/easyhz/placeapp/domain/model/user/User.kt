@@ -1,18 +1,16 @@
 package com.easyhz.placeapp.domain.model.user
 
+import com.easyhz.placeapp.ui.user.SocialLoginType
+
 
 data class User(
-    val userId: String = "user1",
-    val nickname: String = "user1",
-    val email: String = "",
-    val fcmToken: String = "",
-    val phoneNum: String = "",
-    val type: LoginTypes = LoginTypes.NONE
+    val userId: String = "",
+    val nickname: String = "",
+    val email: String? = null,
+    val fcmToken: String? = null,
+    val phoneNum: String? = null,
+    val type: SocialLoginType = SocialLoginType.NONE
 )
-
-enum class LoginTypes() {
-    NONE, NAVER, KAKAO
-}
 
 object UserManager {
     var user: User? = null
@@ -23,7 +21,7 @@ object UserManager {
     }
 
     fun clearUser() {
-        user = null
+        user = User()
     }
 
 }

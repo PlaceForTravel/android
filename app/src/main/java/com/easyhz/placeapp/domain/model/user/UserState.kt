@@ -1,5 +1,7 @@
 package com.easyhz.placeapp.domain.model.user
 
+import com.easyhz.placeapp.ui.user.SocialLoginType
+
 data class UserState(
     val user: User = User(),
     val step: LoginSteps = LoginSteps.LOGIN,
@@ -16,10 +18,10 @@ enum class LoginSteps() {
 fun UserState.update(
     userId: String = user.userId,
     nickname: String = user.nickname,
-    email: String = user.email,
-    fcmToken: String = user.fcmToken,
-    phoneNum: String = user.phoneNum,
-    type: LoginTypes = user.type
+    email: String? = user.email,
+    fcmToken: String? = user.fcmToken,
+    phoneNum: String? = user.phoneNum,
+    type: SocialLoginType = user.type
 ): UserState {
     val user = user.copy(
         userId = userId,

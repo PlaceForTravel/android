@@ -116,7 +116,7 @@ private fun NavGraphBuilder.navGraph(
     getNavBackStack: () -> NavBackStackEntry,
     onNavigateToSearch: (NavBackStackEntry) -> Unit,
     onNavigateToUser: (NavBackStackEntry) -> Unit,
-    onNavigateToHome: (NavBackStackEntry) -> Unit,
+    onNavigateToHome: (NavBackStackEntry, Boolean) -> Unit,
     onNavigateToModify: (FeedDetail, NavBackStackEntry) -> Unit,
     getFeedDetail: () -> FeedDetail?
 ) {
@@ -139,7 +139,7 @@ private fun NavGraphBuilder.navGraph(
 
         BoardDetail(
             id = boardId,
-            onNavigateToHome = { onNavigateToHome(backStackEntry) },
+            onNavigateToHome = { onNavigateToHome(backStackEntry, false) },
             onNavigateToModify = { feedDetail ->  onNavigateToModify(feedDetail, backStackEntry) }
         )
     }

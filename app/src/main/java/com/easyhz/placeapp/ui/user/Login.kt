@@ -19,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.easyhz.placeapp.BuildConfig
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.domain.model.user.LoginSteps
 import com.easyhz.placeapp.ui.component.SpaceDivider
@@ -43,8 +43,6 @@ import com.easyhz.placeapp.ui.theme.NaverGreen
 import com.easyhz.placeapp.ui.theme.NaverLabel
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.borderBottom
-import com.kakao.sdk.common.KakaoSdk
-import com.navercorp.nid.NaverIdLoginSDK
 
 @Composable
 fun Login(
@@ -53,9 +51,10 @@ fun Login(
     onNavigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
-    NaverIdLoginSDK.initialize(context, BuildConfig.NAVER_API_CLIENT_ID, BuildConfig.NAVER_API_CLIENT_SECRET,"Login") //TODO: clientName 변경 필요
-    KakaoSdk.init(context, BuildConfig.KAKAO_SDK_APP_KEY)
 
+    LaunchedEffect(key1 = Unit) {
+        viewModel.initNickname()
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,9 +73,7 @@ fun Login(
             when(viewModel.userState.step) {
                 LoginSteps.LOGIN -> LoginContents(context, viewModel)
                 LoginSteps.USERNAME -> UserNameContents()
-                LoginSteps.SUCCESS -> {
-                    onNavigateToHome()
-                }
+                LoginSteps.SUCCESS -> { onNavigateToHome() }
             }
         }
     }
@@ -117,25 +114,20 @@ private fun LoginContents(
 }
 
 enum class SocialLoginType(
-    @DrawableRes val logo: Int,
-    @StringRes val text: Int,
-    @StringRes val description: Int,
-    val containerColor: Color,
-    val contentColor: Color,
-    val logoColor: Color,
+    @DrawableRes val logo: Int? = null,
+    @StringRes val text: Int? = null,
+    @StringRes val description: Int? = null,
+    val containerColor: Color? = null,
+    val contentColor: Color? = null,
+    val logoColor: Color? = null,
 ) {
-    NAVER(R.drawable.naver, R.string.login_naver, R.string.login_naver_logo, NaverGreen, NaverLabel, NaverLabel) {
-        override fun onClick(context: Context, viewModel: LoginViewModel) {
-            NaverIdLoginSDK.authenticate(context, viewModel.naverLoginCallback)
-        }
-    },
-    KAKAO(R.drawable.kakao, R.string.login_kakao, R.string.login_kakao_logo, KakaoYellow, KakaoLabel, KakaoLogo) {
-        override fun onClick(context: Context, viewModel: LoginViewModel) {
-            viewModel.tryLoginWithKakao(context)
-        }
-    };
+    NONE() ,
+    NAVER(R.drawable.naver, R.string.login_naver, R.string.login_naver_logo, NaverGreen, NaverLabel, NaverLabel) ,
+    KAKAO(R.drawable.kakao, R.string.login_kakao, R.string.login_kakao_logo, KakaoYellow, KakaoLabel, KakaoLogo);
 
-    abstract fun onClick(context: Context, viewModel: LoginViewModel)
+    fun onClick(context: Context, viewModel: LoginViewModel) {
+        viewModel.login(context, this)
+    }
 }
 
 @Composable
@@ -148,7 +140,7 @@ private fun SocialLoginButton(
     Button(
         modifier = modifier.height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = social.containerColor
+            containerColor = social.containerColor!!
         ),
         shape = RoundedCornerShape(5.dp),
         onClick = { social.onClick(context, viewModel) }
@@ -157,17 +149,17 @@ private fun SocialLoginButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(id = social.logo),
-                contentDescription = stringResource(id = social.description),
-                tint = social.logoColor,
+                painter = painterResource(id = social.logo!!),
+                contentDescription = stringResource(id = social.description!!),
+                tint = social.logoColor!!,
                 modifier = Modifier.size(32.dp)
             )
             SpaceDivider(padding = 10)
             Text(
-                text = stringResource(id = social.text),
+                text = stringResource(id = social.text!!),
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 20.sp,
-                color = social.contentColor
+                color = social.contentColor!!
             )
         }
     }
