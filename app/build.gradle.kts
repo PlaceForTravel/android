@@ -7,6 +7,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 val localProperties = Properties()
@@ -130,4 +131,9 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Fcm
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
 }

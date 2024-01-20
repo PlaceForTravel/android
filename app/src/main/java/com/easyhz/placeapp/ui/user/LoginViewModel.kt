@@ -16,10 +16,12 @@ import com.easyhz.placeapp.domain.repository.user.UserRepository
 import com.easyhz.placeapp.domain.repository.user.social.Naver
 import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.repository.user.social.Kakao
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -37,22 +39,25 @@ class LoginViewModel
     init {
         Log.d(TAG, "user: ${UserManager.user}")
     }
-    fun login(context: Context, social: SocialLoginType) {
+    fun login(context: Context, socialType: SocialLoginType) = viewModelScope.launch {
         val loginFunction: suspend (User) -> Unit = { user ->
             val step = if (validateUserId(user.userId)) LoginSteps.SUCCESS else LoginSteps.USERNAME
             setUserState(user, step)
         }
+        getFCMToken()?.let { token ->
+            userState = userState.update(fcmToken = token)
+        }
 
-        when (social) {
-            SocialLoginType.NAVER -> {
-                Naver.setNickname(userState.user.nickname)
-                Naver.login(context, loginFunction)
-            }
-            SocialLoginType.KAKAO -> {
-                Kakao.setNickname(userState.user.nickname)
-                Kakao.login(context, loginFunction)
-            }
-            else -> {}
+        val social = when (socialType) {
+            SocialLoginType.NAVER -> Naver
+            SocialLoginType.KAKAO -> Kakao
+            else -> null
+        }
+
+        social?.apply {
+            setNickname(userState.user.nickname)
+            setFCMToken(userState.user.fcmToken)
+            login(context, loginFunction)
         }
     }
 
@@ -162,6 +167,12 @@ class LoginViewModel
             updateUserInfo()
             UserManager.setUser(userState.user)
         }
+    }
+
+    private suspend fun getFCMToken(): String? = try {
+        FirebaseMessaging.getInstance().token.await()
+    } catch (e: Exception) {
+        null
     }
 
     companion object {

@@ -17,4 +17,8 @@ abstract class SocialLogin {
     fun setNickname(nickname: String) {
         profile = profile.copy(nickname = nickname)
     }
+
+    fun setFCMToken(token: String?) {
+        profile = profile.copy(fcmToken = token)
+    }
 }
