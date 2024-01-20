@@ -13,8 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-object Kakao: SocialRepository {
-    private var profile: User = User()
+object Kakao: SocialLogin() {
     private lateinit var onSuccessCallback: suspend (User) -> Unit
 
     private val kakaoLoginCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
@@ -24,8 +23,7 @@ object Kakao: SocialRepository {
             handleKakaoLoginSuccess(token)
         }
     }
-    override val scope: CoroutineScope
-        get() = CoroutineScope(Dispatchers.IO)
+    override val scope: CoroutineScope by lazy { CoroutineScope(Dispatchers.IO) }
 
 
     override fun login(context: Context, onSuccess: suspend (User) -> Unit) {
@@ -39,10 +37,6 @@ object Kakao: SocialRepository {
 
     override fun logout() {
         UserApiClient.instance.logout {  }
-    }
-
-    override fun setNickname(nickname: String) {
-        profile = profile.copy(nickname = nickname)
     }
 
     private fun loginWithKakaoTalk(context: Context) {

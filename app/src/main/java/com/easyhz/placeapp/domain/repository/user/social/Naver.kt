@@ -17,8 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-object Naver: SocialRepository {
-    private var profile: User = User()
+object Naver: SocialLogin() {
     private lateinit var onSuccessCallback: suspend (User) -> Unit
 
     private val naverLoginCallback = object : OAuthLoginCallback {
@@ -42,8 +41,7 @@ object Naver: SocialRepository {
             Log.d(LoginViewModel.TAG, "oAuthLoginCallback > onFailure - httpStatus: $httpStatus , message: $message")
         }
     }
-    override val scope: CoroutineScope
-        get() = CoroutineScope(Dispatchers.IO)
+    override val scope: CoroutineScope by lazy { CoroutineScope(Dispatchers.IO) }
 
     override fun login(context: Context, onSuccess: suspend (User) -> Unit) {
         this.onSuccessCallback = onSuccess
@@ -52,10 +50,6 @@ object Naver: SocialRepository {
 
     override fun logout() {
         NaverIdLoginSDK.logout()
-    }
-
-    override fun setNickname(nickname: String) {
-        profile = profile.copy(nickname = nickname)
     }
 
     private suspend fun getNidProfile(): NidProfile?  = suspendCancellableCoroutine { continuation ->
