@@ -57,6 +57,7 @@ fun Feed(
     val refreshState = rememberPullRefreshState(refreshing = viewModel.screenState.isRefreshing, onRefresh = {
         viewModel.refreshFeed(contents)
     })
+    val dialogCondition = viewModel.isFirstRun && viewModel.isShowDialog && (UserManager.user == null || UserManager.user?.fcmToken == null)
 
     Box {
         Column {
@@ -92,7 +93,7 @@ fun Feed(
             CircularLoading(scope = this)
         }
     }
-    if (viewModel.isFirstRun && viewModel.isShowDialog && UserManager.user?.userId?.isEmpty() == true) {
+    if (dialogCondition) {
         LoginDialog(
             onDismissRequest = { viewModel.setIsShowDialog(false) },
             onLoginClick = {

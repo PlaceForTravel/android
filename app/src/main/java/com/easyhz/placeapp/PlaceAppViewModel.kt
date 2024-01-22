@@ -21,7 +21,10 @@ class PlaceAppViewModel
 
     private fun isLogin() = viewModelScope.launch {
         dataStoreRepository.getUserInfo().collectLatest {
+            println("user>>>>>>>> $it")
             UserManager.setUser(it)
+            if (it.fcmToken != null) {
+            }
         }
     }
 }

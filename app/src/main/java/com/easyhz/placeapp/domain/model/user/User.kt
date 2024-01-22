@@ -21,7 +21,7 @@ object UserManager {
     }
 
     fun clearUser() {
-        user = User()
+        user = null
     }
 
 }

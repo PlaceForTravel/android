@@ -33,11 +33,13 @@ class LoginViewModel
 ): ViewModel() {
     private var debounceJob: Job? = null
     private val regex = Regex(REGEX)
-
     var userState by mutableStateOf(UserState())
 
     init {
         Log.d(TAG, "user: ${UserManager.user}")
+        UserManager.user?.let {
+            userState = userState.copy(user = it)
+        }
     }
     fun login(context: Context, socialType: SocialLoginType) = viewModelScope.launch {
         val loginFunction: suspend (User) -> Unit = { user ->
@@ -68,7 +70,9 @@ class LoginViewModel
             else -> {}
         }
         dataStoreRepository.deleteUserInfo()
+        userState = userState.update(fcmToken = null)
         UserManager.clearUser()
+        onSuccess()
     }
 
     fun manageNavigateToBack(onNavigateToBack: () -> Unit) {
@@ -113,8 +117,10 @@ class LoginViewModel
                 if (isSuccessful) {
                     userState = userState.copy(onSuccess = true)
                     setUserStateStep(LoginSteps.SUCCESS)
-                    updateUserInfo()
-                    UserManager.setUser(userState.user)
+                    userState.user.fcmToken?.let {
+                        updateUserInfo()
+                        UserManager.setUser(userState.user)
+                    }
                 } else {
                     userState = userState.copy(onSuccess = false)
                 }
@@ -166,6 +172,7 @@ class LoginViewModel
         if (step == LoginSteps.SUCCESS) {
             updateUserInfo()
             UserManager.setUser(userState.user)
+            onSuccess()
         }
     }
 
