@@ -8,6 +8,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.ui.detail.BoardDetail
@@ -39,7 +41,8 @@ import com.easyhz.placeapp.util.checkGalleryPermission
 
 @Composable
 fun PlaceApp(
-    viewModel: PlaceAppViewModel = hiltViewModel()
+    viewModel: PlaceAppViewModel = hiltViewModel(),
+    boardId: Int? = null
 ) {
     PlaceAppTheme {
         val applicationState = rememberApplicationState()
@@ -57,6 +60,9 @@ fun PlaceApp(
             } else {
                 Log.d("PlaceApp", "권한 필요")
             }
+        }
+        LaunchedEffect(Unit) {
+            boardId?.let { boardId -> mainNavController.navigateToBoardDetailOnDeepLink(boardId) }
         }
         Scaffold(
             bottomBar = {
@@ -132,7 +138,10 @@ private fun NavGraphBuilder.navGraph(
     }
     composable(
         route = "${MainDestinations.BOARD_DETAIL_ROUTE}/{${MainDestinations.BOARD_ID}}",
-        arguments = listOf(navArgument(MainDestinations.BOARD_ID) { type = NavType.IntType })
+        arguments = listOf(navArgument(MainDestinations.BOARD_ID) { type = NavType.IntType }),
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "wooyeojung://board/{${MainDestinations.BOARD_ID}}"
+        }),
     ) { backStackEntry ->
         val arguments = requireNotNull(backStackEntry.arguments)
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)

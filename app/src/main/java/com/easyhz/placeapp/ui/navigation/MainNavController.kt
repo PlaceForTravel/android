@@ -81,6 +81,10 @@ class MainNavController(
         if(from.isResumed()) navController.navigate("${MainDestinations.BOARD_DETAIL_ROUTE}/$boardId")
     }
 
+    fun navigateToBoardDetailOnDeepLink(boardId: Int) {
+        navController.navigate("${MainDestinations.BOARD_DETAIL_ROUTE}/$boardId")
+    }
+
     fun navigateToSearch(from: NavBackStackEntry) {
         if (from.isResumed()) navController.navigate(MainDestinations.SEARCH_ROUTE)
     }

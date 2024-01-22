@@ -14,8 +14,11 @@ class MainActivity : ComponentActivity() {
 //        WindowCompat.setDecorFitsSystemWindows(window, false)
         NaverIdLoginSDK.initialize(this, BuildConfig.NAVER_API_CLIENT_ID, BuildConfig.NAVER_API_CLIENT_SECRET,"Login") //TODO: clientName 변경 필요
         KakaoSdk.init(this, BuildConfig.KAKAO_SDK_APP_KEY)
+
+        val boardId = intent.extras?.getString("boardId")
+
         setContent {
-           PlaceApp()
+           PlaceApp(boardId = boardId?.toInt())
         }
     }
 }
