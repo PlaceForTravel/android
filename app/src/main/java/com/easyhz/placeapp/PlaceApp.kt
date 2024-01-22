@@ -178,6 +178,7 @@ private fun NavGraphBuilder.navGraph(
         addUserGraph(
             onNavigateToBack = onNavigateToBack,
             onNavigateToHome = onNavigateToHome,
+            applicationState = applicationState
         )
     }
 }

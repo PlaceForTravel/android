@@ -16,6 +16,7 @@ import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.ScreenState
 import com.easyhz.placeapp.domain.model.user.User
+import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,6 +36,7 @@ class FeedViewModel
 
     var savePostState by mutableStateOf(SaveState())
     var screenState by mutableStateOf(ScreenState())
+    var dialogCondition by mutableStateOf(false)
 
     var pager = Pager(
         config = PagingConfig(
@@ -51,7 +53,11 @@ class FeedViewModel
 
     init {
         try {
-            getIsFirstRun()
+            viewModelScope.launch {
+                getIsFirstRun()
+                delay(500)
+                dialogCondition = isFirstRun && isShowDialog && (UserManager.user == null || UserManager.user?.userId?.isEmpty() == true)
+            }
         } catch (e: Exception) {
             screenState = screenState.copy(error = e.localizedMessage)
             Log.d(this::class.java.simpleName, e.message.toString())

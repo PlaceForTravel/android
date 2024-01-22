@@ -27,7 +27,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.domain.model.feed.Content
-import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.component.NetworkError
@@ -57,7 +56,6 @@ fun Feed(
     val refreshState = rememberPullRefreshState(refreshing = viewModel.screenState.isRefreshing, onRefresh = {
         viewModel.refreshFeed(contents)
     })
-    val dialogCondition = viewModel.isFirstRun && viewModel.isShowDialog && (UserManager.user == null || UserManager.user?.fcmToken == null)
 
     Box {
         Column {
@@ -93,7 +91,7 @@ fun Feed(
             CircularLoading(scope = this)
         }
     }
-    if (dialogCondition) {
+    if (viewModel.dialogCondition) {
         LoginDialog(
             onDismissRequest = { viewModel.setIsShowDialog(false) },
             onLoginClick = {

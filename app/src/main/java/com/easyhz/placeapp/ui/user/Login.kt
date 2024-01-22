@@ -36,6 +36,7 @@ import com.easyhz.placeapp.domain.model.user.LoginSteps
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.post.LoginHeader
 import com.easyhz.placeapp.ui.component.user.UserNameContents
+import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.theme.KakaoLabel
 import com.easyhz.placeapp.ui.theme.KakaoLogo
 import com.easyhz.placeapp.ui.theme.KakaoYellow
@@ -47,6 +48,7 @@ import com.easyhz.placeapp.util.borderBottom
 @Composable
 fun Login(
     viewModel: LoginViewModel = hiltViewModel(),
+    applicationState: ApplicationState,
     onNavigateToBack: () -> Unit,
     onNavigateToHome: () -> Unit,
 ) {
@@ -73,7 +75,10 @@ fun Login(
             when(viewModel.userState.step) {
                 LoginSteps.LOGIN -> LoginContents(context, viewModel)
                 LoginSteps.USERNAME -> UserNameContents()
-                LoginSteps.SUCCESS -> { onNavigateToHome() }
+                LoginSteps.SUCCESS -> {
+                    onNavigateToHome()
+                    applicationState.showSnackBar(stringResource(id = R.string.login_success))
+                }
             }
         }
     }
