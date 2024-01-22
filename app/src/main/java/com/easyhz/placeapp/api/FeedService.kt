@@ -1,7 +1,6 @@
 package com.easyhz.placeapp.api
 
 import com.easyhz.placeapp.domain.model.feed.Feed
-import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
@@ -50,7 +49,7 @@ interface FeedService {
         @Body comment: PostComment
     ) : Response<Void>
 
-    /* 글 등록 -> 헤더에 토큰 TODO: 파라미터 수정 필요 */
+    /* 글 등록 */
     @Multipart
     @POST("/board/save")
     suspend fun writePost(
@@ -71,18 +70,18 @@ interface FeedService {
         @Body content: ModifyPost
     ) : Response<Void>
 
-    /* 글 저장 TODO: userId 와 토큰 필요 (로그인 구현 시 추가)*/
+    /* 글 저장 */
     @POST("/board/like/{boardId}")
     suspend fun savePost(
         @Path("boardId") id: Int,
-        @Body userInfo: UserInfo
+        @Body user: User
     ) : Response<Void>
 
     /* 장소 저장 */
     @POST("/board/saveBoardPlace/{boardPlaceId}")
     suspend fun savePlace(
         @Path("boardPlaceId") id: Int,
-        @Body userInfo: UserInfo
+        @Body user: User
     ): Response<Void>
 
 }

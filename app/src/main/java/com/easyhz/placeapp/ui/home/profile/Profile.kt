@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
@@ -29,16 +30,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.constants.ContentCardIcons
 import com.easyhz.placeapp.constants.PaddingConstants
 import com.easyhz.placeapp.domain.model.feed.Content
+import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
+import com.easyhz.placeapp.ui.user.LoginViewModel
+import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
 
 const val GRID_CELL = 2
 @Composable
-fun Profile() {
+fun Profile(
+    loginViewModel: LoginViewModel = hiltViewModel()
+) {
     val screenWidth = LocalConfiguration.current.screenWidthDp / GRID_CELL
     val dummy = listOf(
         Content(
@@ -65,6 +73,17 @@ fun Profile() {
         ProfileView(
             modifier = Modifier.padding(10.dp)
         )
+        Button(onClick = { loginViewModel.logout(UserManager.user?.type) }) {
+            Text(text = "로그아웃")
+        }
+        Button(onClick = { NaverIdLoginSDK.logout() }) {
+            Text(text = "네이버 로그아웃")
+        }
+        Button(onClick = {
+            UserApiClient.instance.logout {  }
+        }) {
+            Text(text = "카카오 로그아웃")
+        }
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(GRID_CELL),

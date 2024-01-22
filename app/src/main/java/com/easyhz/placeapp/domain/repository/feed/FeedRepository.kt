@@ -1,13 +1,13 @@
 package com.easyhz.placeapp.domain.repository.feed
 
 import com.easyhz.placeapp.domain.model.feed.Feed
-import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.domain.model.post.ModifyPost
 import com.easyhz.placeapp.domain.model.post.Post
+import com.easyhz.placeapp.domain.model.user.User
 import retrofit2.Response
 
 interface FeedRepository {
@@ -42,13 +42,13 @@ interface FeedRepository {
 
     suspend fun savePost(
         boardId: Int,
-        userInfo: UserInfo,
+        user: User,
         onComplete: (Boolean) -> Unit
     )
 
     suspend fun savePlace(
         boardId: Int,
-        userInfo: UserInfo,
+        user: User,
         onComplete: (Boolean) -> Unit
     )
 }

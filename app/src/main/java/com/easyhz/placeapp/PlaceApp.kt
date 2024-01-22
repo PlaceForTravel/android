@@ -22,6 +22,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.ui.detail.BoardDetail
 import com.easyhz.placeapp.ui.home.search.Search
 import com.easyhz.placeapp.ui.navigation.BottomBar
@@ -38,6 +39,7 @@ import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.state.rememberApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.checkGalleryPermission
+import com.easyhz.placeapp.util.login_require
 
 @Composable
 fun PlaceApp(
@@ -79,11 +81,16 @@ fun PlaceApp(
                 if(isFeed) {
                     MainFloatingActionButton(
                         onClick = {
-                            checkGalleryPermission(
-                                context = context,
-                                launcher = launcher,
-                                action = mainNavController::navigateToNewPost
-                        ) }
+                            if (needLogin) {
+                                applicationState.showSnackBar(login_require)
+                            } else {
+                                checkGalleryPermission(
+                                    context = context,
+                                    launcher = launcher,
+                                    action = mainNavController::navigateToNewPost
+                                )
+                            }
+                        }
                     )
                 }
             },
@@ -131,6 +138,7 @@ private fun NavGraphBuilder.navGraph(
         startDestination = HomeSections.FEED.route
     ) {
         addHomeGraph(
+            applicationState = applicationState,
             onNavigateToBoardDetail = onNavigateToBoardDetail,
             onNavigateToSearch = onNavigateToSearch,
             onNavigateToUser = onNavigateToUser
@@ -149,7 +157,8 @@ private fun NavGraphBuilder.navGraph(
         BoardDetail(
             id = boardId,
             onNavigateToHome = { onNavigateToHome(backStackEntry, false) },
-            onNavigateToModify = { feedDetail ->  onNavigateToModify(feedDetail, backStackEntry) }
+            onNavigateToModify = { feedDetail ->  onNavigateToModify(feedDetail, backStackEntry) },
+            applicationState = applicationState
         )
     }
     navigation(

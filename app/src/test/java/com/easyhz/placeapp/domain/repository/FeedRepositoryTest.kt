@@ -5,11 +5,11 @@ import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.Feed
 import com.easyhz.placeapp.domain.model.feed.Pageable
 import com.easyhz.placeapp.domain.model.feed.SortX
-import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
@@ -86,10 +86,10 @@ class FeedRepositoryTest {
     }
     @Test
     fun `Save Post`() = runBlocking {
-        `when`(feedService.savePost(1, UserInfo())).thenReturn(
+        `when`(feedService.savePost(1, User())).thenReturn(
             Response.success(null)
         )
-        repository.savePost(1, UserInfo()) {
+        repository.savePost(1, User()) {
             assert(it)
         }
     }

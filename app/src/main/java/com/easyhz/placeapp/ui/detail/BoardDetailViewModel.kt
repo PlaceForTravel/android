@@ -21,9 +21,13 @@ import com.easyhz.placeapp.domain.model.feed.detail.DetailState
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
 import com.easyhz.placeapp.domain.model.user.User
+import com.easyhz.placeapp.domain.model.user.UserManager
+import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.ui.component.detail.DetailActions
 import com.easyhz.placeapp.ui.component.map.LatLngType
+import com.easyhz.placeapp.ui.state.ApplicationState
+import com.easyhz.placeapp.util.login_require
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -131,12 +135,17 @@ class BoardDetailViewModel
     /**
      * 게시물 저장
      **/
-    fun savePost(boardId: Int) = viewModelScope.launch {
-        // TODO: 유저 아이디 추가 필요
+    fun savePost(boardId: Int, applicationState: ApplicationState) = viewModelScope.launch {
         try {
-            feedRepository.savePost(boardId, savePostState.userInfo) { isSuccessful ->
-                savePostState = savePostState.copy(isSuccessful = isSuccessful)
-                if (isSuccessful) resetFeedDetail()
+            if (needLogin) {
+                applicationState.showSnackBar(login_require)
+            } else {
+                UserManager.user?.let {
+                    feedRepository.savePost(boardId, it) { isSuccessful ->
+                        savePostState = savePostState.copy(isSuccessful = isSuccessful)
+                        if (isSuccessful) resetFeedDetail()
+                    }
+                }
             }
         } catch (e: Exception) {
             savePostState = savePostState.copy(error = e.localizedMessage)

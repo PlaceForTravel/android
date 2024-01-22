@@ -24,6 +24,7 @@ import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.home.bookmark.Bookmark
 import com.easyhz.placeapp.ui.home.feed.Feed
 import com.easyhz.placeapp.ui.home.profile.Profile
+import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.borderTop
 
@@ -31,19 +32,24 @@ import com.easyhz.placeapp.util.borderTop
  * BottomNavigation Items
  */
 fun NavGraphBuilder.addHomeGraph(
+    applicationState: ApplicationState,
     onNavigateToBoardDetail: (Int, NavBackStackEntry) -> Unit,
     onNavigateToSearch: (NavBackStackEntry) -> Unit,
     onNavigateToUser: (NavBackStackEntry) -> Unit
 ) {
     composable(route = HomeSections.FEED.route) {
         Feed(
+            applicationState = applicationState,
             onItemClick = { id -> onNavigateToBoardDetail(id, it)},
             onSearchBarClick = { onNavigateToSearch(it) },
             onNavigateToUser = { onNavigateToUser(it) }
         )
     }
     composable(route = HomeSections.BOOKMARK.route) {
-        Bookmark(onItemClick = { id -> onNavigateToBoardDetail(id, it) })
+        Bookmark(
+            applicationState = applicationState,
+            onItemClick = { id -> onNavigateToBoardDetail(id, it) }
+        )
     }
     composable(route = HomeSections.PROFILE.route) {
         Profile()

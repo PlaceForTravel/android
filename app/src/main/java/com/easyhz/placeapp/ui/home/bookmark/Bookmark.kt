@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.easyhz.placeapp.R
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.post.BookmarkHeader
+import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -35,23 +36,24 @@ enum class BookmarkTabs(
 ) {
     POST(R.string.bookmark_tabs_post) {
         @Composable
-        override fun Screen(onItemClick: (Int) -> Unit) {
-            PostBookmark(onItemClick = onItemClick)
+        override fun Screen(onItemClick: (Int) -> Unit, applicationState: ApplicationState) {
+            PostBookmark(onItemClick = onItemClick, applicationState = applicationState)
         }
     },
     PLACE(R.string.bookmark_tabs_place) {
         @Composable
-        override fun Screen(onItemClick: (Int) -> Unit) {
+        override fun Screen(onItemClick: (Int) -> Unit, applicationState: ApplicationState) {
             PlaceBookmark()
         }
     };
 
     @Composable
-    abstract fun Screen(onItemClick: (Int) -> Unit)
+    abstract fun Screen(onItemClick: (Int) -> Unit, applicationState: ApplicationState)
 }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Bookmark(
+    applicationState: ApplicationState,
     onItemClick: (Int) -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -62,7 +64,7 @@ fun Bookmark(
         BookmarkHeader()
         Tabs(tabIndex = selectedTabIndex.value, scope = scope, pagerState = pagerState)
         HorizontalPager(state = pagerState) {
-            BookmarkTabs.values()[it].Screen(onItemClick = onItemClick)
+            BookmarkTabs.values()[it].Screen(onItemClick = onItemClick, applicationState)
         }
     }
 }

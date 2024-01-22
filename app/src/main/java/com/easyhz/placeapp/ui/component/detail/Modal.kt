@@ -114,7 +114,7 @@ private fun MapModalHeader(
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = "닫기",
+                text = stringResource(id = R.string.user_close),
                 modifier = Modifier.clickable {
                     onClose()
                 }

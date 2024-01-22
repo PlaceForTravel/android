@@ -15,7 +15,8 @@ data class User(
 object UserManager {
     var user: User? = null
         private set
-
+    val needLogin: Boolean
+        get() = user == null || user?.userId?.isEmpty() == true
     fun setUser(newUser: User) {
         user = newUser
     }

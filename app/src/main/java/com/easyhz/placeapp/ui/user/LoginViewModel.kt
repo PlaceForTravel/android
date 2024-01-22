@@ -63,7 +63,8 @@ class LoginViewModel
         }
     }
 
-    fun logout(social: SocialLoginType) = viewModelScope.launch {
+    fun logout(social: SocialLoginType?) = viewModelScope.launch {
+        if (social == null) return@launch
         when(social) {
             SocialLoginType.NAVER -> { Naver.logout() }
             SocialLoginType.KAKAO -> { Kakao.logout() }

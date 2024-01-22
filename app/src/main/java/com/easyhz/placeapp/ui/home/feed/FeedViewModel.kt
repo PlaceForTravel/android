@@ -17,8 +17,11 @@ import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.ScreenState
 import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.model.user.UserManager
+import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
+import com.easyhz.placeapp.ui.state.ApplicationState
+import com.easyhz.placeapp.util.login_require
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +32,7 @@ import javax.inject.Inject
 class FeedViewModel
 @Inject constructor(
     private val feedRepository: FeedRepository,
-    private val dataStoreRepository: UserDataStoreRepository
+    private val dataStoreRepository: UserDataStoreRepository,
 ): ViewModel() {
     var isFirstRun by mutableStateOf(true)
     var isShowDialog by mutableStateOf(true)
@@ -56,7 +59,7 @@ class FeedViewModel
             viewModelScope.launch {
                 getIsFirstRun()
                 delay(500)
-                dialogCondition = isFirstRun && isShowDialog && (UserManager.user == null || UserManager.user?.userId?.isEmpty() == true)
+                updateDialogCondition()
             }
         } catch (e: Exception) {
             screenState = screenState.copy(error = e.localizedMessage)
@@ -82,16 +85,21 @@ class FeedViewModel
     /**
      * 게시물 저장
      **/
-    fun savePost(boardId: Int, contents: LazyPagingItems<Content>) = viewModelScope.launch {
-        // TODO: 유저 아이디 추가 필요
+    fun savePost(boardId: Int, contents: LazyPagingItems<Content>, applicationState: ApplicationState) = viewModelScope.launch {
         try {
-            feedRepository.savePost(boardId, savePostState.userInfo) { isSuccessful ->
-                screenState = screenState.copy(isLoading = true)
-                savePostState = savePostState.copy(isSuccessful = isSuccessful)
-                if (isSuccessful) {
-                    contents.itemSnapshotList
-                        .filter { it?.boardId == boardId }
-                        .forEach { it?.likeCount = it?.likeCount?.plus(1) ?: 0 }
+            if (needLogin) {
+                applicationState.showSnackBar(login_require)
+            } else {
+                UserManager.user?.let {
+                    feedRepository.savePost(boardId, it) { isSuccessful ->
+                        screenState = screenState.copy(isLoading = true)
+                        savePostState = savePostState.copy(isSuccessful = isSuccessful)
+                        if (isSuccessful) {
+                            contents.itemSnapshotList
+                                .filter { it?.boardId == boardId }
+                                .forEach { it?.likeCount = it?.likeCount?.plus(1) ?: 0 }
+                        }
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -109,5 +117,10 @@ class FeedViewModel
 
     fun setIsShowDialog(value: Boolean) {
         isShowDialog = value
+        updateDialogCondition()
+    }
+
+    private fun updateDialogCondition() {
+        dialogCondition = isFirstRun && isShowDialog && needLogin
     }
 }
