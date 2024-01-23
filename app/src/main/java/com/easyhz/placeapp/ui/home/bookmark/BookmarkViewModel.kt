@@ -13,7 +13,7 @@ import com.easyhz.placeapp.data.dataSource.PostBookmarkPagingSource
 import com.easyhz.placeapp.data.dataSource.PostBookmarkPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.ScreenState
-import com.easyhz.placeapp.domain.model.user.User
+import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.domain.repository.bookmark.BookmarkRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -35,7 +35,7 @@ class BookmarkViewModel
         pagingSourceFactory = {
             PostBookmarkPagingSource(
                 bookmarkRepository = bookmarkRepository,
-                user = User()
+                user = UserManager.user
             )
         }
     ).flow.cachedIn(viewModelScope)

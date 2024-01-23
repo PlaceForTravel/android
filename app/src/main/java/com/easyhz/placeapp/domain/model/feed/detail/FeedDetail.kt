@@ -16,5 +16,6 @@ data class FeedDetail(
     val regDate: String,
     val modifiedDate: String? = null,
     val deletedDate: String? = null,
-    val userId: String
+    val userId: String,
+    var like: Boolean
 ) : Parcelable

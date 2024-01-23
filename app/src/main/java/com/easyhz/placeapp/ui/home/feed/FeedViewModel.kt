@@ -15,9 +15,12 @@ import com.easyhz.placeapp.data.dataSource.FeedPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.ScreenState
-import com.easyhz.placeapp.domain.model.user.User
+import com.easyhz.placeapp.domain.model.user.UserManager
+import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 import com.easyhz.placeapp.domain.repository.user.UserDataStoreRepository
+import com.easyhz.placeapp.ui.state.ApplicationState
+import com.easyhz.placeapp.util.login_require
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -28,13 +31,14 @@ import javax.inject.Inject
 class FeedViewModel
 @Inject constructor(
     private val feedRepository: FeedRepository,
-    private val dataStoreRepository: UserDataStoreRepository
+    private val dataStoreRepository: UserDataStoreRepository,
 ): ViewModel() {
     var isFirstRun by mutableStateOf(true)
     var isShowDialog by mutableStateOf(true)
 
     var savePostState by mutableStateOf(SaveState())
     var screenState by mutableStateOf(ScreenState())
+    var dialogCondition by mutableStateOf(false)
 
     var pager = Pager(
         config = PagingConfig(
@@ -43,15 +47,18 @@ class FeedViewModel
         ),
         pagingSourceFactory = {
             FeedPagingSource(
-                feedRepository = feedRepository,
-                user = User()
+                feedRepository = feedRepository
             )
         }
     ).flow.cachedIn(viewModelScope)
 
     init {
         try {
-            getIsFirstRun()
+            viewModelScope.launch {
+                getIsFirstRun()
+                delay(500)
+                updateDialogCondition()
+            }
         } catch (e: Exception) {
             screenState = screenState.copy(error = e.localizedMessage)
             Log.d(this::class.java.simpleName, e.message.toString())
@@ -76,16 +83,24 @@ class FeedViewModel
     /**
      * 게시물 저장
      **/
-    fun savePost(boardId: Int, contents: LazyPagingItems<Content>) = viewModelScope.launch {
-        // TODO: 유저 아이디 추가 필요
+    fun savePost(boardId: Int, contents: LazyPagingItems<Content>, applicationState: ApplicationState) = viewModelScope.launch {
         try {
-            feedRepository.savePost(boardId, savePostState.userInfo) { isSuccessful ->
-                screenState = screenState.copy(isLoading = true)
-                savePostState = savePostState.copy(isSuccessful = isSuccessful)
-                if (isSuccessful) {
-                    contents.itemSnapshotList
-                        .filter { it?.boardId == boardId }
-                        .forEach { it?.likeCount = it?.likeCount?.plus(1) ?: 0 }
+            if (needLogin) {
+                applicationState.showSnackBar(login_require)
+            } else {
+                UserManager.user?.let { user ->
+                    feedRepository.savePost(boardId, user) { isSuccessful ->
+                        screenState = screenState.copy(isLoading = true)
+                        savePostState = savePostState.copy(isSuccessful = isSuccessful)
+                        if (isSuccessful) {
+                            contents.itemSnapshotList
+                                .find { it?.boardId == boardId }
+                                ?.apply {
+                                    likeCount = if (like) likeCount.minus(1) else likeCount.plus(1)
+                                    like = !like
+                                }
+                        }
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -103,5 +118,10 @@ class FeedViewModel
 
     fun setIsShowDialog(value: Boolean) {
         isShowDialog = value
+        updateDialogCondition()
+    }
+
+    private fun updateDialogCondition() {
+        dialogCondition = isFirstRun && isShowDialog && needLogin
     }
 }

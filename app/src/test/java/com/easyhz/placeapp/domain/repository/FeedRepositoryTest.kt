@@ -5,11 +5,11 @@ import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.Feed
 import com.easyhz.placeapp.domain.model.feed.Pageable
 import com.easyhz.placeapp.domain.model.feed.SortX
-import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.repository.feed.FeedRepositoryImpl
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
@@ -25,35 +25,35 @@ class FeedRepositoryTest {
 
     @Test
     fun `fetch Feed Contents`() = runBlocking {
-        `when`(feedService.getFeed(1)).thenReturn(
+        `when`(feedService.getFeed(1, "user1")).thenReturn(
             Response.success(
                 Feed(
-                    listOf(Content(1, "서울", listOf(), 0,"", "", "", "", "", "", "")),
+                    listOf(Content(1, "서울", listOf(), 0,"", "", "", "", "", "", "", true)),
                 false, false, false, 0, 0, Pageable(0, 0, 0, true, SortX(true, true, true), false), 5, SortX(true, true, true), 0, 0
                 )
             )
         )
 
-        val result = repository.fetchFeedContents(1)
+        val result = repository.fetchFeedContents(1, "user1")
         assert(result.isSuccessful)
     }
 
     @Test
     fun `fetch Feed Detail`() = runBlocking {
-        `when`(feedService.getFeedDetail(1)).thenReturn(
+        `when`(feedService.getFeedDetail(1, "user1")).thenReturn(
             Response.success(
                 FeedDetail(1, "서울특별시 종로구", "여기 정말 좋아요", 0, "", listOf(), "",
-                     "", "", "user1")
+                     "", "", "user1", false)
             )
         )
 
-        val result = repository.fetchFeedDetail(1)
+        val result = repository.fetchFeedDetail(1, "user1")
         assert(result.isSuccessful)
     }
 
     @Test
     fun `fetch comments`() = runBlocking {
-        `when`(feedService.getComments(1,1)).thenReturn(
+        `when`(feedService.getComments(1,1, "user1")).thenReturn(
             Response.success(
                 Comment(
                     content = listOf(CommentContent(1, "", "", "", "")),
@@ -71,7 +71,7 @@ class FeedRepositoryTest {
             )
         )
 
-        val result = repository.fetchComments(1, 1)
+        val result = repository.fetchComments(1, 1, "user1")
         assert(result.isSuccessful)
     }
 
@@ -86,10 +86,10 @@ class FeedRepositoryTest {
     }
     @Test
     fun `Save Post`() = runBlocking {
-        `when`(feedService.savePost(1, UserInfo())).thenReturn(
+        `when`(feedService.savePost(1, User())).thenReturn(
             Response.success(null)
         )
-        repository.savePost(1, UserInfo()) {
+        repository.savePost(1, User()) {
             assert(it)
         }
     }

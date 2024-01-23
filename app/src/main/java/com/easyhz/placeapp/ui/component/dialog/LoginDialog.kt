@@ -103,7 +103,7 @@ private fun DialogButton(
 
 @Preview
 @Composable
-fun LoginSuggestionPreview() {
+private fun LoginSuggestionPreview() {
 //    LoginSuggestion()
     LoginDialog({}, {}, {})
 }

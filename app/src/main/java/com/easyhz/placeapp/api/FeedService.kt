@@ -1,7 +1,6 @@
 package com.easyhz.placeapp.api
 
 import com.easyhz.placeapp.domain.model.feed.Feed
-import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
@@ -26,20 +25,22 @@ interface FeedService {
     @GET("/board/list")
     suspend fun getFeed(
         @Query("page") page: Int,
-        @Body user: User,
+        @Query("userId") userId: String,
     ) : Response<Feed>
 
     /* 글 상세 조회 */
     @GET("/board/detail/{boardId}")
     suspend fun getFeedDetail(
-        @Path("boardId") id: Int
+        @Path("boardId") id: Int,
+        @Query("userId") userId: String
     ) : Response<FeedDetail>
 
     /* 댓글 조회 */
     @GET("/board/{boardId}/comment")
     suspend fun getComments(
         @Path("boardId") id: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("userId") userId: String
     ) : Response<Comment>
 
     /* 댓글 등록 */
@@ -49,7 +50,7 @@ interface FeedService {
         @Body comment: PostComment
     ) : Response<Void>
 
-    /* 글 등록 -> 헤더에 토큰 TODO: 파라미터 수정 필요 */
+    /* 글 등록 */
     @Multipart
     @POST("/board/save")
     suspend fun writePost(
@@ -70,18 +71,18 @@ interface FeedService {
         @Body content: ModifyPost
     ) : Response<Void>
 
-    /* 글 저장 TODO: userId 와 토큰 필요 (로그인 구현 시 추가)*/
+    /* 글 저장 */
     @POST("/board/like/{boardId}")
     suspend fun savePost(
         @Path("boardId") id: Int,
-        @Body userInfo: UserInfo
+        @Body user: User
     ) : Response<Void>
 
     /* 장소 저장 */
     @POST("/board/saveBoardPlace/{boardPlaceId}")
     suspend fun savePlace(
         @Path("boardPlaceId") id: Int,
-        @Body userInfo: UserInfo
+        @Body user: User
     ): Response<Void>
 
 }

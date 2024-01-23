@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +29,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.domain.model.feed.Content
+import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.ContentCard
 import com.easyhz.placeapp.ui.component.NetworkError
@@ -36,6 +37,7 @@ import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.component.dialog.LoginDialog
 import com.easyhz.placeapp.ui.component.search.SubSearchBar
 import com.easyhz.placeapp.ui.detail.getStatusBarColors
+import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundShape
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
@@ -48,6 +50,7 @@ import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 @Composable
 fun Feed(
     viewModel: FeedViewModel = hiltViewModel(),
+    applicationState: ApplicationState,
     onItemClick: (Int) -> Unit,
     onSearchBarClick: () -> Unit,
     onNavigateToUser: () -> Unit
@@ -77,7 +80,7 @@ fun Feed(
                             refreshState = refreshState,
                             screenWidth = screenWidth,
                             onItemClick = onItemClick,
-                        ) { id -> viewModel.savePost(id, contents) }
+                        ) { id -> viewModel.savePost(id, contents, applicationState) }
                     }
                 }
                 PullRefreshIndicator(
@@ -93,7 +96,7 @@ fun Feed(
             CircularLoading(scope = this)
         }
     }
-    if (viewModel.isFirstRun && viewModel.isShowDialog) {
+    if (viewModel.dialogCondition) {
         LoginDialog(
             onDismissRequest = { viewModel.setIsShowDialog(false) },
             onLoginClick = {
@@ -157,8 +160,11 @@ fun FeedContent(
 @Preview("DarkMode", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun FeedPreview() {
+    val scope = rememberCoroutineScope()
+    val a = ApplicationState(SnackbarHostState(), scope)
     PlaceAppTheme {
         Feed(
+            applicationState = a,
             onItemClick = { },
             onSearchBarClick = { }
         ) {

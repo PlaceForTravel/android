@@ -5,5 +5,5 @@ import com.easyhz.placeapp.domain.model.user.User
 import retrofit2.Response
 
 interface BookmarkRepository {
-    suspend fun fetchSavedPost(page: Int, user: User): Response<Feed>
+    suspend fun fetchSavedPost(page: Int, user: User?): Response<Feed>
 }

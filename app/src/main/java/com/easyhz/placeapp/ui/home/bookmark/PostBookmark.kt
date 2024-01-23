@@ -16,6 +16,7 @@ import com.easyhz.placeapp.ui.component.NetworkError
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.home.feed.FeedContent
 import com.easyhz.placeapp.ui.home.feed.FeedViewModel
+import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicatorDefaults
@@ -26,6 +27,7 @@ import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 fun PostBookmark(
     viewModel: BookmarkViewModel = hiltViewModel(),
     feedViewModel: FeedViewModel = hiltViewModel(),
+    applicationState: ApplicationState,
     onItemClick: (Int) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
@@ -49,7 +51,7 @@ fun PostBookmark(
                             refreshState = refreshState,
                             screenWidth = screenWidth,
                             onItemClick = onItemClick,
-                        ) { id -> feedViewModel.savePost(id, contents) }
+                        ) { id -> feedViewModel.savePost(id, contents, applicationState) }
                     }
                 }
                 PullRefreshIndicator(

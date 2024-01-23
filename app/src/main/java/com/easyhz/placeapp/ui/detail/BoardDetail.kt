@@ -18,11 +18,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +42,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.constants.PaddingConstants
 import com.easyhz.placeapp.constants.PaddingConstants.CONTENT_ALL
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.ui.component.DetailContentCard
 import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.SpaceDivider
@@ -49,16 +52,19 @@ import com.easyhz.placeapp.ui.component.detail.DetailActions
 import com.easyhz.placeapp.ui.component.detail.DetailBottomSheet
 import com.easyhz.placeapp.ui.component.detail.MapModal
 import com.easyhz.placeapp.ui.component.detail.WindowShade
+import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.ui.theme.roundBottomShape
 import com.easyhz.placeapp.ui.theme.roundShape
 import com.easyhz.placeapp.ui.theme.roundTopShape
+import com.easyhz.placeapp.util.login_require
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoardDetail(
     viewModel: BoardDetailViewModel = hiltViewModel(),
     modalViewModel: MapModalViewModel = hiltViewModel(),
+    applicationState: ApplicationState,
     id: Int,
     onNavigateToHome: () -> Unit,
     onNavigateToModify: (FeedDetail) -> Unit
@@ -132,7 +138,7 @@ fun BoardDetail(
                                     modalViewModel.isShowModal = true
                                 },
                                 onSaveClick = {
-                                    viewModel.savePost(it)
+                                    viewModel.savePost(it, applicationState)
                                 },
                                 onMoreClick = { viewModel.setIsSheetOpen(true) }
                             )
@@ -178,7 +184,13 @@ fun BoardDetail(
                         value = viewModel.commentState.postComment.content,
                         onValueChange = { viewModel.setCommentText(it) },
                         enabled = !modalViewModel.isShowModal,
-                        onSendClick = { viewModel.saveComment(id) }
+                        onSendClick = {
+                            if (needLogin) {
+                                applicationState.showSnackBar(login_require)
+                            } else {
+                                viewModel.saveComment(id)
+                            }
+                        }
                     )
                 }
             }
@@ -194,7 +206,7 @@ fun BoardDetail(
                         isViewAll = modalViewModel.isViewAll.value,
                         onViewAllClick = { modalViewModel.setIsViewAll(!modalViewModel.isViewAll.value) },
                         onClose = { onModalClose(modalViewModel, focusManager) },
-                        onSaved = { modalViewModel.savePlace(it) }
+                        onSaved = { modalViewModel.savePlace(it, applicationState) }
                     )
                 }
             }
@@ -258,9 +270,12 @@ fun getStatusBarColors(
 @Preview("DarkMode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun FeedPreview() {
+    val scope = rememberCoroutineScope()
+    val a = ApplicationState(SnackbarHostState(), scope)
     PlaceAppTheme {
         BoardDetail(
             id = 1,
+            applicationState = a,
             onNavigateToHome = { }
         ) { }
     }

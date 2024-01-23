@@ -11,4 +11,5 @@ data class Place(
     val imageName: String,
     val imgIndex: Int,
     var placeBorderColor: Color,
+    var category: String?
 )
