@@ -10,5 +10,5 @@ class BookmarkRepositoryImpl
 @Inject constructor(
     private val bookmarkService: BookmarkService
 ):BookmarkRepository {
-    override suspend fun fetchSavedPost(page: Int, user: User?): Response<Feed> = bookmarkService.getSavedPost(page, user)
+    override suspend fun fetchSavedPost(page: Int, userId: String): Response<Feed> = bookmarkService.getSavedPost(page, userId)
 }

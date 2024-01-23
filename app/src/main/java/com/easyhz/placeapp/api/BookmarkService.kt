@@ -12,6 +12,6 @@ interface BookmarkService {
     @POST("/user/savedBoard/list")
     suspend fun getSavedPost(
         @Query("page") page: Int,
-        @Body user: User?
+        @Query("userId") userId: String
     ): Response<Feed>
 }
