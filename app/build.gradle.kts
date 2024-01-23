@@ -33,6 +33,7 @@ android {
         buildConfigField("String", "NAVER_API_CLIENT_ID", localProperties["NAVER_API_CLIENT_ID"].toString())
         buildConfigField("String", "NAVER_API_CLIENT_SECRET", localProperties["NAVER_API_CLIENT_SECRET"].toString())
         buildConfigField("String", "KAKAO_SDK_APP_KEY", localProperties["KAKAO_SDK_APP_KEY"].toString())
+        resValue("string", "kakao_sdk_app_key", "kakao${localProperties["KAKAO_SDK_APP_KEY"].toString()}")
     }
 
     buildTypes {
