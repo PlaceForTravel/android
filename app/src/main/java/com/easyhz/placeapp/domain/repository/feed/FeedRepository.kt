@@ -15,7 +15,7 @@ interface FeedRepository {
 
     suspend fun fetchFeedDetail(id: Int, userId: String): Response<FeedDetail>
 
-    suspend fun fetchComments(id: Int, page: Int): Response<Comment>
+    suspend fun fetchComments(id: Int, page: Int, userId: String): Response<Comment>
 
     suspend fun writePost(
         post: Post,

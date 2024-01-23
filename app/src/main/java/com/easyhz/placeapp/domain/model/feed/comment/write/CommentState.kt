@@ -10,9 +10,9 @@ data class CommentState(
 )
 
 data class PostComment(
-    val userId: String? = UserManager.user?.userId,
+    val userId: String = UserManager.user?.userId ?: "",
     val content: String = "",
-    val nickname: String? = UserManager.user?.nickname,
+    val nickname: String = UserManager.user?.nickname ?: "",
 )
 
 fun CommentState.updateContent(value: String): CommentState {

@@ -156,7 +156,8 @@ class NewPostViewModel
                     imageFile = item.path,
                     imageName = item.name,
                     imgIndex = index,
-                    placeBorderColor = placeBorderDefault
+                    placeBorderColor = placeBorderDefault,
+                    category = null
                 )
             }
         )
@@ -175,12 +176,14 @@ class NewPostViewModel
     }
 
     fun setPlaces(index: Int, placeItem: PlaceItem, placeBorderDefault: Color) {
+        println("category :: $placeItem")
         postState.post.places[index].apply {
             placeName = placeItem.title.withoutHTML()
             address = placeItem.roadAddress.ifEmpty { placeItem.roadAddress }
             longitude = (placeItem.mapx * POSITION_FORMAT).toLatLng(LAT_LNG_SCALE)
             latitude = (placeItem.mapy * POSITION_FORMAT).toLatLng(LAT_LNG_SCALE)
             placeBorderColor = placeBorderDefault
+            category = placeItem.category
         }
         setPlaceList(null)
     }
@@ -216,11 +219,11 @@ class NewPostViewModel
             cityName = feedDetail.cityName,
             userId = feedDetail.userId,
             nickname = feedDetail.nickname,
-            places = set(feedDetail, placeBorderDefault)
+            places = setPlacesInModify(feedDetail, placeBorderDefault)
         ).copy(isEqualCity = true)
     }
 
-    private fun set(feedDetail: FeedDetail, placeBorderDefault: Color) =
+    private fun setPlacesInModify(feedDetail: FeedDetail, placeBorderDefault: Color) =
         feedDetail.placeImages.mapIndexed { index, placeImagesItem ->
             placeImagesItem.toPlace(index, placeBorderDefault)
         }

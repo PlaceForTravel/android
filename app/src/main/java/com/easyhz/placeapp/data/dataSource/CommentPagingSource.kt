@@ -1,6 +1,7 @@
 package com.easyhz.placeapp.data.dataSource
 
 import com.easyhz.placeapp.domain.model.feed.comment.CommentContent
+import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
 
 /**
@@ -12,7 +13,7 @@ class CommentPagingSource(
     private val id: Int,
 ): BasePagingSource<CommentContent>() {
     override suspend fun fetchData(page: Int): List<CommentContent>? {
-        val data = feedRepository.fetchComments(page = page, id = id)
+        val data = feedRepository.fetchComments(page = page, id = id, userId = UserManager.user?.userId ?: "")
         if (data.isSuccessful) {
             return data.body()?.content ?: emptyList()
         }

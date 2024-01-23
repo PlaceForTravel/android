@@ -6,7 +6,7 @@ import com.easyhz.placeapp.domain.repository.bookmark.BookmarkRepository
 
 class PostBookmarkPagingSource(
     private val bookmarkRepository: BookmarkRepository,
-    private val user: User
+    private val user: User?
 ): BasePagingSource<Content>() {
     override suspend fun fetchData(page: Int): List<Content>? {
         val data = bookmarkRepository.fetchSavedPost(page, user)

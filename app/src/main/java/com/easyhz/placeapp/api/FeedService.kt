@@ -39,7 +39,8 @@ interface FeedService {
     @GET("/board/{boardId}/comment")
     suspend fun getComments(
         @Path("boardId") id: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("userId") userId: String
     ) : Response<Comment>
 
     /* 댓글 등록 */

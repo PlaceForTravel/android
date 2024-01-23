@@ -15,7 +15,6 @@ import com.easyhz.placeapp.data.dataSource.FeedPagingSource.Companion.PAGE_SIZE
 import com.easyhz.placeapp.domain.model.feed.Content
 import com.easyhz.placeapp.domain.model.feed.SaveState
 import com.easyhz.placeapp.domain.model.feed.ScreenState
-import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
@@ -48,8 +47,7 @@ class FeedViewModel
         ),
         pagingSourceFactory = {
             FeedPagingSource(
-                feedRepository = feedRepository,
-                userId = User().userId
+                feedRepository = feedRepository
             )
         }
     ).flow.cachedIn(viewModelScope)
@@ -90,14 +88,17 @@ class FeedViewModel
             if (needLogin) {
                 applicationState.showSnackBar(login_require)
             } else {
-                UserManager.user?.let {
-                    feedRepository.savePost(boardId, it) { isSuccessful ->
+                UserManager.user?.let { user ->
+                    feedRepository.savePost(boardId, user) { isSuccessful ->
                         screenState = screenState.copy(isLoading = true)
                         savePostState = savePostState.copy(isSuccessful = isSuccessful)
                         if (isSuccessful) {
                             contents.itemSnapshotList
-                                .filter { it?.boardId == boardId }
-                                .forEach { it?.likeCount = it?.likeCount?.plus(1) ?: 0 }
+                                .find { it?.boardId == boardId }
+                                ?.apply {
+                                    likeCount = if (like) likeCount.minus(1) else likeCount.plus(1)
+                                    like = !like
+                                }
                         }
                     }
                 }

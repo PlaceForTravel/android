@@ -20,7 +20,6 @@ import com.easyhz.placeapp.domain.model.feed.comment.write.updateContent
 import com.easyhz.placeapp.domain.model.feed.detail.DetailState
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.feed.detail.PlaceImagesItem
-import com.easyhz.placeapp.domain.model.user.User
 import com.easyhz.placeapp.domain.model.user.UserManager
 import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.domain.repository.feed.FeedRepository
@@ -71,7 +70,7 @@ class BoardDetailViewModel
 
     fun fetchFeedDetail(id: Int) = viewModelScope.launch {
         setIsLoading(true)
-        val response = feedRepository.fetchFeedDetail(id, userId = User().userId)
+        val response = feedRepository.fetchFeedDetail(id, userId = UserManager.user?.userId ?: "")
         if(response.isSuccessful) {
             _feedDetail.value = response.body()
             getAllPlaceLatLng()
@@ -90,7 +89,7 @@ class BoardDetailViewModel
             pagingSourceFactory = {
                 CommentPagingSource(
                     feedRepository = feedRepository,
-                    id = id
+                    id = id,
                 )
             }
         ).flow.cachedIn(viewModelScope).collectLatest {
@@ -179,9 +178,9 @@ class BoardDetailViewModel
     }
 
     private fun resetFeedDetail() {
-        _feedDetail.value = _feedDetail.value?.let {
-            it.copy(likeCount = it.likeCount + 1)
-        }
+        _feedDetail.value = _feedDetail.value?.likeCount?.plus(
+            if (_feedDetail.value?.like == true) 1 else -1
+        )?.let { _feedDetail.value?.copy(likeCount = it) }
     }
 
 

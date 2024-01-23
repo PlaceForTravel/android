@@ -15,7 +15,8 @@ data class PlaceImagesItem(
     val latitude: Double,
     val longitude: Double,
     val placeId: Int,
-    val placeName: String
+    val placeName: String,
+    val category: String,
 ) : Parcelable
 
 
@@ -27,5 +28,6 @@ fun PlaceImagesItem.toPlace(imgIndex: Int, placeBorderColor: Color): Place = Pla
     imageFile = imgUrl,
     imageName = imgUrl,
     imgIndex = imgIndex,
-    placeBorderColor = placeBorderColor
+    placeBorderColor = placeBorderColor,
+    category = category
 )

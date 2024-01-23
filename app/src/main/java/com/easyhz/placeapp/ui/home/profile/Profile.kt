@@ -62,7 +62,8 @@ fun Profile(
             places = "제주 흑돼지",
             deletedDate = "",
             modifiedDate = "",
-            userId = "유저 1"
+            userId = "유저 1",
+            like = true
         )
     )
     Column(

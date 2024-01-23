@@ -31,7 +31,7 @@ class FeedRepositoryImpl
 
     override suspend fun fetchFeedDetail(id: Int, userId: String): Response<FeedDetail> = feedService.getFeedDetail(id = id, userId = userId)
 
-    override suspend fun fetchComments(id: Int, page: Int): Response<Comment> = feedService.getComments(id = id, page = page)
+    override suspend fun fetchComments(id: Int, page: Int, userId: String): Response<Comment> = feedService.getComments(id = id, page = page, userId = userId)
     override suspend fun writePost(
         post: Post,
         images: List<Gallery>,

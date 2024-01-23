@@ -28,7 +28,7 @@ class FeedRepositoryTest {
         `when`(feedService.getFeed(1, "user1")).thenReturn(
             Response.success(
                 Feed(
-                    listOf(Content(1, "서울", listOf(), 0,"", "", "", "", "", "", "")),
+                    listOf(Content(1, "서울", listOf(), 0,"", "", "", "", "", "", "", true)),
                 false, false, false, 0, 0, Pageable(0, 0, 0, true, SortX(true, true, true), false), 5, SortX(true, true, true), 0, 0
                 )
             )
@@ -43,7 +43,7 @@ class FeedRepositoryTest {
         `when`(feedService.getFeedDetail(1, "user1")).thenReturn(
             Response.success(
                 FeedDetail(1, "서울특별시 종로구", "여기 정말 좋아요", 0, "", listOf(), "",
-                     "", "", "user1")
+                     "", "", "user1", false)
             )
         )
 
@@ -53,7 +53,7 @@ class FeedRepositoryTest {
 
     @Test
     fun `fetch comments`() = runBlocking {
-        `when`(feedService.getComments(1,1)).thenReturn(
+        `when`(feedService.getComments(1,1, "user1")).thenReturn(
             Response.success(
                 Comment(
                     content = listOf(CommentContent(1, "", "", "", "")),
@@ -71,7 +71,7 @@ class FeedRepositoryTest {
             )
         )
 
-        val result = repository.fetchComments(1, 1)
+        val result = repository.fetchComments(1, 1, "user1")
         assert(result.isSuccessful)
     }
 

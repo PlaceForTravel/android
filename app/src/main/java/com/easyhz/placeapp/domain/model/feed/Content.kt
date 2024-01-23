@@ -12,4 +12,5 @@ data class Content(
     val userId: String,
     val text: String?,
     val places: String?,
+    var like: Boolean
 )
