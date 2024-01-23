@@ -120,7 +120,7 @@ private fun TabButton(
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun TabsPreview() {
+private fun TabsPreview() {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { BookmarkTabs.values().size })
     PlaceAppTheme {

@@ -9,7 +9,6 @@ data class CommentState(
     val error: String? = null
 )
 
-// TODO: 로그인 처리 시 -> userId, nickname 처리 필요
 data class PostComment(
     val userId: String? = UserManager.user?.userId,
     val content: String = "",
