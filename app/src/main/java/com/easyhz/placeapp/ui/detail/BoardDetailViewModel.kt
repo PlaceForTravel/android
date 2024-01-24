@@ -178,9 +178,9 @@ class BoardDetailViewModel
     }
 
     private fun resetFeedDetail() {
-        _feedDetail.value = _feedDetail.value?.likeCount?.plus(
-            if (_feedDetail.value?.like == true) 1 else -1
-        )?.let { _feedDetail.value?.copy(likeCount = it) }
+        _feedDetail.value = _feedDetail.value?.run {
+            copy(likeCount = likeCount + if (like) -1 else 1, like = !like)
+        }
     }
 
 
