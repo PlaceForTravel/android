@@ -1,6 +1,7 @@
 package com.easyhz.placeapp.ui.home.bookmark
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.easyhz.placeapp.ui.component.bookmark.CityContent
+import com.easyhz.placeapp.ui.component.bookmark.NoContent
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 
 @Composable
@@ -24,19 +26,23 @@ fun PlaceBookmark(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PlaceAppTheme.colorScheme.subBackground)
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(PlaceAppTheme.colorScheme.subBackground)
-        ) {
-            items(viewModel.cityList) { city ->
-                CityContent(
-                    modifier = Modifier.fillMaxWidth(),
-                    city = city
+        Box(modifier = Modifier.fillMaxSize()) {
+            when(viewModel.cityList.size) {
+                0 -> NoContent(scope = this, type = BookmarkTabs.PLACE)
+                else -> LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(PlaceAppTheme.colorScheme.subBackground)
                 ) {
-                    println(it)
+                    items(viewModel.cityList) { city ->
+                        CityContent(
+                            modifier = Modifier.fillMaxWidth(),
+                            city = city
+                        ) {
+                            println(it)
+                        }
+                    }
                 }
             }
         }

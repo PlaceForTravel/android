@@ -23,6 +23,7 @@
     <string name="content_bookmark_filled_icon">Bookmark Filled</string>
     <string name="content_map_icon">Map</string>
     <string name="content_more_icon">More</string>
+    <string name="content_empty_place">More</string>
 
     <string name="search_icon">Search</string>
     <string name="search_cancel_icon">Cancel</string>
@@ -91,6 +92,11 @@
 
     <string name="action_delete">삭제</string>
     <string name="action_modify">수정</string>
+
+    <string name="no_bookmark_post_content">저장한 포스트가 없습니다.</string>
+    <string name="no_bookmark_post_content_sub">마음에 드는 포스트를 저장해 보세요!</string>
+    <string name="no_bookmark_place_content">저장한 장소가 없습니다.</string>
+    <string name="no_bookmark_place_content_sub">마음에 드는 장소를 저장해 보세요!</string>
 
     <string name="notification_channel_id">fcm_channel_1</string>
 
