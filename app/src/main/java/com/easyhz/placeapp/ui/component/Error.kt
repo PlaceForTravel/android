@@ -41,11 +41,31 @@ fun NetworkError(
 }
 
 @Composable
+fun LoginRequireError(
+    scope: BoxScope,
+    onClick: () -> Unit
+) {
+    ErrorTemplate(
+        scope = scope,
+        icon = ContentCardIcons.ERROR.icon,
+        description = stringResource(id = ContentCardIcons.ERROR.label),
+        mainText = stringResource(id = R.string.login_require),
+        subText = stringResource(id = R.string.login_require_retry),
+        buttonText = stringResource(id = R.string.login_header),
+        buttonIcon = ContentCardIcons.USER,
+        onClick = onClick
+    )
+}
+
+@Composable
 private fun ErrorTemplate(
     scope: BoxScope,
     icon: ImageVector,
     description: String,
     mainText: String,
+    subText: String = stringResource(id = R.string.retry_error_message),
+    buttonText: String = stringResource(id = R.string.retry),
+    buttonIcon: ContentCardIcons = ContentCardIcons.REFRESH,
     onClick: () -> Unit
 ) {
     scope.apply {
@@ -71,7 +91,7 @@ private fun ErrorTemplate(
                     modifier = Modifier.padding(bottom = 5.dp)
                 )
                 Text(
-                    text = stringResource(id = R.string.retry_error_message),
+                    text = subText,
                     modifier = Modifier.padding(bottom = 20.dp)
                 )
                 Button(
@@ -84,11 +104,11 @@ private fun ErrorTemplate(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = ContentCardIcons.REFRESH.icon,
-                            contentDescription = stringResource(id = ContentCardIcons.REFRESH.label)
+                            imageVector = buttonIcon.icon,
+                            contentDescription = stringResource(id = buttonIcon.label)
                         )
                         Text(
-                            text = stringResource(id = R.string.retry),
+                            text = buttonText,
                             modifier = Modifier.padding(start = 10.dp)
                         )
                     }

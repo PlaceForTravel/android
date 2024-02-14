@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -24,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.easyhz.placeapp.R
+import com.easyhz.placeapp.domain.model.user.UserManager
+import com.easyhz.placeapp.ui.component.LoginRequireError
 import com.easyhz.placeapp.ui.component.SpaceDivider
 import com.easyhz.placeapp.ui.component.post.BookmarkHeader
 import com.easyhz.placeapp.ui.state.ApplicationState
@@ -54,7 +58,8 @@ enum class BookmarkTabs(
 @Composable
 fun Bookmark(
     applicationState: ApplicationState,
-    onItemClick: (Int) -> Unit
+    onItemClick: (Int) -> Unit,
+    onNavigateToUser: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { BookmarkTabs.values().size })
@@ -62,7 +67,42 @@ fun Bookmark(
 
     Column {
         BookmarkHeader()
-        Tabs(tabIndex = selectedTabIndex.value, scope = scope, pagerState = pagerState)
+        when(UserManager.user) {
+            null -> NeedLogin(onLoginClick = onNavigateToUser)
+            else -> BookmarkContents(
+                    tabIndex = selectedTabIndex.value,
+                    scope = scope,
+                    pagerState = pagerState,
+                    onItemClick = onItemClick,
+                    applicationState = applicationState
+                )
+        }
+    }
+}
+
+@Composable
+private fun NeedLogin(
+    onLoginClick: () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        LoginRequireError(
+            scope = this,
+            onClick = onLoginClick
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun BookmarkContents(
+    tabIndex: Int,
+    scope: CoroutineScope,
+    pagerState: PagerState,
+    onItemClick: (Int) -> Unit,
+    applicationState: ApplicationState
+) {
+    Column {
+        Tabs(tabIndex = tabIndex, scope = scope, pagerState = pagerState)
         HorizontalPager(state = pagerState) {
             BookmarkTabs.values()[it].Screen(onItemClick = onItemClick, applicationState)
         }

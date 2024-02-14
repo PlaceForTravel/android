@@ -48,7 +48,8 @@ fun NavGraphBuilder.addHomeGraph(
     composable(route = HomeSections.BOOKMARK.route) {
         Bookmark(
             applicationState = applicationState,
-            onItemClick = { id -> onNavigateToBoardDetail(id, it) }
+            onItemClick = { id -> onNavigateToBoardDetail(id, it) },
+            onNavigateToUser = { onNavigateToUser(it) }
         )
     }
     composable(route = HomeSections.PROFILE.route) {
