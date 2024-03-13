@@ -25,7 +25,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun NaverMap(
     modifier: Modifier = Modifier,
-    places: List<LatLngType>
+    places: List<LatLngType>,
+    type: Int = 0,
 ) {
     NaverMapSdk.getInstance(LocalContext.current).client =
         NaverMapSdk.NaverCloudPlatformClient(BuildConfig.NAVER_MAP_SDK_KEY)
@@ -50,7 +51,7 @@ fun NaverMap(
         factory = { mapView },
         modifier = modifier
     ) {
-        setMap(it, places)
+        setMap(it, places, type)
     }
 
 }
@@ -60,9 +61,9 @@ data class LatLngType(
     val longitude: Double
 )
 
-private fun setMap(mapView: MapView, places: List<LatLngType>) {
+private fun setMap(mapView: MapView, places: List<LatLngType>, type: Int) {
     mapView.getMapAsync { naverMap ->
-        val cameraUpdate = setCamera(places)
+        val cameraUpdate = setCamera(places, type)
 
         setMarkers(naverMap, places)
 
@@ -75,12 +76,15 @@ private fun setMap(mapView: MapView, places: List<LatLngType>) {
 
 const val ALL_PLACE_ZOOM_SIZE = 13.0
 const val ONE_PLACE_ZOOM_SIZE = 15.5
+const val SAVED_PLACE_ZOOM_SIZE = 6.0
 
-private fun setCamera(places: List<LatLngType>): CameraUpdate {
-    val zoom = if (places.size > 1) ALL_PLACE_ZOOM_SIZE else ONE_PLACE_ZOOM_SIZE
+private fun setCamera(places: List<LatLngType>, type: Int): CameraUpdate {
+    val zoom = if (type == 1) SAVED_PLACE_ZOOM_SIZE else if (places.size > 1) ALL_PLACE_ZOOM_SIZE else ONE_PLACE_ZOOM_SIZE
     val cameraParams = CameraUpdateParams().apply {
         zoomTo(zoom)
-        scrollTo(LatLng(places.first().latitude, places.first().longitude))
+        if (type == 0) {
+            scrollTo(LatLng(places.first().latitude, places.first().longitude))
+        }
     }
 
     return CameraUpdate.withParams(cameraParams)

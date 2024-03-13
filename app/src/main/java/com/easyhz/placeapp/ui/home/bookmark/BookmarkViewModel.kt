@@ -34,8 +34,7 @@ class BookmarkViewModel
         ),
         pagingSourceFactory = {
             PostBookmarkPagingSource(
-                bookmarkRepository = bookmarkRepository,
-                user = UserManager.user
+                bookmarkRepository = bookmarkRepository
             )
         }
     ).flow.cachedIn(viewModelScope)

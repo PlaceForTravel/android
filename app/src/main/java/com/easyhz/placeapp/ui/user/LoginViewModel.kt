@@ -144,7 +144,14 @@ class LoginViewModel
 
     private suspend fun validateUserId(userId: String): Boolean = try {
         val response = userRepository.validateUserId(userId)
-        response.isSuccessful && response.body() == true
+        if(response.isSuccessful) {
+            response.body()?.let {
+                userState = userState.update(nickname = it)
+            } ?: run {
+                initNickname()
+            }
+            true
+        } else false
     } catch (e: Exception) {
         userState = userState.copy(error = e.localizedMessage)
         false
@@ -166,10 +173,13 @@ class LoginViewModel
     }
 
     private fun setUserState(user: User, step: LoginSteps) {
-        userState = userState.copy(
-                user = user,
-                step = step
-            )
+        userState = userState.update(
+            userId = user.userId,
+            email = user.email,
+            phoneNum = user.phoneNum,
+            type = user.type
+        ).copy(step = step)
+
         if (step == LoginSteps.SUCCESS) {
             updateUserInfo()
             UserManager.setUser(userState.user)

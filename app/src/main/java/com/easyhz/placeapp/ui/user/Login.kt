@@ -19,7 +19,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,10 +52,6 @@ fun Login(
     onNavigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.initNickname()
-    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,31 +85,36 @@ private fun LoginContents(
     context: Context,
     viewModel: LoginViewModel
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 200.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.fillMaxHeight()
     ) {
-        Image(
-            modifier = Modifier.size(400.dp),
-            painter = painterResource(id = R.drawable.fold_map),
-            contentDescription = stringResource(id = R.string.logo_fold_map)
-        )
-        SpaceDivider(padding = 10)
-        SocialLoginButton(
-            modifier = Modifier.width(400.dp),
-            social = SocialLoginType.NAVER,
-            viewModel = viewModel,
-            context = context
-        )
-        SpaceDivider(padding = 10)
-        SocialLoginButton(
-            modifier = Modifier.width(400.dp),
-            social = SocialLoginType.KAKAO,
-            viewModel = viewModel,
-            context = context
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = Modifier.size(400.dp),
+                painter = painterResource(id = R.drawable.fold_map),
+                contentDescription = stringResource(id = R.string.logo_fold_map)
+            )
+            SpaceDivider(padding = 10)
+            SocialLoginButton(
+                modifier = Modifier.width(400.dp),
+                social = SocialLoginType.NAVER,
+                viewModel = viewModel,
+                context = context
+            )
+            SpaceDivider(padding = 10)
+            SocialLoginButton(
+                modifier = Modifier.width(400.dp),
+                social = SocialLoginType.KAKAO,
+                viewModel = viewModel,
+                context = context
+            )
+        }
     }
 }
 

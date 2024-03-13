@@ -16,7 +16,7 @@ interface UserService {
     @GET("/user/id")
     suspend fun validateUserId(
         @Query("userId") userId: String
-    ) : Response<Boolean>
+    ) : Response<String>
 
     @GET("/user/nickname")
     suspend fun validateNickname(

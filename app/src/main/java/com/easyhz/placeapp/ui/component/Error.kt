@@ -41,11 +41,51 @@ fun NetworkError(
 }
 
 @Composable
+fun LoginRequireError(
+    scope: BoxScope,
+    onClick: () -> Unit
+) {
+    ErrorTemplate(
+        scope = scope,
+        icon = ContentCardIcons.ERROR.icon,
+        description = stringResource(id = ContentCardIcons.ERROR.label),
+        mainText = stringResource(id = R.string.login_require),
+        subText = stringResource(id = R.string.login_require_retry),
+        buttonText = stringResource(id = R.string.login_header),
+        buttonIcon = ContentCardIcons.USER,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun NoContentError(
+    scope: BoxScope,
+    mainText: String,
+    subText: String
+) {
+    ErrorTemplate(
+        scope = scope,
+        icon = ContentCardIcons.NO_PLACE.icon, 
+        description = stringResource(id = ContentCardIcons.NO_PLACE.label),
+        mainText = mainText,
+        subText = subText,
+        useButton = false
+    ) {
+
+    }
+}
+
+
+@Composable
 private fun ErrorTemplate(
     scope: BoxScope,
     icon: ImageVector,
     description: String,
     mainText: String,
+    subText: String = stringResource(id = R.string.retry_error_message),
+    useButton: Boolean = true,
+    buttonText: String = stringResource(id = R.string.retry),
+    buttonIcon: ContentCardIcons = ContentCardIcons.REFRESH,
     onClick: () -> Unit
 ) {
     scope.apply {
@@ -71,26 +111,28 @@ private fun ErrorTemplate(
                     modifier = Modifier.padding(bottom = 5.dp)
                 )
                 Text(
-                    text = stringResource(id = R.string.retry_error_message),
+                    text = subText,
                     modifier = Modifier.padding(bottom = 20.dp)
                 )
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = PlaceAppTheme.colorScheme.secondary, contentColor = PlaceAppTheme.colorScheme.subBackground),
-                    shape = roundShape,
-                    elevation = null,
-                    onClick = onClick,
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                if (useButton) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = PlaceAppTheme.colorScheme.secondary, contentColor = PlaceAppTheme.colorScheme.subBackground),
+                        shape = roundShape,
+                        elevation = null,
+                        onClick = onClick,
                     ) {
-                        Icon(
-                            imageVector = ContentCardIcons.REFRESH.icon,
-                            contentDescription = stringResource(id = ContentCardIcons.REFRESH.label)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.retry),
-                            modifier = Modifier.padding(start = 10.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = buttonIcon.icon,
+                                contentDescription = stringResource(id = buttonIcon.label)
+                            )
+                            Text(
+                                text = buttonText,
+                                modifier = Modifier.padding(start = 10.dp)
+                            )
+                        }
                     }
                 }
             }

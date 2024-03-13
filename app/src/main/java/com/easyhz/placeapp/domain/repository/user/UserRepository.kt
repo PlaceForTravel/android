@@ -9,7 +9,7 @@ interface UserRepository {
         onComplete: (Boolean) -> Unit
     )
 
-    suspend fun validateUserId(userId: String): Response<Boolean>
+    suspend fun validateUserId(userId: String): Response<String>
 
     suspend fun validateNickname(nickname: String): Response<Boolean>
 }

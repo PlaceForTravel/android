@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -13,6 +14,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.easyhz.placeapp.ui.component.CircularLoading
 import com.easyhz.placeapp.ui.component.NetworkError
+import com.easyhz.placeapp.ui.component.bookmark.NoContent
 import com.easyhz.placeapp.ui.component.detail.WindowShade
 import com.easyhz.placeapp.ui.home.feed.FeedContent
 import com.easyhz.placeapp.ui.home.feed.FeedViewModel
@@ -36,6 +38,9 @@ fun PostBookmark(
         refreshing = viewModel.screenState.isRefreshing,
         onRefresh = { viewModel.refreshSavedPost(contents) }
     )
+    LaunchedEffect(key1 = Unit) {
+        viewModel.refreshSavedPost(contents)
+    }
     Box {
         Column {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -46,12 +51,15 @@ fun PostBookmark(
                         }
                     }
                     else -> {
-                        FeedContent(
-                            contents = contents,
-                            refreshState = refreshState,
-                            screenWidth = screenWidth,
-                            onItemClick = onItemClick,
-                        ) { id -> feedViewModel.savePost(id, contents, applicationState) }
+                        when(contents.itemCount) {
+                            0 -> NoContent(scope = this, type = BookmarkTabs.POST)
+                            else -> FeedContent(
+                                contents = contents,
+                                refreshState = refreshState,
+                                screenWidth = screenWidth,
+                                onItemClick = onItemClick,
+                            ) { id -> feedViewModel.savePost(id, contents, applicationState) }
+                        }
                     }
                 }
                 PullRefreshIndicator(
