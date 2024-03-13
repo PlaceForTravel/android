@@ -17,6 +17,7 @@ data class PlaceImagesItem(
     val placeId: Int,
     val placeName: String,
     val category: String,
+    var like: Boolean
 ) : Parcelable
 
 

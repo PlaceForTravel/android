@@ -103,7 +103,10 @@ private fun BookmarkContents(
 ) {
     Column {
         Tabs(tabIndex = tabIndex, scope = scope, pagerState = pagerState)
-        HorizontalPager(state = pagerState) {
+        HorizontalPager(
+            state = pagerState,
+            userScrollEnabled = false
+        ) {
             BookmarkTabs.values()[it].Screen(onItemClick = onItemClick, applicationState)
         }
     }

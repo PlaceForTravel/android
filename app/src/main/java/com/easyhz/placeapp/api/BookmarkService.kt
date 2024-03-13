@@ -1,5 +1,6 @@
 package com.easyhz.placeapp.api
 
+import com.easyhz.placeapp.domain.model.bookmark.place.SavedPlaceItem
 import com.easyhz.placeapp.domain.model.feed.Feed
 import retrofit2.Response
 import retrofit2.http.GET
@@ -17,4 +18,9 @@ interface BookmarkService {
     suspend fun getCity(
         @Query("userId") userId: String
     ): Response<List<String>>
+
+    @GET("/user/savedPlace")
+    suspend fun getSavedPlaces(
+        @Query("userId") userId: String
+    ): Response<List<SavedPlaceItem>>
 }

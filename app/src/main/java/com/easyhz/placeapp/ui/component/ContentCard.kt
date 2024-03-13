@@ -335,7 +335,7 @@ private fun DetailCardPreview() {
         content = "안녕",
         likeCount = 1,
         nickname = "user1",
-        placeImages = listOf(PlaceImagesItem(address = "", boardPlaceId = 1, imgUrl = "", latitude = 1.0, longitude = 1.0, placeId = 1, placeName = "흑돼지", category = "음식점")),
+        placeImages = listOf(PlaceImagesItem(address = "", boardPlaceId = 1, imgUrl = "", latitude = 1.0, longitude = 1.0, placeId = 1, placeName = "흑돼지", category = "음식점", like = false)),
         regDate = "",
         modifiedDate = null,
         deletedDate = null,
