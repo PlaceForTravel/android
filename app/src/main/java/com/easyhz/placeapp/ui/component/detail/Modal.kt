@@ -16,6 +16,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +46,9 @@ fun MapModal(
     onClose: () -> Unit,
     onSaved: (Int) -> Unit,
 ) {
+    var like by remember {
+        mutableStateOf(item.like)
+    }
     Card(
         modifier = modifier.padding(30.dp),
     ) {
@@ -53,9 +60,12 @@ fun MapModal(
             MapModalHeader(
                 placeName = item.placeName,
                 isViewAll = isViewAll,
-                isLike = item.like,
+                isLike = like,
                 onClose = onClose,
-                onSaved = { onSaved(item.placeId) }
+                onSaved = {
+                    onSaved(item.placeId)
+                    like = !like
+                }
             )
             Box(modifier = modifier) {
                 if (isViewAll) {
