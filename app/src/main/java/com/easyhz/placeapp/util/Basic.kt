@@ -26,3 +26,5 @@ fun checkGalleryPermission(
         }
     }
 }
+
+const val login_require = "로그인이 필요합니다."

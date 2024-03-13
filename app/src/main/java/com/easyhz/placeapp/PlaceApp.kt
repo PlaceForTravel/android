@@ -8,8 +8,10 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -17,8 +19,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
+import com.easyhz.placeapp.domain.model.user.UserManager.needLogin
 import com.easyhz.placeapp.ui.detail.BoardDetail
 import com.easyhz.placeapp.ui.home.search.Search
 import com.easyhz.placeapp.ui.navigation.BottomBar
@@ -35,9 +39,13 @@ import com.easyhz.placeapp.ui.state.ApplicationState
 import com.easyhz.placeapp.ui.state.rememberApplicationState
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.checkGalleryPermission
+import com.easyhz.placeapp.util.login_require
 
 @Composable
-fun PlaceApp() {
+fun PlaceApp(
+    viewModel: PlaceAppViewModel = hiltViewModel(),
+    boardId: Int? = null
+) {
     PlaceAppTheme {
         val applicationState = rememberApplicationState()
         val mainNavController = rememberMainNavController()
@@ -55,6 +63,9 @@ fun PlaceApp() {
                 Log.d("PlaceApp", "권한 필요")
             }
         }
+        LaunchedEffect(Unit) {
+            boardId?.let { boardId -> mainNavController.navigateToBoardDetailOnDeepLink(boardId) }
+        }
         Scaffold(
             bottomBar = {
                 if(isHome) {
@@ -70,11 +81,16 @@ fun PlaceApp() {
                 if(isFeed) {
                     MainFloatingActionButton(
                         onClick = {
-                            checkGalleryPermission(
-                                context = context,
-                                launcher = launcher,
-                                action = mainNavController::navigateToNewPost
-                        ) }
+                            if (needLogin) {
+                                applicationState.showSnackBar(login_require)
+                            } else {
+                                checkGalleryPermission(
+                                    context = context,
+                                    launcher = launcher,
+                                    action = mainNavController::navigateToNewPost
+                                )
+                            }
+                        }
                     )
                 }
             },
@@ -113,7 +129,7 @@ private fun NavGraphBuilder.navGraph(
     getNavBackStack: () -> NavBackStackEntry,
     onNavigateToSearch: (NavBackStackEntry) -> Unit,
     onNavigateToUser: (NavBackStackEntry) -> Unit,
-    onNavigateToHome: (NavBackStackEntry) -> Unit,
+    onNavigateToHome: (NavBackStackEntry, Boolean) -> Unit,
     onNavigateToModify: (FeedDetail, NavBackStackEntry) -> Unit,
     getFeedDetail: () -> FeedDetail?
 ) {
@@ -122,6 +138,7 @@ private fun NavGraphBuilder.navGraph(
         startDestination = HomeSections.FEED.route
     ) {
         addHomeGraph(
+            applicationState = applicationState,
             onNavigateToBoardDetail = onNavigateToBoardDetail,
             onNavigateToSearch = onNavigateToSearch,
             onNavigateToUser = onNavigateToUser
@@ -129,15 +146,19 @@ private fun NavGraphBuilder.navGraph(
     }
     composable(
         route = "${MainDestinations.BOARD_DETAIL_ROUTE}/{${MainDestinations.BOARD_ID}}",
-        arguments = listOf(navArgument(MainDestinations.BOARD_ID) { type = NavType.IntType })
+        arguments = listOf(navArgument(MainDestinations.BOARD_ID) { type = NavType.IntType }),
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "wooyeojung://board/{${MainDestinations.BOARD_ID}}"
+        }),
     ) { backStackEntry ->
         val arguments = requireNotNull(backStackEntry.arguments)
         val boardId = arguments.getInt(MainDestinations.BOARD_ID)
 
         BoardDetail(
             id = boardId,
-            onNavigateToHome = { onNavigateToHome(backStackEntry) },
-            onNavigateToModify = { feedDetail ->  onNavigateToModify(feedDetail, backStackEntry) }
+            onNavigateToHome = { onNavigateToHome(backStackEntry, false) },
+            onNavigateToModify = { feedDetail ->  onNavigateToModify(feedDetail, backStackEntry) },
+            applicationState = applicationState
         )
     }
     navigation(
@@ -164,7 +185,9 @@ private fun NavGraphBuilder.navGraph(
         startDestination = LOGIN
     ) {
         addUserGraph(
-            onNavigateToBack = onNavigateToBack
+            onNavigateToBack = onNavigateToBack,
+            onNavigateToHome = onNavigateToHome,
+            applicationState = applicationState
         )
     }
 }

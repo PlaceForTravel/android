@@ -65,6 +65,65 @@ fun PostHeader(
     }
 }
 
+@Composable
+fun BookmarkHeader(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.bookmark_header),
+                fontSize = 25.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier
+                    .padding(top = 20.dp, bottom = 5.dp, start = 20.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun LoginHeader(
+    modifier: Modifier = Modifier,
+    title: Int,
+    onBackClick: () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            SimpleIconButton(
+                modifier = Modifier
+                    .size(30.dp)
+                    .padding(start = 5.dp),
+                icon = Icons.Outlined.ArrowBackIos,
+                onClick = onBackClick
+            )
+        }
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = stringResource(id = title), fontWeight = FontWeight.ExtraBold)
+        }
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun PostHeaderPreview() {
@@ -76,5 +135,13 @@ private fun PostHeaderPreview() {
             onNextClick = { },
             next = "다음"
         )
+    }
+}
+
+@Preview
+@Composable
+private fun BookmarkHeaderPreview() {
+    PlaceAppTheme {
+        BookmarkHeader()
     }
 }

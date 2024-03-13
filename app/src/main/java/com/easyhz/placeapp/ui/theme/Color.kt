@@ -81,3 +81,7 @@ val FunctionalBlack = Color(0xff1c1b1e)
 const val AlphaNearOpaque = 0.95f
 
 val NaverGreen = Color(0xff03C75A)
+val NaverLabel = Color(0xffFFFFFF)
+val KakaoYellow = Color(0xffFEE500)
+val KakaoLabel = Color(0xD9000000)
+val KakaoLogo = Color(0xff000000)

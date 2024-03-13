@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.FmdBad
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material.icons.outlined.NotListedLocation
 import androidx.compose.material.icons.outlined.PersonPinCircle
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Refresh
@@ -36,7 +37,9 @@ enum class ContentCardIcons(
 
     ERROR(R.string.setting_error, Icons.Outlined.FmdBad),
 
-    SEND(R.string.post_add_comment, Icons.Outlined.Send)
+    SEND(R.string.post_add_comment, Icons.Outlined.Send),
+
+    NO_PLACE(R.string.content_empty_place, Icons.Outlined.NotListedLocation)
 }
 
 enum class SearchIcons(

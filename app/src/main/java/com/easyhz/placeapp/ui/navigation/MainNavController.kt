@@ -61,8 +61,14 @@ class MainNavController(
         if (from.isResumed()) navController.navigate("${MainDestinations.USER_ROUTE}/$LOGIN")
     }
 
-    fun navigateToHome(from: NavBackStackEntry) {
-        if (from.isResumed()) navController.navigate("${MainDestinations.HOME_ROUTE}/feed")
+    fun navigateToHome(from: NavBackStackEntry, needPopStack: Boolean = false) {
+        if (from.isResumed()) navController.navigate("${MainDestinations.HOME_ROUTE}/feed") {
+            if (needPopStack) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
     }
 
     fun navigateToModify(feedDetail: FeedDetail, from: NavBackStackEntry) {
@@ -73,6 +79,10 @@ class MainNavController(
     fun navigateToBoardDetail(boardId: Int, from: NavBackStackEntry) {
         // 중복 이벤트 발생할 수도 있기 때문에 체크
         if(from.isResumed()) navController.navigate("${MainDestinations.BOARD_DETAIL_ROUTE}/$boardId")
+    }
+
+    fun navigateToBoardDetailOnDeepLink(boardId: Int) {
+        navController.navigate("${MainDestinations.BOARD_DETAIL_ROUTE}/$boardId")
     }
 
     fun navigateToSearch(from: NavBackStackEntry) {

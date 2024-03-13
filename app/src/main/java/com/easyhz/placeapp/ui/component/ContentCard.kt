@@ -86,6 +86,7 @@ fun ContentCard(
                     name = item.nickname,
                     regDate = item.regDate,
                     likeCount = item.likeCount,
+                    isLike = item.like,
                     onSaveClick = { onSaveClick(item.boardId) }
                 )
             }
@@ -138,6 +139,7 @@ fun DetailContentCard(
                 name = item.nickname,
                 regDate = item.regDate,
                 likeCount = item.likeCount,
+                isLike = item.like,
                 onSaveClick = { onSaveClick(item.boardId) }
             )
             SpaceDivider(10)
@@ -165,7 +167,7 @@ fun IconText(
     tint: Color = LocalContentColor.current,
     text: String,
     contentDescription: String,
-    onClick: () -> Unit,
+    onClick: () -> Unit = { },
     textStyle: TextStyle = TextStyle.Default.copy(
         fontSize = 15.sp,
         fontWeight = FontWeight.Bold,
@@ -202,6 +204,7 @@ private fun ContentInfo(
     name: String,
     regDate: String,
     likeCount: Int,
+    isLike: Boolean,
     cardWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
     onSaveClick: () -> Unit
 ) {
@@ -220,7 +223,7 @@ private fun ContentInfo(
         Text(regDate.toTimeFormat(), modifier = Modifier.padding(horizontal = TEXT_HORIZONTAL.dp))
     }
     IconText(
-        icon = ContentCardIcons.BOOKMARK.icon,
+        icon = if (isLike) ContentCardIcons.BOOKMARK_FILLED.icon else ContentCardIcons.BOOKMARK.icon,
         text = likeCount.toString(),
         contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
         onClick = onSaveClick,
@@ -309,7 +312,8 @@ private fun CardPreview() {
         places = null,
         deletedDate = "",
         modifiedDate = "",
-        userId = "유저 1"
+        userId = "유저 1",
+        like = true
     )
     PlaceAppTheme {
         ContentCard(
@@ -331,11 +335,12 @@ private fun DetailCardPreview() {
         content = "안녕",
         likeCount = 1,
         nickname = "user1",
-        placeImages = listOf(PlaceImagesItem(address = "", boardPlaceId = 1, imgUrl = "", latitude = 1.0, longitude = 1.0, placeId = 1, placeName = "흑돼지")),
+        placeImages = listOf(PlaceImagesItem(address = "", boardPlaceId = 1, imgUrl = "", latitude = 1.0, longitude = 1.0, placeId = 1, placeName = "흑돼지", category = "음식점", like = false)),
         regDate = "",
         modifiedDate = null,
         deletedDate = null,
-        userId = "user1"
+        userId = "user1",
+        like = true
     )
     PlaceAppTheme {
         DetailContentCard(

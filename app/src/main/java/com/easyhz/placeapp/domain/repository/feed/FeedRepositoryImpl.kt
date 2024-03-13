@@ -3,13 +3,13 @@ package com.easyhz.placeapp.domain.repository.feed
 import com.easyhz.placeapp.api.FeedService
 import com.easyhz.placeapp.di.CommonModule.ProvideGson
 import com.easyhz.placeapp.domain.model.feed.Feed
-import com.easyhz.placeapp.domain.model.feed.UserInfo
 import com.easyhz.placeapp.domain.model.feed.comment.Comment
 import com.easyhz.placeapp.domain.model.feed.comment.write.PostComment
 import com.easyhz.placeapp.domain.model.feed.detail.FeedDetail
 import com.easyhz.placeapp.domain.model.gallery.Gallery
 import com.easyhz.placeapp.domain.model.post.ModifyPost
 import com.easyhz.placeapp.domain.model.post.Post
+import com.easyhz.placeapp.domain.model.user.User
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,11 +27,11 @@ class FeedRepositoryImpl
     private val feedService: FeedService,
     @ProvideGson private val gson: Gson
 ):FeedRepository {
-    override suspend fun fetchFeedContents(page: Int): Response<Feed> = feedService.getFeed(page)
+    override suspend fun fetchFeedContents(page: Int, userId: String): Response<Feed> = feedService.getFeed(page, userId)
 
-    override suspend fun fetchFeedDetail(id: Int): Response<FeedDetail> = feedService.getFeedDetail(id = id)
+    override suspend fun fetchFeedDetail(id: Int, userId: String): Response<FeedDetail> = feedService.getFeedDetail(id = id, userId = userId)
 
-    override suspend fun fetchComments(id: Int, page: Int): Response<Comment> = feedService.getComments(id = id, page = page)
+    override suspend fun fetchComments(id: Int, page: Int, userId: String): Response<Comment> = feedService.getComments(id = id, page = page, userId = userId)
     override suspend fun writePost(
         post: Post,
         images: List<Gallery>,
@@ -88,27 +88,27 @@ class FeedRepositoryImpl
 
     override suspend fun savePost(
         boardId: Int,
-        userInfo: UserInfo,
+        user: User,
         onComplete: (Boolean) -> Unit
     )  {
-        saveAction(boardId, userInfo, feedService::savePost, onComplete)
+        saveAction(boardId, user, feedService::savePost, onComplete)
     }
 
     override suspend fun savePlace(
         boardId: Int,
-        userInfo: UserInfo,
+        user: User,
         onComplete: (Boolean) -> Unit
     ) {
-        saveAction(boardId, userInfo, feedService::savePlace, onComplete)
+        saveAction(boardId, user, feedService::savePlace, onComplete)
     }
 
     private suspend fun saveAction(
         boardId: Int,
-        userInfo: UserInfo,
-        saveFunction: suspend (Int, UserInfo) -> Response<Void>,
+        user: User,
+        saveFunction: suspend (Int, User) -> Response<Void>,
         onComplete: (Boolean) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val response = saveFunction(boardId, userInfo)
+        val response = saveFunction(boardId, user)
         onComplete(response.isSuccessful)
     }
 

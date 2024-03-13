@@ -23,6 +23,7 @@
     <string name="content_bookmark_filled_icon">Bookmark Filled</string>
     <string name="content_map_icon">Map</string>
     <string name="content_more_icon">More</string>
+    <string name="content_empty_place">More</string>
 
     <string name="search_icon">Search</string>
     <string name="search_cancel_icon">Cancel</string>
@@ -43,6 +44,9 @@
     <string name="selected_city">선택한 도시</string>
     <string name="post_modify_post_content">내용만 수정할 수 있습니다.</string>
 
+    <string name="bookmark_header">저장됨</string>
+    <string name="bookmark_tabs_post">포스트</string>
+    <string name="bookmark_tabs_place">장소</string>
 
     <string name="no_search_data">검색 결과가 없습니다.</string>
 
@@ -61,9 +65,26 @@
     <string name="user_do_not_show_again">다시 보지 않기</string>
 
     <string name="login_header">로그인</string>
-    <string name="login_naver">네이버로 시작하기</string>
+    <string name="login_naver">네이버 로그인</string>
+    <string name="login_kakao">카카오 로그인</string>
     <string name="login_naver_logo">Naver</string>
+    <string name="login_kakao_logo">Kakao</string>
     <string name="logo_fold_map">fold map</string>
+    <string name="login_username_main_title">사용하실 닉네임을 알려주세요.</string>
+    <string name="login_username_sub_title">여정을 시작할 닉네임을 입력하세요!</string>
+    <string name="login_username_placeholder">닉네임을 입력하세요.</string>
+    <string name="login_join_success_request">시작하기</string>
+    <string name="login_nickname_invalid">Invalid Nickname</string>
+    <string name="login_nickname_invalid_text">
+        \n - 닉네임은 3자 이상, 8자 이하여야 합니다.
+        \n - 문자를 최소 1개 이상 포함해야 합니다.
+        \n - 특수 문자 및 공백을 사용할 수 없습니다.
+        \n - 중복을 허용하지 않습니다.
+    </string>
+    <string name="login_nickname_valid">Valid Nickname</string>
+    <string name="login_success">간편 로그인 되었습니다.</string>
+    <string name="login_require">로그인이 필요합니다.</string>
+    <string name="login_require_retry">로그인 후 다시 시도해 주세요.</string>
 
     <string name="network_error_message">네트워크 오류가 발생했습니다.</string>
     <string name="retry_error_message">잠시 후 다시 시도해 주세요.</string>
@@ -71,5 +92,12 @@
 
     <string name="action_delete">삭제</string>
     <string name="action_modify">수정</string>
+
+    <string name="no_bookmark_post_content">저장한 포스트가 없습니다.</string>
+    <string name="no_bookmark_post_content_sub">마음에 드는 포스트를 저장해 보세요!</string>
+    <string name="no_bookmark_place_content">저장한 장소가 없습니다.</string>
+    <string name="no_bookmark_place_content_sub">마음에 드는 장소를 저장해 보세요!</string>
+
+    <string name="notification_channel_id">fcm_channel_1</string>
 
 </resources>

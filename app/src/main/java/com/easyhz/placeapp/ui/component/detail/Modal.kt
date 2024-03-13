@@ -16,6 +16,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +46,9 @@ fun MapModal(
     onClose: () -> Unit,
     onSaved: (Int) -> Unit,
 ) {
+    var like by remember {
+        mutableStateOf(item.like)
+    }
     Card(
         modifier = modifier.padding(30.dp),
     ) {
@@ -53,8 +60,12 @@ fun MapModal(
             MapModalHeader(
                 placeName = item.placeName,
                 isViewAll = isViewAll,
+                isLike = like,
                 onClose = onClose,
-                onSaved = { onSaved(item.placeId) }
+                onSaved = {
+                    onSaved(item.placeId)
+                    like = !like
+                }
             )
             Box(modifier = modifier) {
                 if (isViewAll) {
@@ -82,6 +93,7 @@ fun MapModal(
 private fun MapModalHeader(
     placeName: String,
     isViewAll: Boolean,
+    isLike: Boolean,
     onClose: () -> Unit,
     onSaved: () -> Unit
 ) {
@@ -96,7 +108,7 @@ private fun MapModalHeader(
         ) {
             if (!isViewAll) {
                 SimpleIconButton(
-                    icon = ContentCardIcons.BOOKMARK.icon,
+                    icon = if (isLike) ContentCardIcons.BOOKMARK_FILLED.icon else ContentCardIcons.BOOKMARK.icon,
                     contentDescription = stringResource(id = ContentCardIcons.BOOKMARK.label),
                     modifier = Modifier.size(30.dp),
                     onClick = onSaved
@@ -114,7 +126,7 @@ private fun MapModalHeader(
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = "닫기",
+                text = stringResource(id = R.string.user_close),
                 modifier = Modifier.clickable {
                     onClose()
                 }
@@ -135,6 +147,6 @@ fun WindowShade(alpha: Float = 0.5f) {
 @Composable
 private fun MapBottomSheetHeaderPreview() {
     PlaceAppTheme {
-        MapModalHeader("카카오 판교아지트", false, { }) {  }
+        MapModalHeader("카카오 판교아지트", false, false, { }) {  }
     }
 }

@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -32,23 +30,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.easyhz.placeapp.BuildConfig
 import com.easyhz.placeapp.R
-import com.easyhz.placeapp.ui.component.SimpleIconButton
+import com.easyhz.placeapp.domain.model.user.LoginSteps
 import com.easyhz.placeapp.ui.component.SpaceDivider
+import com.easyhz.placeapp.ui.component.post.LoginHeader
+import com.easyhz.placeapp.ui.component.user.UserNameContents
+import com.easyhz.placeapp.ui.state.ApplicationState
+import com.easyhz.placeapp.ui.theme.KakaoLabel
+import com.easyhz.placeapp.ui.theme.KakaoLogo
+import com.easyhz.placeapp.ui.theme.KakaoYellow
 import com.easyhz.placeapp.ui.theme.NaverGreen
+import com.easyhz.placeapp.ui.theme.NaverLabel
 import com.easyhz.placeapp.ui.theme.PlaceAppTheme
 import com.easyhz.placeapp.util.borderBottom
-import com.navercorp.nid.NaverIdLoginSDK
 
 @Composable
 fun Login(
     viewModel: LoginViewModel = hiltViewModel(),
-    onNavigateToBack: () -> Unit
+    applicationState: ApplicationState,
+    onNavigateToBack: () -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
-    NaverIdLoginSDK.initialize(context, BuildConfig.NAVER_API_CLIENT_ID, BuildConfig.NAVER_API_CLIENT_ID,"Login") //TODO: clientName 변경 필요
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,89 +63,76 @@ fun Login(
                     .fillMaxWidth()
                     .height(50.dp)
                     .borderBottom(color = PlaceAppTheme.colorScheme.primaryBorder, width = 1.dp),
+                title = R.string.login_header
             ) {
-                onNavigateToBack()
+                viewModel.manageNavigateToBack(onNavigateToBack)
             }
-            LoginContents(context, viewModel)
+            when(viewModel.userState.step) {
+                LoginSteps.LOGIN -> LoginContents(context, viewModel)
+                LoginSteps.USERNAME -> UserNameContents()
+                LoginSteps.SUCCESS -> {
+                    onNavigateToHome()
+                    applicationState.showSnackBar(stringResource(id = R.string.login_success))
+                }
+            }
         }
     }
 }
 
-@Composable
-private fun LoginHeader(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            SimpleIconButton(
-                modifier = Modifier
-                    .size(30.dp)
-                    .padding(start = 5.dp),
-                icon = Icons.Outlined.ArrowBackIos,
-                onClick = onBackClick
-            )
-        }
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = stringResource(id = R.string.login_header), fontWeight = FontWeight.ExtraBold)
-        }
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-
-        }
-    }
-}
 
 @Composable
 private fun LoginContents(
     context: Context,
     viewModel: LoginViewModel
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 200.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.fillMaxHeight()
     ) {
-        Image(
-            modifier = Modifier.size(400.dp),
-            painter = painterResource(id = R.drawable.fold_map),
-            contentDescription = stringResource(id = R.string.logo_fold_map)
-        )
-        SpaceDivider(padding = 10)
-        SocialLoginButton(
-            modifier = Modifier.width(400.dp),
-            social = SocialLoginType.NAVER,
-            viewModel = viewModel,
-            context = context
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = Modifier.size(400.dp),
+                painter = painterResource(id = R.drawable.fold_map),
+                contentDescription = stringResource(id = R.string.logo_fold_map)
+            )
+            SpaceDivider(padding = 10)
+            SocialLoginButton(
+                modifier = Modifier.width(400.dp),
+                social = SocialLoginType.NAVER,
+                viewModel = viewModel,
+                context = context
+            )
+            SpaceDivider(padding = 10)
+            SocialLoginButton(
+                modifier = Modifier.width(400.dp),
+                social = SocialLoginType.KAKAO,
+                viewModel = viewModel,
+                context = context
+            )
+        }
     }
 }
 
 enum class SocialLoginType(
-    @DrawableRes val logo: Int,
-    @StringRes val text: Int,
-    @StringRes val description: Int,
-    val color: Color
+    @DrawableRes val logo: Int? = null,
+    @StringRes val text: Int? = null,
+    @StringRes val description: Int? = null,
+    val containerColor: Color? = null,
+    val contentColor: Color? = null,
+    val logoColor: Color? = null,
 ) {
-    NAVER(R.drawable.naver, R.string.login_naver, R.string.login_naver_logo, NaverGreen) {
-        override fun onClick(context: Context, viewModel: LoginViewModel) {
-            NaverIdLoginSDK.authenticate(context, viewModel.oauthLoginCallback)
-        }
-    };
+    NONE() ,
+    NAVER(R.drawable.naver, R.string.login_naver, R.string.login_naver_logo, NaverGreen, NaverLabel, NaverLabel) ,
+    KAKAO(R.drawable.kakao, R.string.login_kakao, R.string.login_kakao_logo, KakaoYellow, KakaoLabel, KakaoLogo);
 
-    abstract fun onClick(context: Context, viewModel: LoginViewModel)
+    fun onClick(context: Context, viewModel: LoginViewModel) {
+        viewModel.login(context, this)
+    }
 }
 
 @Composable
@@ -155,7 +145,7 @@ private fun SocialLoginButton(
     Button(
         modifier = modifier.height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = social.color
+            containerColor = social.containerColor!!
         ),
         shape = RoundedCornerShape(5.dp),
         onClick = { social.onClick(context, viewModel) }
@@ -164,14 +154,17 @@ private fun SocialLoginButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(id = social.logo),
-                contentDescription = stringResource(id = social.description)
+                painter = painterResource(id = social.logo!!),
+                contentDescription = stringResource(id = social.description!!),
+                tint = social.logoColor!!,
+                modifier = Modifier.size(32.dp)
             )
-            SpaceDivider(padding = 5)
+            SpaceDivider(padding = 10)
             Text(
-                text = stringResource(id = social.text),
+                text = stringResource(id = social.text!!),
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = social.contentColor!!
             )
         }
     }
