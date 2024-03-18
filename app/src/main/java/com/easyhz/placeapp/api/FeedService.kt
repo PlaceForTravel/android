@@ -75,14 +75,14 @@ interface FeedService {
     @POST("/board/like/{boardId}")
     suspend fun savePost(
         @Path("boardId") id: Int,
-        @Body user: User
+        @Query("userId") userId: String,
     ) : Response<Void>
 
     /* 장소 저장 */
     @POST("/board/saveBoardPlace/{boardPlaceId}")
     suspend fun savePlace(
         @Path("boardPlaceId") id: Int,
-        @Body user: User
+        @Query("userId") userId: String,
     ): Response<Void>
 
 }
