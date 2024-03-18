@@ -105,10 +105,10 @@ class FeedRepositoryImpl
     private suspend fun saveAction(
         boardId: Int,
         user: User,
-        saveFunction: suspend (Int, User) -> Response<Void>,
+        saveFunction: suspend (Int, String) -> Response<Void>,
         onComplete: (Boolean) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val response = saveFunction(boardId, user)
+        val response = saveFunction(boardId, user.userId)
         onComplete(response.isSuccessful)
     }
 
